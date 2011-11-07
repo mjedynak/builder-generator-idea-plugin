@@ -5,18 +5,24 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.ui.components.JBList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.displayer.PopupDisplayer;
+import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import javax.swing.*;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GoToBuilderActionHandlerTest {
@@ -48,17 +54,26 @@ public class GoToBuilderActionHandlerTest {
     @Mock
     private PsiHelper psiHelper;
 
+    @Mock
+    private PopupListFactory popupListFactory;
+
+    @Mock
+    private PopupDisplayer popupDisplayer;
+
+    @Mock
+    JList list;
+
     @Before
     public void setUp() {
-        when(dataContext.getData(DataKeys.PROJECT.getName())).thenReturn(project);
+        given(dataContext.getData(DataKeys.PROJECT.getName())).willReturn(project);
     }
 
     @Test
     public void shouldNavigateToBuilderIfItExistsAndInvokedInsideNotBuilderClass() {
         // given
-        when(psiHelper.getPsiClassFromEditor(editor, project)).thenReturn(psiClass);
-        when(builderVerifier.isBuilder(psiClass)).thenReturn(false);
-        when(builderFinder.findBuilderForClass(psiClass)).thenReturn(builderClass);
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
+        given(builderVerifier.isBuilder(psiClass)).willReturn(false);
+        given(builderFinder.findBuilderForClass(psiClass)).willReturn(builderClass);
 
         // when
         goToBuilderActionHandler.execute(editor, dataContext);
@@ -70,14 +85,43 @@ public class GoToBuilderActionHandlerTest {
     @Test
     public void shouldNavigateToNotBuilderClassIfItExistsAndInvokedInsideBuilder() {
         // given
-        when(psiHelper.getPsiClassFromEditor(editor, project)).thenReturn(builderClass);
-        when(builderVerifier.isBuilder(builderClass)).thenReturn(true);
-        when(builderFinder.findClassForBuilder(builderClass)).thenReturn(psiClass);
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
+        given(builderVerifier.isBuilder(builderClass)).willReturn(true);
+        given(builderFinder.findClassForBuilder(builderClass)).willReturn(psiClass);
 
         // when
         goToBuilderActionHandler.execute(editor, dataContext);
 
         // then
         verify(psiHelper).navigateToClass(psiClass);
+    }
+
+    @Test
+    public void shouldDisplayPopupWhenBuilderNotFoundAndInvokedInsideNotBuilderClass() {
+        // given
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
+        given(builderVerifier.isBuilder(psiClass)).willReturn(false);
+        given(builderFinder.findBuilderForClass(psiClass)).willReturn(null);
+        given(popupListFactory.getPopupList()).willReturn(list);
+
+        // when
+        goToBuilderActionHandler.execute(editor, dataContext);
+
+        // then
+        verify(popupDisplayer).displayPopupChooser(eq(editor), eq(list), any(Runnable.class));
+    }
+
+    @Test
+    public void shouldDisplayNothingWhenNotBuilderClassNotFoundAndInvokedInsideBuilder() {
+        // given
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
+        given(builderVerifier.isBuilder(builderClass)).willReturn(true);
+        given(builderFinder.findClassForBuilder(builderClass)).willReturn(null);
+
+        // when
+        goToBuilderActionHandler.execute(editor, dataContext);
+
+        // then
+        verifyNoMoreInteractions(popupDisplayer);
     }
 }
