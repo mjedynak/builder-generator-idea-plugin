@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply from: 'https://raw.github.com/breskeby/gradleplugins/master/emmaPlugin/emma.gradle'
 
 ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 10.5.2'
 ideaJdk = 'IDEA IC-107.587'
@@ -31,6 +32,8 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.9.0-rc1'
     testCompile 'org.powermock:powermock-module-junit4:1.4.10'
     testCompile 'org.powermock:powermock-api-mockito:1.4.10'
+    emma "emma:emma:2.0.5312"
+    emma "emma:emma_ant:2.0.5312"
 }
 
 metaInf << files('/META-INF/plugin.xml')
