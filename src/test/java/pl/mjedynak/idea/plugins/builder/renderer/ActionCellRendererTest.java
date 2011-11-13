@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,8 +41,8 @@ public class ActionCellRendererTest {
         // given
         Icon icon = mock(Icon.class);
         String actionText = "actionText";
-        when(action.getText()).thenReturn(actionText);
-        when(action.getIcon()).thenReturn(icon);
+        given(action.getText()).willReturn(actionText);
+        given(action.getIcon()).willReturn(icon);
 
         // when
         actionCellRenderer.getListCellRendererComponent(list, action, anyIndex, anyBooleanValue, anyBooleanValue);

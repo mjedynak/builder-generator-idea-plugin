@@ -10,6 +10,7 @@ import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,7 +29,7 @@ public class BuilderVerifierImplTest {
     @Test
     public void shouldVerifyThatClassIsNotABuilderWhenItsDoesNotHaveBuilderSuffix() {
         // given
-        when(psiClass.getName()).thenReturn("AnyNameThatDoesn'tHaveBuilderAtTheEnd");
+        given(psiClass.getName()).willReturn("AnyNameThatDoesn'tHaveBuilderAtTheEnd");
 
         // when
         boolean result = builderVerifier.isBuilder(psiClass);
@@ -40,7 +41,7 @@ public class BuilderVerifierImplTest {
     @Test
     public void shouldVerifyThatClassIsABuilderWhenItHasBuilderSuffix() {
         // given
-        when(psiClass.getName()).thenReturn("AnyNameThatEndsWithBuilder");
+        given(psiClass.getName()).willReturn("AnyNameThatEndsWithBuilder");
 
         // when
         boolean result = builderVerifier.isBuilder(psiClass);

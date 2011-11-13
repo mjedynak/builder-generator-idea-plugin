@@ -14,6 +14,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,20 +40,20 @@ public class BuilderFinderImplTest {
 
     @Before
     public void setUp() {
-        when(psiClass.isEnum()).thenReturn(false);
-        when(psiClass.isInterface()).thenReturn(false);
-        when(psiClass.isAnnotationType()).thenReturn(false);
-        when(psiClass.getProject()).thenReturn(project);
-        when(psiClass.getName()).thenReturn(CLASS_NAME);
+        given(psiClass.isEnum()).willReturn(false);
+        given(psiClass.isInterface()).willReturn(false);
+        given(psiClass.isAnnotationType()).willReturn(false);
+        given(psiClass.getProject()).willReturn(project);
+        given(psiClass.getName()).willReturn(CLASS_NAME);
 
-        when(builderClass.getName()).thenReturn(BUILDER_NAME);
-        when(builderClass.getProject()).thenReturn(project);
+        given(builderClass.getName()).willReturn(BUILDER_NAME);
+        given(builderClass.getProject()).willReturn(project);
     }
 
     @Test
     public void shouldNotFindBuilderForEnum() {
         // given
-        when(psiClass.isEnum()).thenReturn(true);
+        given(psiClass.isEnum()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
@@ -64,7 +65,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindBuilderForInterface() {
         // given
-        when(psiClass.isAnnotationType()).thenReturn(true);
+        given(psiClass.isAnnotationType()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
@@ -76,7 +77,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindBuilderForAnnotationType() {
         // given
-        when(psiClass.isAnnotationType()).thenReturn(true);
+        given(psiClass.isAnnotationType()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
@@ -88,7 +89,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindBuilderForClassWhenClassFounderReturnsNull() {
         // given
-        when(classFinder.findClass(CLASS_NAME, project)).thenReturn(null);
+        given(classFinder.findClass(CLASS_NAME, project)).willReturn(null);
 
         // when
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
@@ -102,9 +103,9 @@ public class BuilderFinderImplTest {
         // given
 
         PsiClass builderClass = mock(PsiClass.class);
-        when(builderClass.getName()).thenReturn(BUILDER_NAME);
+        given(builderClass.getName()).willReturn(BUILDER_NAME);
 
-        when(classFinder.findClass(BUILDER_NAME, project)).thenReturn(builderClass);
+        given(classFinder.findClass(BUILDER_NAME, project)).willReturn(builderClass);
 
         // when
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
@@ -117,7 +118,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindClassForEnum() {
         // given
-        when(psiClass.isEnum()).thenReturn(true);
+        given(psiClass.isEnum()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
@@ -129,7 +130,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindClassForInterface() {
         // given
-        when(psiClass.isAnnotationType()).thenReturn(true);
+        given(psiClass.isAnnotationType()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
@@ -141,7 +142,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindClassForAnnotationType() {
         // given
-        when(psiClass.isAnnotationType()).thenReturn(true);
+        given(psiClass.isAnnotationType()).willReturn(true);
 
         // when
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
@@ -153,7 +154,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldNotFindClassForBuilderWhenClassFounderReturnsNull() {
         // given
-        when(classFinder.findClass(BUILDER_NAME, project)).thenReturn(null);
+        given(classFinder.findClass(BUILDER_NAME, project)).willReturn(null);
 
         // when
         PsiClass result = builderFinder.findClassForBuilder(builderClass);
@@ -166,7 +167,7 @@ public class BuilderFinderImplTest {
     @Test
     public void shouldFindClassForBuilderWhenClassWithTheExactBuildersNameIsPresent() {
         // given
-        when(classFinder.findClass(CLASS_NAME, project)).thenReturn(psiClass);
+        given(classFinder.findClass(CLASS_NAME, project)).willReturn(psiClass);
 
         // when
         PsiClass result = builderFinder.findClassForBuilder(psiClass);

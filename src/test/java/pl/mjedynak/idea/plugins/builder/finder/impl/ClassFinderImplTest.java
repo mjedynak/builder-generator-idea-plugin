@@ -18,6 +18,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,15 +44,15 @@ public class ClassFinderImplTest {
 
     @Before
     public void setUp() {
-        when(project.getUserData(Matchers.<Key<Object>>any())).thenReturn(globalSearchScope);
-        when(psiHelper.getPsiShortNamesCache(project)).thenReturn(psiShortNamesCache);
+        given(project.getUserData(Matchers.<Key<Object>>any())).willReturn(globalSearchScope);
+        given(psiHelper.getPsiShortNamesCache(project)).willReturn(psiShortNamesCache);
     }
 
     @Test
     public void shouldNotFindClassWhenSearchPatternNotFound() {
         // given
         PsiClass[] emptyArray = new PsiClass[0];
-        when(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).thenReturn(emptyArray);
+        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).willReturn(emptyArray);
 
         // when
         PsiClass result = classFinder.findClass(CLASS_NAME, project);
@@ -64,10 +65,10 @@ public class ClassFinderImplTest {
     public void shouldFoundClassWhenBuilderSearchPatternFound() {
         // given
         PsiClass foundClass = mock(PsiClass.class);
-        when(foundClass.getName()).thenReturn(CLASS_NAME);
+        given(foundClass.getName()).willReturn(CLASS_NAME);
         PsiClass[] foundClassArray = {foundClass};
 
-        when(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).thenReturn(foundClassArray);
+        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).willReturn(foundClassArray);
 
         // when
         PsiClass result = classFinder.findClass(CLASS_NAME, project);
