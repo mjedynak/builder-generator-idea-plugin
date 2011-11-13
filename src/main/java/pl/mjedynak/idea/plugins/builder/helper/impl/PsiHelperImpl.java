@@ -16,9 +16,14 @@ import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
 public class PsiHelperImpl implements PsiHelper {
 
     @Override
+    public PsiFile getPsiFileFromEditor(Editor editor, Project project) {
+        return getPsiFile(editor, project);
+    }
+
+    @Override
     public PsiClass getPsiClassFromEditor(Editor editor, Project project) {
         PsiClass psiClass = null;
-        PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+        PsiFile psiFile = getPsiFile(editor, project);
         if (psiFile instanceof PsiClassOwner) {
             PsiClass[] classes = ((PsiClassOwner) psiFile).getClasses();
             if (classes.length == 1) {
@@ -26,6 +31,10 @@ public class PsiHelperImpl implements PsiHelper {
             }
         }
         return psiClass;
+    }
+
+    private PsiFile getPsiFile(Editor editor, Project project) {
+        return PsiUtilBase.getPsiFileInEditor(editor, project);
     }
 
     @Override

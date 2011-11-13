@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.displayer.impl;
+package pl.mjedynak.idea.plugins.builder.gui.displayer.impl;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopup;

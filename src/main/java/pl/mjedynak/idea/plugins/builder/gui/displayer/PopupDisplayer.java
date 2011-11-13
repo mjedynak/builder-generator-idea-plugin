@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.displayer;
+package pl.mjedynak.idea.plugins.builder.gui.displayer;
 
 
 import com.intellij.openapi.editor.Editor;

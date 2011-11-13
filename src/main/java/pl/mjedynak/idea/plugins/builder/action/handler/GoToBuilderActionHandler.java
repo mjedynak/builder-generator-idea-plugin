@@ -6,9 +6,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import pl.mjedynak.idea.plugins.builder.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
+import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
@@ -39,17 +39,17 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
         PsiClass psiClassFromEditor = psiHelper.getPsiClassFromEditor(editor, project);
         if (psiClassFromEditor != null) {
-            navigateOrDisplay(editor, psiClassFromEditor);
+            navigateOrDisplay(editor, psiClassFromEditor, dataContext);
         }
     }
 
-    private void navigateOrDisplay(Editor editor, PsiClass psiClassFromEditor) {
+    private void navigateOrDisplay(Editor editor, PsiClass psiClassFromEditor, DataContext dataContext) {
         boolean isBuilder = builderVerifier.isBuilder(psiClassFromEditor);
         PsiClass classToGo = findClassToGo(psiClassFromEditor, isBuilder);
         if (classToGo != null) {
             psiHelper.navigateToClass(classToGo);
         } else if (canDisplayPopup(isBuilder, classToGo)) {
-            displayPopup(editor);
+            displayPopup(editor, psiClassFromEditor, dataContext);
         }
     }
 
@@ -57,7 +57,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         return classToGo == null && !isBuilder;
     }
 
-    private void displayPopup(Editor editor) {
+    private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
         popupDisplayer.displayPopupChooser(editor, popupList, new Runnable() {
             @Override

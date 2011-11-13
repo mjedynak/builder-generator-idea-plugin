@@ -7,6 +7,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassOwner;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,8 @@ import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -48,7 +49,7 @@ public class PsiHelperImplTest {
         // given
         mockStatic(JavaPsiFacade.class);
         JavaPsiFacade javaPsiFacadeInstance = mock(JavaPsiFacade.class);
-        when(JavaPsiFacade.getInstance(project)).thenReturn(javaPsiFacadeInstance);
+        given(JavaPsiFacade.getInstance(project)).willReturn(javaPsiFacadeInstance);
 
         // when
         psiHelper.getPsiShortNamesCache(project);
@@ -62,7 +63,7 @@ public class PsiHelperImplTest {
         // given
         mockStatic(EditSourceUtil.class);
         Navigatable navigatable = mock(Navigatable.class);
-        when(EditSourceUtil.getDescriptor(psiClass)).thenReturn(navigatable);
+        given(EditSourceUtil.getDescriptor(psiClass)).willReturn(navigatable);
 
         // when
         psiHelper.navigateToClass(psiClass);
@@ -76,14 +77,29 @@ public class PsiHelperImplTest {
         // given
         mockStatic(PsiUtilBase.class);
         PsiClassOwner psiFile = mock(PsiClassOwner.class);
-        when(PsiUtilBase.getPsiFileInEditor(editor, project)).thenReturn(psiFile);
+        given(PsiUtilBase.getPsiFileInEditor(editor, project)).willReturn(psiFile);
         PsiClass[] classes = {psiClass};
-        when(psiFile.getClasses()).thenReturn(classes);
+        given(psiFile.getClasses()).willReturn(classes);
 
         // when
         PsiClass psiClassFromEditor = psiHelper.getPsiClassFromEditor(editor, project);
 
         // then
         assertThat(psiClassFromEditor, is(psiClass));
+    }
+
+
+    @Test
+    public void shouldGetPsiFileFromEditor() {
+        // given
+        mockStatic(PsiUtilBase.class);
+        PsiFile psiFile = mock(PsiClassOwner.class);
+        given(PsiUtilBase.getPsiFileInEditor(editor, project)).willReturn(psiFile);
+
+        // when
+        PsiFile result = psiHelper.getPsiFileFromEditor(editor, project);
+
+        // then
+        assertThat(result, is(psiFile));
     }
 }
