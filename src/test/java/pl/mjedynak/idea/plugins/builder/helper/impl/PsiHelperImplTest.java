@@ -1,13 +1,12 @@
 package pl.mjedynak.idea.plugins.builder.helper.impl;
 
 import com.intellij.ide.util.EditSourceUtil;
+import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassOwner;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class})
+@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -102,4 +101,23 @@ public class PsiHelperImplTest {
         // then
         assertThat(result, is(psiFile));
     }
+
+    @Test
+    public void shouldGetDirectoryFromModuleAndPackageName() {
+        // given
+        mockStatic(PackageUtil.class);
+        String packageName = "packageName";
+        Module module = mock(Module.class);
+        PsiDirectory baseDir = mock(PsiDirectory.class);
+        PsiDirectory psiDirectory = mock(PsiDirectory.class);
+        given(PackageUtil.findPossiblePackageDirectoryInModule(module, packageName)).willReturn(baseDir);
+        given(PackageUtil.findOrCreateDirectoryForPackage(module, packageName, baseDir, true)).willReturn(psiDirectory);
+
+        // when
+        PsiDirectory result = psiHelper.getDirectoryFromModuleAndPackageName(module, packageName);
+
+        // then
+        assertThat(result, is(psiDirectory));
+    }
+
 }

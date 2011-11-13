@@ -1,12 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.helper.impl;
 
+import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassOwner;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
@@ -40,6 +39,12 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public PsiShortNamesCache getPsiShortNamesCache(Project project) {
         return JavaPsiFacade.getInstance(project).getShortNamesCache();
+    }
+
+    @Override
+    public PsiDirectory getDirectoryFromModuleAndPackageName(Module module, String packageName) {
+        PsiDirectory baseDir = PackageUtil.findPossiblePackageDirectoryInModule(module, packageName);
+        return PackageUtil.findOrCreateDirectoryForPackage(module, packageName, baseDir, true);
     }
 
     @Override
