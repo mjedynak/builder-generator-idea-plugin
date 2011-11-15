@@ -46,12 +46,11 @@ public class CreateBuilderDialogTest {
     @Mock
     private ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton;
 
-    private String title;
     private String className;
 
     @Before
     public void setUp() {
-        title = "title";
+        String title = "title";
         className = "className";
         String packageName = "packageName";
         given(targetPackage.getQualifiedName()).willReturn(packageName);
