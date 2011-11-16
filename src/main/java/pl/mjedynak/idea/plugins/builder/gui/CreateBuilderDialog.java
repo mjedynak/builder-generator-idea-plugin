@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.gui;
 
-import com.intellij.CommonBundle;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,17 +8,14 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
-import com.intellij.refactoring.util.RefactoringMessageUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
-import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.factory.impl.PackageChooserDialogFactoryImpl;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
@@ -35,6 +31,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
 
     private PsiHelper psiHelper;
+    private GuiHelper guiHelper;
     private Project project;
     private Module module;
     private PsiDirectory targetDirectory;
@@ -47,10 +44,12 @@ public class CreateBuilderDialog extends DialogWrapper {
                                PsiPackage targetPackage,
                                Module targetModule,
                                PsiHelper psiHelper,
+                               GuiHelper guiHelper,
                                PsiManager psiManager,
                                ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
         super(project, true);
         this.psiHelper = psiHelper;
+        this.guiHelper = guiHelper;
         this.project = project;
         module = targetModule;
         targetClassNameField = new JTextField(targetClassName);
@@ -132,7 +131,8 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     protected void doOKAction() {
         RecentsManager.getInstance(project).registerRecentEntry(RECENTS_KEY, targetPackageField.getText());
-        CommandProcessor.getInstance().executeCommand(project, new OKActionRunnable(), CodeInsightBundle.message("create.directory.command"), null);
+        CommandProcessor.getInstance().executeCommand(
+                project, new OKActionRunnable(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName()), CodeInsightBundle.message("create.directory.command"), null);
         super.doOKAction();
     }
 
@@ -153,26 +153,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         return targetDirectory;
     }
 
-    private class OKActionRunnable implements Runnable {
-        @Override
-        public void run() {
-            final String[] errorString = new String[1];
-            try {
-                targetDirectory = psiHelper.getDirectoryFromModuleAndPackageName(module, getPackageName());
-                if (targetDirectory == null) {
-                    errorString[0] = ""; // message already reported by PackageUtil
-                    return;
-                }
-                errorString[0] = RefactoringMessageUtil.checkCanCreateClass(targetDirectory, getClassName());
-            } catch (IncorrectOperationException e) {
-                errorString[0] = e.getMessage();
-            }
-            if (errorString[0] != null) {
-                if (errorString[0].length() > 0) {
-                    Messages.showMessageDialog(project, errorString[0], CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-                }
-                return;
-            }
-        }
+    public void setTargetDirectory(PsiDirectory targetDirectory) {
+        this.targetDirectory = targetDirectory;
     }
 }

@@ -19,6 +19,7 @@ import javax.swing.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateBuilderDialogTest {
@@ -36,6 +37,9 @@ public class CreateBuilderDialogTest {
 
     @Mock
     private PsiHelper psiHelper;
+
+    @Mock
+    private GuiHelper guiHelper;
 
     @Mock
     private PsiManager psiManager;
@@ -57,7 +61,8 @@ public class CreateBuilderDialogTest {
         given(referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(
                 psiManager, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
 
-        createBuilderDialog = new CreateBuilderDialog(project, title, className, targetPackage, targetModule, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory);
+        createBuilderDialog = new CreateBuilderDialog(
+                project, title, className, targetPackage, targetModule, psiHelper, guiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory);
     }
 
 
@@ -87,6 +92,18 @@ public class CreateBuilderDialogTest {
 
         // then
         assertThat(result, is(nullValue()));
+    }
+
+    @Test
+    public void shouldSetTargetDirectory() {
+        // given
+        PsiDirectory targetDirectory = mock(PsiDirectory.class);
+
+        // when
+        createBuilderDialog.setTargetDirectory(targetDirectory);
+
+        // then
+        assertThat(createBuilderDialog.getTargetDirectory(), is(targetDirectory));
     }
 }
 
