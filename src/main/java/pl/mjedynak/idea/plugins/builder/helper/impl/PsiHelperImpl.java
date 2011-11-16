@@ -8,6 +8,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.refactoring.util.RefactoringMessageUtil;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 
 import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
@@ -55,5 +56,10 @@ public class PsiHelperImpl implements PsiHelper {
                 navigatable.navigate(true);
             }
         }
+    }
+
+    @Override
+    public String checkIfClassCanBeCreated(PsiDirectory targetDirectory, String className) {
+        return RefactoringMessageUtil.checkCanCreateClass(targetDirectory, className);
     }
 }

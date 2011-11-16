@@ -19,4 +19,6 @@ public interface PsiHelper {
     PsiDirectory getDirectoryFromModuleAndPackageName(Module module, String packageName);
 
     void navigateToClass(PsiClass psiClass);
+
+    String checkIfClassCanBeCreated(PsiDirectory targetDirectory, String className);
 }

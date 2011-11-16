@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.refactoring.util.RefactoringMessageUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,11 +21,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class})
+@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class, RefactoringMessageUtil.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -118,6 +118,21 @@ public class PsiHelperImplTest {
 
         // then
         assertThat(result, is(psiDirectory));
+    }
+
+    @Test
+    public void shouldDelegateCheckingIfClassCanBeCreatedToRefactoringMessageUtil() {
+        // given
+        mockStatic(RefactoringMessageUtil.class);
+
+        // when
+        PsiDirectory anyDirectory = mock(PsiDirectory.class);
+        String anyClassName = "anyClassName";
+        psiHelper.checkIfClassCanBeCreated(anyDirectory, anyClassName);
+
+        // then
+        verifyStatic();
+        RefactoringMessageUtil.checkCanCreateClass(anyDirectory, anyClassName);
     }
 
 }
