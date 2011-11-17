@@ -15,6 +15,7 @@ import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseBu
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 
 import javax.swing.*;
+import java.awt.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -104,6 +105,26 @@ public class CreateBuilderDialogTest {
 
         // then
         assertThat(createBuilderDialog.getTargetDirectory(), is(targetDirectory));
+    }
+
+    @Test
+    public void shouldCreateJPanelWithComponentsAndGridBagLayout() {
+        // when
+        JComponent centerPanel = createBuilderDialog.createCenterPanel();
+
+        // then
+        assertThat(centerPanel, is(instanceOf(JPanel.class)));
+        assertThat(centerPanel.getComponentCount() > 0,is(true));
+        assertThat(centerPanel.getLayout(), is(instanceOf(GridBagLayout.class)));
+    }
+
+    @Test
+    public void shouldCreateThreeActions() {
+        // when
+        Action[] actions = createBuilderDialog.createActions();
+
+        // then
+        assertThat(actions.length, is(3));
     }
 }
 
