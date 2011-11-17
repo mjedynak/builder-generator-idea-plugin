@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.PsiShortNamesCache;
 
@@ -21,4 +22,6 @@ public interface PsiHelper {
     void navigateToClass(PsiClass psiClass);
 
     String checkIfClassCanBeCreated(PsiDirectory targetDirectory, String className);
+
+    Module findModuleForPsiElement(PsiElement psiElement);
 }

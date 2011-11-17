@@ -4,6 +4,7 @@ import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
@@ -20,11 +21,13 @@ import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class, RefactoringMessageUtil.class})
+@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class, RefactoringMessageUtil.class, ModuleUtil.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -133,6 +136,21 @@ public class PsiHelperImplTest {
         // then
         verifyStatic();
         RefactoringMessageUtil.checkCanCreateClass(anyDirectory, anyClassName);
+    }
+
+    @Test
+    public void shouldDelegateFindingModuleForPsiElementToModuleUtil() {
+        // given
+        mockStatic(ModuleUtil.class);
+        Module module = mock(Module.class);
+        PsiElement psiElement = mock(PsiElement.class);
+        given(ModuleUtil.findModuleForPsiElement(psiElement)).willReturn(module);
+
+        // when
+        Module result = psiHelper.findModuleForPsiElement(psiElement);
+
+        // then
+        assertThat(result, is(module));
     }
 
 }

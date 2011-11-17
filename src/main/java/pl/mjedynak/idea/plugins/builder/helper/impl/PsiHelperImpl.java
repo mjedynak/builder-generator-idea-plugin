@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.helper.impl;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
@@ -61,5 +62,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public String checkIfClassCanBeCreated(PsiDirectory targetDirectory, String className) {
         return RefactoringMessageUtil.checkCanCreateClass(targetDirectory, className);
+    }
+
+    @Override
+    public Module findModuleForPsiElement(PsiElement psiElement) {
+        return ModuleUtil.findModuleForPsiElement(psiElement);
     }
 }
