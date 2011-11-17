@@ -3,10 +3,7 @@ package pl.mjedynak.idea.plugins.builder.helper;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 
 public interface PsiHelper {
@@ -24,4 +21,6 @@ public interface PsiHelper {
     String checkIfClassCanBeCreated(PsiDirectory targetDirectory, String className);
 
     Module findModuleForPsiElement(PsiElement psiElement);
+
+    PsiPackage getPackage(PsiDirectory psiDirectory);
 }
