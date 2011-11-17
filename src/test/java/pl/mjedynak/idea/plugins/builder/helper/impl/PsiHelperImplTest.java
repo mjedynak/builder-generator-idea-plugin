@@ -27,7 +27,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class, RefactoringMessageUtil.class, ModuleUtil.class})
+@PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
+        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -151,6 +152,23 @@ public class PsiHelperImplTest {
 
         // then
         assertThat(result, is(module));
+    }
+
+    @Test
+    public void shouldDelegateGettingPsiPackageToJavaDirectoryService() {
+        // given
+        mockStatic(JavaDirectoryService.class);
+        PsiPackage psiPackage = mock(PsiPackage.class);
+        PsiDirectory psiDirectory = mock(PsiDirectory.class);
+        JavaDirectoryService javaDirectoryService = mock(JavaDirectoryService.class);
+        given(JavaDirectoryService.getInstance()).willReturn(javaDirectoryService);
+        given(javaDirectoryService.getPackage(psiDirectory)).willReturn(psiPackage);
+
+        // when
+        PsiPackage result = psiHelper.getPackage(psiDirectory);
+
+        // then
+        assertThat(result, is(psiPackage));
     }
 
 }

@@ -68,4 +68,9 @@ public class PsiHelperImpl implements PsiHelper {
     public Module findModuleForPsiElement(PsiElement psiElement) {
         return ModuleUtil.findModuleForPsiElement(psiElement);
     }
+
+    @Override
+    public PsiPackage getPackage(PsiDirectory psiDirectory) {
+        return JavaDirectoryService.getInstance().getPackage(psiDirectory);
+    }
 }
