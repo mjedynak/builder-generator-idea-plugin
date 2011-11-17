@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
@@ -26,12 +27,16 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private PopupListFactory popupListFactory;
 
-    public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer, PopupListFactory popupListFactory) {
+    private PsiManagerFactory psiManagerFactory;
+
+    public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder,
+                                    PopupDisplayer popupDisplayer, PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
         this.popupDisplayer = popupDisplayer;
         this.popupListFactory = popupListFactory;
+        this.psiManagerFactory = psiManagerFactory;
     }
 
     @Override
@@ -57,13 +62,11 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         return classToGo == null && !isBuilder;
     }
 
+
     private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
-        popupDisplayer.displayPopupChooser(editor, popupList, new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
+        popupDisplayer.displayPopupChooser(editor, popupList,
+                new DisplayChoosersRunnable(psiClassFromEditor, dataContext, editor, psiHelper, psiManagerFactory));
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {
