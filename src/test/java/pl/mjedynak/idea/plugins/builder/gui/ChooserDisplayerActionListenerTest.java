@@ -55,7 +55,5 @@ public class ChooserDisplayerActionListenerTest {
         verify(chooser).selectPackage(text);
         verify(chooser).show();
         verify(comboWithBrowseButton).setText(name);
-
     }
-
 }

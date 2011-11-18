@@ -17,9 +17,12 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.util.IncorrectOperationException;
+import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.factory.impl.ReferenceEditorComboWithBrowseButtonFactoryImpl;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
+import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.gui.impl.GuiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 
@@ -29,30 +32,32 @@ import java.util.List;
 
 public class DisplayChoosersRunnable implements Runnable {
 
+    private static final String BUILDER_SUFFIX = "Builder";
     private PsiClass psiClassFromEditor;
-    private DataContext dataContext;
+    private Project project;
     private Editor editor;
     private PsiHelper psiHelper;
     private PsiManagerFactory psiManagerFactory;
+    private CreateBuilderDialogFactory createBuilderDialogFactory;
+    private GuiHelper guiHelper;
+    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
 
-    public DisplayChoosersRunnable(PsiClass psiClassFromEditor, DataContext dataContext, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory) {
+    public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
+                                   CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
+                                   ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
         this.psiClassFromEditor = psiClassFromEditor;
-        this.dataContext = dataContext;
+        this.project = project;
         this.editor = editor;
         this.psiHelper = psiHelper;
         this.psiManagerFactory = psiManagerFactory;
+        this.createBuilderDialogFactory = createBuilderDialogFactory;
+        this.guiHelper = guiHelper;
+        this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
     }
 
     @Override
     public void run() {
-        final Module srcModule = psiHelper.findModuleForPsiElement(psiClassFromEditor);
-        final Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
-        PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
-        PsiPackage srcPackage = psiHelper.getPackage(srcDir);
-        final CreateBuilderDialog dialog
-                = new CreateBuilderDialog(project, "CreateBuilder", psiClassFromEditor.getName() + "Builder", srcPackage, srcModule, psiHelper, new GuiHelperImpl(),
-                psiManagerFactory.getPsiManager(project), new ReferenceEditorComboWithBrowseButtonFactoryImpl());
-        dialog.show();
+        final CreateBuilderDialog dialog = showDialog();
         if (!dialog.isOK()) {
             return;
         }
@@ -95,6 +100,18 @@ public class DisplayChoosersRunnable implements Runnable {
                 });
             }
         }, "Create Builder", this);
+    }
+
+    private CreateBuilderDialog showDialog() {
+        final Module srcModule = psiHelper.findModuleForPsiElement(psiClassFromEditor);
+        PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
+        PsiPackage srcPackage = psiHelper.getPackage(srcDir);
+        PsiManager psiManager = psiManagerFactory.getPsiManager(project);
+        final CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor.getName() + BUILDER_SUFFIX, project,
+                srcPackage, srcModule, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper);
+
+        dialog.show();
+        return dialog;
     }
 
     private PsiElementClassMember[] getAllAccessibleFieldsInHierarchyToDisplay(

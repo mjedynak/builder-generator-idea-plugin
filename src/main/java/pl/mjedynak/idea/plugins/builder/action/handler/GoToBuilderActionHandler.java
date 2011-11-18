@@ -6,9 +6,13 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
+import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
+import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
@@ -29,14 +33,26 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private PsiManagerFactory psiManagerFactory;
 
-    public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder,
-                                    PopupDisplayer popupDisplayer, PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory) {
+    private CreateBuilderDialogFactory createBuilderDialogFactory;
+
+    private GuiHelper guiHelper;
+
+    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+
+    public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
+                                    PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
+                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
+                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
         this.popupDisplayer = popupDisplayer;
         this.popupListFactory = popupListFactory;
         this.psiManagerFactory = psiManagerFactory;
+        this.createBuilderDialogFactory = createBuilderDialogFactory;
+        this.guiHelper = guiHelper;
+        this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
+
     }
 
     @Override
@@ -65,8 +81,10 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
+        Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
         popupDisplayer.displayPopupChooser(editor, popupList,
-                new DisplayChoosersRunnable(psiClassFromEditor, dataContext, editor, psiHelper, psiManagerFactory));
+                new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
+                        createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory));
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {
