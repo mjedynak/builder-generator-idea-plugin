@@ -128,12 +128,8 @@ public class CreateBuilderDialog extends DialogWrapper {
     }
 
     private void addInnerPanel(JPanel panel, GridBagConstraints gbConstraints) {
-        try {
-            JPanel innerPanel = createInnerPanel();
-            panel.add(innerPanel, gbConstraints);
-        } catch (NullPointerException e) { // thrown in test invoked by gradle
-            e.printStackTrace();
-        }
+        JPanel innerPanel = createInnerPanel();
+        panel.add(innerPanel, gbConstraints);
     }
 
     private JPanel createInnerPanel() {
