@@ -6,7 +6,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
-import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public interface CreateBuilderDialogFactory {
 

@@ -8,8 +8,7 @@ import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
-import pl.mjedynak.idea.plugins.builder.gui.impl.GuiHelperImpl;
-import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactory {
 

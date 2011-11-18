@@ -14,7 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
-import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
 import javax.swing.*;

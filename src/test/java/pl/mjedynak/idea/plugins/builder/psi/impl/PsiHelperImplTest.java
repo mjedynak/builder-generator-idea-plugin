@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.helper.impl;
+package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

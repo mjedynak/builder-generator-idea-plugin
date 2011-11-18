@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.helper.impl;
+package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.editor.Editor;
@@ -10,7 +10,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RefactoringMessageUtil;
-import pl.mjedynak.idea.plugins.builder.helper.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
 

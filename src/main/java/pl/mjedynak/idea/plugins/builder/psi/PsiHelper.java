@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.helper;
+package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
