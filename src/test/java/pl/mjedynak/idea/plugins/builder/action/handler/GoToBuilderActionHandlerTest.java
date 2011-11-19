@@ -11,9 +11,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
+import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
@@ -106,7 +106,7 @@ public class GoToBuilderActionHandlerTest {
         goToBuilderActionHandler.execute(editor, dataContext);
 
         // then
-        verify(popupDisplayer).displayPopupChooser(eq(editor), eq(list), any(Runnable.class));
+        verify(popupDisplayer).displayPopupChooser(eq(editor), eq(list), any(DisplayChoosersRunnable.class));
     }
 
     @Test
