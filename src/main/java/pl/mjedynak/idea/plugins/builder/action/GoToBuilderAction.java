@@ -7,6 +7,7 @@ import pl.mjedynak.idea.plugins.builder.finder.impl.BuilderFinderImpl;
 import pl.mjedynak.idea.plugins.builder.finder.impl.ClassFinderImpl;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.impl.PopupDisplayerImpl;
 import pl.mjedynak.idea.plugins.builder.gui.impl.GuiHelperImpl;
+import pl.mjedynak.idea.plugins.builder.psi.impl.PsiFieldSelectorImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.verifier.impl.BuilderVerifierImpl;
 
@@ -23,6 +24,7 @@ public class GoToBuilderAction extends EditorAction {
                 new PsiManagerFactoryImpl(),
                 new CreateBuilderDialogFactoryImpl(),
                 new GuiHelperImpl(),
-                new ReferenceEditorComboWithBrowseButtonFactoryImpl()));
+                new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
+                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl())));
     }
 }

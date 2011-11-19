@@ -2,7 +2,6 @@ package pl.mjedynak.idea.plugins.builder.action.handler;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
-import com.intellij.codeInsight.generation.PsiFieldMember;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -20,9 +19,9 @@ import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,10 +36,12 @@ public class DisplayChoosersRunnable implements Runnable {
     private CreateBuilderDialogFactory createBuilderDialogFactory;
     private GuiHelper guiHelper;
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+    private PsiFieldSelector psiFieldSelector;
 
     public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
-                                   ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
+                                   ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
+                                   PsiFieldSelector psiFieldSelector) {
         this.psiClassFromEditor = psiClassFromEditor;
         this.project = project;
         this.editor = editor;
@@ -49,6 +50,7 @@ public class DisplayChoosersRunnable implements Runnable {
         this.createBuilderDialogFactory = createBuilderDialogFactory;
         this.guiHelper = guiHelper;
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
+        this.psiFieldSelector = psiFieldSelector;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class DisplayChoosersRunnable implements Runnable {
         if (!dialog.isOK()) {
             return;
         }
-        PsiElementClassMember[] fieldsToDisplay = getAllAccessibleFieldsInHierarchyToDisplay(psiClassFromEditor);
+        PsiElementClassMember[] fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
 
         final MemberChooser<PsiElementClassMember> memberMemberChooserDialog = new MemberChooser<PsiElementClassMember>(fieldsToDisplay, false, true, project, false);
         memberMemberChooserDialog.setCopyJavadocVisible(false);
@@ -110,17 +112,12 @@ public class DisplayChoosersRunnable implements Runnable {
         return dialog;
     }
 
-    private PsiElementClassMember[] getAllAccessibleFieldsInHierarchyToDisplay(
+    private PsiElementClassMember[] getFieldsToIncludeInBuilder(
             PsiClass clazz) {
         List<PsiField> localFields = Arrays.asList(clazz.getAllFields());
-        List<PsiElementClassMember> psiElementClassMembers = new ArrayList<PsiElementClassMember>();
-
-        for (PsiField localField : localFields) {
-            psiElementClassMembers.add(new PsiFieldMember(localField));
-        }
-
+        List<PsiElementClassMember> fieldsToInclude = psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
         PsiElementClassMember[] array = new PsiElementClassMember[0];
-        return psiElementClassMembers.toArray(array);
+        return fieldsToInclude.toArray(array);
     }
 
 }

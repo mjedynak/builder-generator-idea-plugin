@@ -35,7 +35,6 @@ dependencies {
     testCompile 'org.springframework:spring-test:3.0.6.RELEASE'
     testCompile 'org.springframework:spring-core:3.0.6.RELEASE'
 
-
     emma "emma:emma:2.0.5312"
     emma "emma:emma_ant:2.0.5312"
 }

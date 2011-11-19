@@ -13,6 +13,7 @@ import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseBu
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
+import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
@@ -38,10 +39,13 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
 
+    private PsiFieldSelector psiFieldSelector;
+
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
                                     PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
                                     CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
-                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
+                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
+                                    PsiFieldSelector psiFieldSelector) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
@@ -51,6 +55,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         this.createBuilderDialogFactory = createBuilderDialogFactory;
         this.guiHelper = guiHelper;
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
+        this.psiFieldSelector = psiFieldSelector;
 
     }
 
@@ -83,7 +88,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
         popupDisplayer.displayPopupChooser(editor, popupList,
                 new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
-                        createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory));
+                        createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector));
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {
