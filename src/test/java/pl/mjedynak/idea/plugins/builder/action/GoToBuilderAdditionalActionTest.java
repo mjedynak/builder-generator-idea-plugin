@@ -34,4 +34,10 @@ public class GoToBuilderAdditionalActionTest {
         // then
         assertThat(result, is(GoToBuilderAdditionalAction.ICON));
     }
+
+    @Test
+    public void shouldDoNothingInWhenInvokingExecute() {
+        // when
+        action.execute();
+    }
 }
