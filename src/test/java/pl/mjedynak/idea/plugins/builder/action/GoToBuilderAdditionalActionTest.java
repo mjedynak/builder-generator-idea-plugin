@@ -36,7 +36,7 @@ public class GoToBuilderAdditionalActionTest {
     }
 
     @Test
-    public void shouldDoNothingInWhenInvokingExecute() {
+    public void shouldDoNothingWhenInvokingExecute() {
         // when
         action.execute();
     }
