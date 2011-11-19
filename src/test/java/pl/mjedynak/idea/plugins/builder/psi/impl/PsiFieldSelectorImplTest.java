@@ -70,20 +70,6 @@ public class PsiFieldSelectorImplTest {
     }
 
     @Test
-    public void shouldIgnorePrivateFields() {
-        // given
-        given(incorrectPsiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.PRIVATE_MODIFIER)).willReturn(true);
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
-                Arrays.asList(correctPsiFieldWithModifierList, correctPsiFieldWithoutModifierList, incorrectPsiField));
-
-        // then
-        assertThat(result, is(notNullValue()));
-        assertThat(result.size(), is(2));
-    }
-
-    @Test
     public void shouldIgnoreEnumConstants() {
         // given
         incorrectPsiField = new PsiEnumConstantImpl(mock(PsiFieldStub.class));
@@ -95,6 +81,5 @@ public class PsiFieldSelectorImplTest {
         // then
         assertThat(result, is(notNullValue()));
         assertThat(result.size(), is(2));
-
     }
 }

@@ -45,17 +45,12 @@ public class PsiFieldSelectorImpl implements PsiFieldSelector {
         if (hasNoModifierList(modifierList)) {
             return isNotEnumConstant(psiField);
         } else {
-            return isNotFinal(modifierList) && isNotPrivate(modifierList);
+            return isNotFinal(modifierList);
         }
     }
 
     private boolean isNotEnumConstant(PsiField psiField) {
         return !(psiField instanceof PsiEnumConstant);
-    }
-
-
-    private boolean isNotPrivate(PsiModifierList modifierList) {
-        return !modifierList.hasExplicitModifier(PRIVATE_MODIFIER);
     }
 
     private boolean isNotFinal(PsiModifierList modifierList) {
