@@ -19,7 +19,7 @@ import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
-import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -58,14 +58,17 @@ public class DisplayChoosersRunnable implements Runnable {
 
     @Override
     public void run() {
-        final CreateBuilderDialog dialog = showDialog();
-        if (!dialog.isOK()) {
+        final CreateBuilderDialog createBuilderDialog = showDialog();
+        if (!createBuilderDialog.isOK()) {
             return;
         }
+        final PsiDirectory targetDirectory = createBuilderDialog.getTargetDirectory();
+        final String className = createBuilderDialog.getClassName();
+
         List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
         final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
         memberChooserDialog.show();
-        memberChooserDialog.getSelectedElements();
+        List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
 
 
         CommandProcessor.getInstance().executeCommand(project, new Runnable() {
@@ -77,14 +80,14 @@ public class DisplayChoosersRunnable implements Runnable {
                             public PsiElement compute() {
                                 try {
                                     IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
-                                    PsiClass targetClass = JavaDirectoryService.getInstance().createClass(dialog.getTargetDirectory(), dialog.getClassName());
+                                    PsiClass targetClass = JavaDirectoryService.getInstance().createClass(targetDirectory, className);
 //                                            Editor editor = CodeInsightUtil.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
                                     return targetClass;
                                 } catch (IncorrectOperationException e) {
                                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                                         public void run() {
                                             Messages.showErrorDialog(project,
-                                                    CodeInsightBundle.message("intention.error.cannot.create.class.message", dialog.getClassName()),
+                                                    CodeInsightBundle.message("intention.error.cannot.create.class.message", className),
                                                     CodeInsightBundle.message("intention.error.cannot.create.class.title"));
                                         }
                                     });

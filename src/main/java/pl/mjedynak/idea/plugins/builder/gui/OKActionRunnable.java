@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.util.IncorrectOperationException;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class OKActionRunnable implements Runnable {

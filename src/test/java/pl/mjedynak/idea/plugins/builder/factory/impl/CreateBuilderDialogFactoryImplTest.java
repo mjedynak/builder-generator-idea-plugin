@@ -14,7 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
-import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -1,8 +1,8 @@
-package pl.mjedynak.idea.plugins.builder.gui.impl;
+package pl.mjedynak.idea.plugins.builder.gui.helper.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.gui.impl;
+package pl.mjedynak.idea.plugins.builder.gui.helper.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import pl.mjedynak.idea.plugins.builder.gui.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 
 import javax.swing.*;
 

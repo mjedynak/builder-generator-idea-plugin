@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.gui;
+package pl.mjedynak.idea.plugins.builder.gui.helper;
 
 import com.intellij.openapi.project.Project;
 
