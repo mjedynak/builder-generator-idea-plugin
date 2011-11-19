@@ -61,14 +61,14 @@ public class DisplayChoosersRunnable implements Runnable {
         }
         PsiElementClassMember[] fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
 
-        final MemberChooser<PsiElementClassMember> memberMemberChooserDialog = new MemberChooser<PsiElementClassMember>(fieldsToDisplay, false, true, project, false);
-        memberMemberChooserDialog.setCopyJavadocVisible(false);
-        memberMemberChooserDialog.selectElements(fieldsToDisplay);
-        memberMemberChooserDialog.setTitle("Select fields to be available in builder");
-        memberMemberChooserDialog.show();
+        final MemberChooser<PsiElementClassMember> memberChooserDialog = new MemberChooser<PsiElementClassMember>(fieldsToDisplay, false, true, project, false);
+        memberChooserDialog.setCopyJavadocVisible(false);
+        memberChooserDialog.selectElements(fieldsToDisplay);
+        memberChooserDialog.setTitle("Select fields to be available in builder");
+        memberChooserDialog.show();
+        memberChooserDialog.getSelectedElements();
 
 
-        memberMemberChooserDialog.getSelectedElements();
 
         CommandProcessor.getInstance().executeCommand(project, new Runnable() {
             @Override
