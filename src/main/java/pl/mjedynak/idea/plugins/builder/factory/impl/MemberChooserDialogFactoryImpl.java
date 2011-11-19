@@ -10,9 +10,8 @@ import java.util.List;
 public class MemberChooserDialogFactoryImpl implements MemberChooserDialogFactory {
     public static final String TITLE = "Select fields to be available in builder";
 
-    public MemberChooser getMemberChooserDialog(List<PsiElementClassMember> elements, Project project) {
-        PsiElementClassMember[] array = new PsiElementClassMember[0];
-        PsiElementClassMember[] psiElementClassMembers = elements.toArray(array);
+    public MemberChooser<PsiElementClassMember> getMemberChooserDialog(List<PsiElementClassMember> elements, Project project) {
+        PsiElementClassMember[] psiElementClassMembers = elements.toArray(new PsiElementClassMember[0]);
         MemberChooser<PsiElementClassMember> memberChooserDialog = new MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
         memberChooserDialog.setCopyJavadocVisible(false);
         memberChooserDialog.selectElements(psiElementClassMembers);

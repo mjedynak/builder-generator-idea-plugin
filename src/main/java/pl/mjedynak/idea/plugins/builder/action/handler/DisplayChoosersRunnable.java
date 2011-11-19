@@ -15,6 +15,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
@@ -37,11 +38,12 @@ public class DisplayChoosersRunnable implements Runnable {
     private GuiHelper guiHelper;
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
     private PsiFieldSelector psiFieldSelector;
+    private MemberChooserDialogFactory memberChooserDialogFactory;
 
     public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
-                                   PsiFieldSelector psiFieldSelector) {
+                                   PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory) {
         this.psiClassFromEditor = psiClassFromEditor;
         this.project = project;
         this.editor = editor;
@@ -51,6 +53,7 @@ public class DisplayChoosersRunnable implements Runnable {
         this.guiHelper = guiHelper;
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
         this.psiFieldSelector = psiFieldSelector;
+        this.memberChooserDialogFactory = memberChooserDialogFactory;
     }
 
     @Override
@@ -59,15 +62,10 @@ public class DisplayChoosersRunnable implements Runnable {
         if (!dialog.isOK()) {
             return;
         }
-        PsiElementClassMember[] fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
-
-        final MemberChooser<PsiElementClassMember> memberChooserDialog = new MemberChooser<PsiElementClassMember>(fieldsToDisplay, false, true, project, false);
-        memberChooserDialog.setCopyJavadocVisible(false);
-        memberChooserDialog.selectElements(fieldsToDisplay);
-        memberChooserDialog.setTitle("Select fields to be available in builder");
+        List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
+        final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
         memberChooserDialog.show();
         memberChooserDialog.getSelectedElements();
-
 
 
         CommandProcessor.getInstance().executeCommand(project, new Runnable() {
@@ -112,12 +110,10 @@ public class DisplayChoosersRunnable implements Runnable {
         return dialog;
     }
 
-    private PsiElementClassMember[] getFieldsToIncludeInBuilder(
-            PsiClass clazz) {
+    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz) {
         List<PsiField> localFields = Arrays.asList(clazz.getAllFields());
         List<PsiElementClassMember> fieldsToInclude = psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
-        PsiElementClassMember[] array = new PsiElementClassMember[0];
-        return fieldsToInclude.toArray(array);
+        return fieldsToInclude;
     }
 
 }

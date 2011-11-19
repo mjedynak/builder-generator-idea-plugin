@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface MemberChooserDialogFactory {
 
-    MemberChooser getMemberChooserDialog(List<PsiElementClassMember> elements, Project project);
+    MemberChooser<PsiElementClassMember> getMemberChooserDialog(List<PsiElementClassMember> elements, Project project);
 }

@@ -25,6 +25,7 @@ public class GoToBuilderAction extends EditorAction {
                 new CreateBuilderDialogFactoryImpl(),
                 new GuiHelperImpl(),
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
-                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl())));
+                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
+                new MemberChooserDialogFactoryImpl()));
     }
 }
