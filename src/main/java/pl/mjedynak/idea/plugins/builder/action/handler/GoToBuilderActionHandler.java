@@ -13,6 +13,7 @@ import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
+import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import javax.swing.*;
 
@@ -40,11 +41,14 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private MemberChooserDialogFactory memberChooserDialogFactory;
 
+    private BuilderWriter builderWriter;
+
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
                                     PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
                                     CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                     ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
-                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory) {
+                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
+                                    BuilderWriter builderWriter) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
@@ -56,6 +60,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
         this.psiFieldSelector = psiFieldSelector;
         this.memberChooserDialogFactory = memberChooserDialogFactory;
+        this.builderWriter = builderWriter;
 
     }
 
@@ -89,7 +94,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         popupDisplayer.displayPopupChooser(editor, popupList,
                 new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
                         createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector,
-                        memberChooserDialogFactory));
+                        memberChooserDialogFactory, builderWriter));
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {

@@ -10,6 +10,7 @@ import pl.mjedynak.idea.plugins.builder.gui.helper.impl.GuiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiFieldSelectorImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.verifier.impl.BuilderVerifierImpl;
+import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 
 
 public class GoToBuilderAction extends EditorAction {
@@ -26,6 +27,7 @@ public class GoToBuilderAction extends EditorAction {
                 new GuiHelperImpl(),
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
                 new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
-                new MemberChooserDialogFactoryImpl()));
+                new MemberChooserDialogFactoryImpl(),
+                new BuilderWriterImpl()));
     }
 }

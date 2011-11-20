@@ -1,19 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
-import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.ide.util.MemberChooser;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Computable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
@@ -22,13 +14,15 @@ import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DisplayChoosersRunnable implements Runnable {
 
-    private static final String BUILDER_SUFFIX = "Builder";
+    static final String BUILDER_SUFFIX = "Builder";
+
     private PsiClass psiClassFromEditor;
     private Project project;
     private Editor editor;
@@ -39,11 +33,13 @@ public class DisplayChoosersRunnable implements Runnable {
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
     private PsiFieldSelector psiFieldSelector;
     private MemberChooserDialogFactory memberChooserDialogFactory;
+    private BuilderWriter builderWriter;
 
     public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
-                                   PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory) {
+                                   PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
+                                   BuilderWriter builderWriter) {
         this.psiClassFromEditor = psiClassFromEditor;
         this.project = project;
         this.editor = editor;
@@ -54,6 +50,7 @@ public class DisplayChoosersRunnable implements Runnable {
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
         this.psiFieldSelector = psiFieldSelector;
         this.memberChooserDialogFactory = memberChooserDialogFactory;
+        this.builderWriter = builderWriter;
     }
 
     @Override
@@ -69,36 +66,7 @@ public class DisplayChoosersRunnable implements Runnable {
         final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
         memberChooserDialog.show();
         List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
-
-
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-            @Override
-            public void run() {
-                PostprocessReformattingAspect.getInstance(project).postponeFormattingInside(new Computable<PsiElement>() {
-                    public PsiElement compute() {
-                        return ApplicationManager.getApplication().runWriteAction(new Computable<PsiElement>() {
-                            public PsiElement compute() {
-                                try {
-                                    IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
-                                    PsiClass targetClass = JavaDirectoryService.getInstance().createClass(targetDirectory, className);
-//                                            Editor editor = CodeInsightUtil.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
-                                    return targetClass;
-                                } catch (IncorrectOperationException e) {
-                                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                        public void run() {
-                                            Messages.showErrorDialog(project,
-                                                    CodeInsightBundle.message("intention.error.cannot.create.class.message", className),
-                                                    CodeInsightBundle.message("intention.error.cannot.create.class.title"));
-                                        }
-                                    });
-                                    return null;
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        }, "Create Builder", this);
+        builderWriter.writeBuilder(project, selectedElements, targetDirectory, className);
     }
 
     private CreateBuilderDialog showDialog() {
