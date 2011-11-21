@@ -113,6 +113,6 @@ public class DisplayChoosersRunnableTest {
         // then
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(project, selectedFields, psiDirectory, className);
+        verify(builderWriter).writeBuilder(project, selectedFields, psiDirectory, className, psiClassFromEditor);
     }
 }

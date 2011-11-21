@@ -66,7 +66,7 @@ public class DisplayChoosersRunnable implements Runnable {
         final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
         memberChooserDialog.show();
         List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
-        builderWriter.writeBuilder(project, selectedElements, targetDirectory, className);
+        builderWriter.writeBuilder(project, selectedElements, targetDirectory, className, psiClassFromEditor);
     }
 
     private CreateBuilderDialog showDialog() {
