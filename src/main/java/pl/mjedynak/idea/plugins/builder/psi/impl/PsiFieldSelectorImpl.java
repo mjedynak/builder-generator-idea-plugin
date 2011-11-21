@@ -46,7 +46,7 @@ public class PsiFieldSelectorImpl implements PsiFieldSelector {
         PsiClass containingClass = psiField.getContainingClass();
         boolean result = false;
         for (PsiMethod method : containingClass.getAllMethods()) {
-            if (methodIsNotPrivate(method) && methodIsSetter(psiField, method)) {
+            if (methodIsNotPrivate(method) && methodIsSetterWithProperName(psiField, method)) {
                 result = true;
                 break;
             }
@@ -60,7 +60,7 @@ public class PsiFieldSelectorImpl implements PsiFieldSelector {
     }
 
 
-    private boolean methodIsSetter(PsiField psiField, PsiMethod method) {
+    private boolean methodIsSetterWithProperName(PsiField psiField, PsiMethod method) {
         return method.getName().equals(SET_PREFIX + WordUtils.capitalize(psiField.getName()));
     }
 

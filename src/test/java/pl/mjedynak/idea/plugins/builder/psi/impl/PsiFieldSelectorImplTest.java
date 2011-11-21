@@ -61,13 +61,27 @@ public class PsiFieldSelectorImplTest {
     }
 
     @Test
-    public void shouldTakeFieldWithProperSetMethods() {
+    public void shouldTakeFieldWithProperSetMethodsWhenModifierListIsNotPrivate() {
         // given
         given(correctPsiFieldWithSetMethod.getContainingClass()).willReturn(psiClass);
         given(psiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.PRIVATE_MODIFIER)).willReturn(false);
-        String fieldName = "name";
-        given(correctPsiFieldWithSetMethod.getName()).willReturn(fieldName);
-        given(setMethod.getName()).willReturn("setName");
+        prepareMockForReturningCorrectName();
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
+                Arrays.asList(correctPsiFieldWithSetMethod));
+
+        // then
+        assertThat(result, is(notNullValue()));
+        assertThat(result.size(), is(1));
+    }
+
+    @Test
+    public void shouldTakeFieldWithProperSetMethodsWhenModifierListDoesNotExist() {
+        // given
+        given(correctPsiFieldWithSetMethod.getContainingClass()).willReturn(psiClass);
+        given(setMethod.getModifierList()).willReturn(psiModifierList);
+        prepareMockForReturningCorrectName();
 
         // when
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
@@ -109,6 +123,12 @@ public class PsiFieldSelectorImplTest {
         // then
         assertThat(result, is(notNullValue()));
         assertThat(result.size(), is(0));
+    }
+
+    private void prepareMockForReturningCorrectName() {
+        String fieldName = "name";
+        given(correctPsiFieldWithSetMethod.getName()).willReturn(fieldName);
+        given(setMethod.getName()).willReturn("setName");
     }
 
 
