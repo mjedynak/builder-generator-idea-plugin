@@ -1,10 +1,10 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.impl.java.stubs.PsiFieldStub;
-import com.intellij.psi.impl.source.PsiEnumConstantImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,53 +33,83 @@ public class PsiFieldSelectorImplTest {
     private PsiElementClassMemberFactory psiElementClassMemberFactory;
 
     @Mock
-    private PsiField correctPsiFieldWithModifierList;
+    private PsiField correctPsiFieldWithSetMethod;
 
     @Mock
-    private PsiField correctPsiFieldWithoutModifierList;
+    private PsiField incorrectPsiFieldWithoutSetMethod;
 
     @Mock
-    private PsiField incorrectPsiField;
+    private PsiField incorrectPsiFieldWithoutPrivateSetMethod;
+
 
     @Mock
-    private PsiModifierList correctPsiModifierList;
+    private PsiClass psiClass;
 
     @Mock
-    private PsiModifierList incorrectPsiModifierList;
+    private PsiMethod setMethod;
+
+    @Mock
+    private PsiModifierList psiModifierList;
+
 
     @Before
     public void setUp() {
-        given(correctPsiFieldWithModifierList.getModifierList()).willReturn(correctPsiModifierList);
-        given(correctPsiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.FINAL_MODIFIER)).willReturn(false);
-        given(incorrectPsiField.getModifierList()).willReturn(incorrectPsiModifierList);
+        PsiMethod[] methodsArray = {setMethod};
+        given(psiClass.getAllMethods()).willReturn(methodsArray);
+        given(setMethod.getModifierList()).willReturn(psiModifierList);
         given(psiElementClassMemberFactory.createPsiElementClassMember(any(PsiField.class))).willReturn(mock(PsiElementClassMember.class));
     }
 
     @Test
-    public void shouldIgnoreFinalFields() {
+    public void shouldTakeFieldWithProperSetMethods() {
         // given
-        given(incorrectPsiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.FINAL_MODIFIER)).willReturn(true);
+        given(correctPsiFieldWithSetMethod.getContainingClass()).willReturn(psiClass);
+        given(psiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.PRIVATE_MODIFIER)).willReturn(false);
+        String fieldName = "name";
+        given(correctPsiFieldWithSetMethod.getName()).willReturn(fieldName);
+        given(setMethod.getName()).willReturn("setName");
 
         // when
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
-                Arrays.asList(correctPsiFieldWithModifierList, correctPsiFieldWithoutModifierList, incorrectPsiField));
+                Arrays.asList(correctPsiFieldWithSetMethod));
 
         // then
         assertThat(result, is(notNullValue()));
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(1));
     }
 
     @Test
-    public void shouldIgnoreEnumConstants() {
+    public void shouldNotTakeFieldWithPrivateSetMethods() {
         // given
-        incorrectPsiField = new PsiEnumConstantImpl(mock(PsiFieldStub.class));
+        given(incorrectPsiFieldWithoutPrivateSetMethod.getContainingClass()).willReturn(psiClass);
+        given(psiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.PRIVATE_MODIFIER)).willReturn(true);
 
         // when
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
-                Arrays.asList(correctPsiFieldWithModifierList, correctPsiFieldWithoutModifierList, incorrectPsiField));
+                Arrays.asList(incorrectPsiFieldWithoutPrivateSetMethod));
 
         // then
         assertThat(result, is(notNullValue()));
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(0));
     }
+
+    @Test
+    public void shouldNotTakeFieldWithSetMethodWithIncorrectName() {
+        // given
+        given(correctPsiFieldWithSetMethod.getContainingClass()).willReturn(psiClass);
+        given(psiModifierList.hasExplicitModifier(PsiFieldSelectorImpl.PRIVATE_MODIFIER)).willReturn(false);
+        String fieldName = "name";
+        given(correctPsiFieldWithSetMethod.getName()).willReturn(fieldName);
+        given(setMethod.getName()).willReturn("setAge");
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(
+                Arrays.asList(correctPsiFieldWithSetMethod));
+
+        // then
+        assertThat(result, is(notNullValue()));
+        assertThat(result.size(), is(0));
+    }
+
+
 }

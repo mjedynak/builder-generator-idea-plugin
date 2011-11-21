@@ -9,10 +9,10 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiFieldImpl;
 import com.intellij.util.IncorrectOperationException;
+import org.apache.commons.lang.WordUtils;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class BuilderWriterImpl implements BuilderWriter {
             PsiElementFactory psiElementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
 
             String srcClassName = psiClassFromEditor.getName();
-            String srcClassFieldName = StringUtil.toLowerCase(srcClassName.charAt(0)) + srcClassName.substring(1);
+            String srcClassFieldName = WordUtils.uncapitalize(srcClassName);
             PsiField srcClassNameField = psiElementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", psiClassFromEditor);
             targetClass.add(srcClassNameField);
 
@@ -59,7 +59,7 @@ public class BuilderWriterImpl implements BuilderWriter {
                 PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
                 String fieldName = psiField.getName();
                 String fieldType = psiField.getType().getPresentableText();
-                String fieldNameUppercase = StringUtil.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+                String fieldNameUppercase = WordUtils.capitalize(fieldName);
                 PsiMethod method = psiElementFactory.createMethodFromText(
                         "public " + className + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
                 targetClass.add(method);
