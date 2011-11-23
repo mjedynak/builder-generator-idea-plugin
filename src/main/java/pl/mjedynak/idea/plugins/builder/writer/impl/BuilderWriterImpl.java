@@ -65,6 +65,18 @@ public class BuilderWriterImpl implements BuilderWriter {
                 targetClass.add(method);
             }
 
+            StringBuilder buildMethodText = new StringBuilder();
+            buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();  ");
+            for (PsiElementClassMember classMember : classMembers) {
+                PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
+                String fieldName = psiField.getName();
+                String fieldNameUppercase = WordUtils.capitalize(fieldName);
+                buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
+            }
+            buildMethodText.append("return " + srcClassFieldName + ";}");
+            PsiMethod buildMethod = psiElementFactory.createMethodFromText(buildMethodText.toString(), psiClassFromEditor);
+            targetClass.add(buildMethod);
+
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
