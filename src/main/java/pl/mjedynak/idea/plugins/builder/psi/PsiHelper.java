@@ -23,4 +23,6 @@ public interface PsiHelper {
     Module findModuleForPsiElement(PsiElement psiElement);
 
     PsiPackage getPackage(PsiDirectory psiDirectory);
+
+    JavaDirectoryService getJavaDirectoryService();
 }

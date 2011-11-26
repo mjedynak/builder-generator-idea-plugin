@@ -171,4 +171,19 @@ public class PsiHelperImplTest {
         assertThat(result, is(psiPackage));
     }
 
+    @Test
+    public void shouldGetJavaDirectoryService() {
+        // given
+        mockStatic(JavaDirectoryService.class);
+        JavaDirectoryService javaDirectoryService = mock(JavaDirectoryService.class);
+        given(JavaDirectoryService.getInstance()).willReturn(javaDirectoryService);
+        
+        // when
+        JavaDirectoryService result = psiHelper.getJavaDirectoryService();
+
+        // then
+        assertThat(result, is(javaDirectoryService));
+
+    }
+
 }

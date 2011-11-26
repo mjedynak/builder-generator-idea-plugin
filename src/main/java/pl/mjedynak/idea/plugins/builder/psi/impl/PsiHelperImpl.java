@@ -70,7 +70,12 @@ public class PsiHelperImpl implements PsiHelper {
     }
 
     @Override
+    public JavaDirectoryService getJavaDirectoryService() {
+        return JavaDirectoryService.getInstance();
+    }
+
+    @Override
     public PsiPackage getPackage(PsiDirectory psiDirectory) {
-        return JavaDirectoryService.getInstance().getPackage(psiDirectory);
+        return getJavaDirectoryService().getPackage(psiDirectory);
     }
 }
