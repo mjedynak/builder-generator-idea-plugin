@@ -35,48 +35,7 @@ public class BuilderWriterImpl implements BuilderWriter {
     private PsiElement createBuilder(final Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, final String className, PsiClass psiClassFromEditor) {
         try {
             IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
-            PsiClass targetClass = JavaDirectoryService.getInstance().createClass(targetDirectory, className);
-            PsiElementFactory psiElementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
-
-            String srcClassName = psiClassFromEditor.getName();
-            String srcClassFieldName = WordUtils.uncapitalize(srcClassName);
-            PsiField srcClassNameField = psiElementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", psiClassFromEditor);
-            targetClass.add(srcClassNameField);
-
-            for (PsiElementClassMember classMember : classMembers) {
-                targetClass.add(classMember.getPsiElement());
-            }
-
-            PsiMethod constructor = psiElementFactory.createConstructor();
-            constructor.getModifierList().setModifierProperty("private", true);
-            targetClass.add(constructor);
-
-            PsiMethod staticMethod = psiElementFactory.createMethodFromText(
-                    "public static " + className + " a" + srcClassName + "() { return new " + className + "();}", psiClassFromEditor);
-            targetClass.add(staticMethod);
-
-            for (PsiElementClassMember classMember : classMembers) {
-                PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-                String fieldName = psiField.getName();
-                String fieldType = psiField.getType().getPresentableText();
-                String fieldNameUppercase = WordUtils.capitalize(fieldName);
-                PsiMethod method = psiElementFactory.createMethodFromText(
-                        "public " + className + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
-                targetClass.add(method);
-            }
-
-            StringBuilder buildMethodText = new StringBuilder();
-            buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();  ");
-            for (PsiElementClassMember classMember : classMembers) {
-                PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-                String fieldName = psiField.getName();
-                String fieldNameUppercase = WordUtils.capitalize(fieldName);
-                buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
-            }
-            buildMethodText.append("return " + srcClassFieldName + ";}");
-            PsiMethod buildMethod = psiElementFactory.createMethodFromText(buildMethodText.toString(), psiClassFromEditor);
-            targetClass.add(buildMethod);
-
+            PsiClass targetClass = getBuilderPsiClass(project, classMembers, targetDirectory, className, psiClassFromEditor);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
@@ -84,6 +43,52 @@ public class BuilderWriterImpl implements BuilderWriter {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private PsiClass getBuilderPsiClass(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+        PsiClass targetClass = JavaDirectoryService.getInstance().createClass(targetDirectory, className);
+        PsiElementFactory psiElementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
+
+        String srcClassName = psiClassFromEditor.getName();
+        String srcClassFieldName = WordUtils.uncapitalize(srcClassName);
+
+        PsiField srcClassNameField = psiElementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", psiClassFromEditor);
+        targetClass.add(srcClassNameField);
+
+        for (PsiElementClassMember classMember : classMembers) {
+            targetClass.add(classMember.getPsiElement());
+        }
+
+        PsiMethod constructor = psiElementFactory.createConstructor();
+        constructor.getModifierList().setModifierProperty("private", true);
+        targetClass.add(constructor);
+
+        PsiMethod staticMethod = psiElementFactory.createMethodFromText(
+                "public static " + className + " a" + srcClassName + "() { return new " + className + "();}", psiClassFromEditor);
+        targetClass.add(staticMethod);
+
+        for (PsiElementClassMember classMember : classMembers) {
+            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
+            String fieldName = psiField.getName();
+            String fieldType = psiField.getType().getPresentableText();
+            String fieldNameUppercase = WordUtils.capitalize(fieldName);
+            PsiMethod method = psiElementFactory.createMethodFromText(
+                    "public " + className + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
+            targetClass.add(method);
+        }
+
+        StringBuilder buildMethodText = new StringBuilder();
+        buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();  ");
+        for (PsiElementClassMember classMember : classMembers) {
+            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
+            String fieldName = psiField.getName();
+            String fieldNameUppercase = WordUtils.capitalize(fieldName);
+            buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
+        }
+        buildMethodText.append("return " + srcClassFieldName + ";}");
+        PsiMethod buildMethod = psiElementFactory.createMethodFromText(buildMethodText.toString(), psiClassFromEditor);
+        targetClass.add(buildMethod);
+        return targetClass;
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {
