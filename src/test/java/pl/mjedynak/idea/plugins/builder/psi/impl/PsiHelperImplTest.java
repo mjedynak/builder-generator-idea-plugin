@@ -177,12 +177,26 @@ public class PsiHelperImplTest {
         mockStatic(JavaDirectoryService.class);
         JavaDirectoryService javaDirectoryService = mock(JavaDirectoryService.class);
         given(JavaDirectoryService.getInstance()).willReturn(javaDirectoryService);
-        
+
         // when
         JavaDirectoryService result = psiHelper.getJavaDirectoryService();
 
         // then
         assertThat(result, is(javaDirectoryService));
+    }
+
+    @Test
+    public void shouldGetJavaPsiFacade() {
+        // given
+        mockStatic(JavaPsiFacade.class);
+        JavaPsiFacade javaPsiFacadeInstance = mock(JavaPsiFacade.class);
+        given(JavaPsiFacade.getInstance(project)).willReturn(javaPsiFacadeInstance);
+
+        // when
+        JavaPsiFacade result = psiHelper.getJavaPsiFacade(project);
+
+        // then
+        assertThat(result, is(javaPsiFacadeInstance));
 
     }
 

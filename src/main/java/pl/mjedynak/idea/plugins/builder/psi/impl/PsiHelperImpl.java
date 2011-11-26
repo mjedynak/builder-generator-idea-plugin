@@ -40,7 +40,7 @@ public class PsiHelperImpl implements PsiHelper {
 
     @Override
     public PsiShortNamesCache getPsiShortNamesCache(Project project) {
-        return JavaPsiFacade.getInstance(project).getShortNamesCache();
+        return getJavaPsiFacade(project).getShortNamesCache();
     }
 
     @Override
@@ -77,5 +77,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public PsiPackage getPackage(PsiDirectory psiDirectory) {
         return getJavaDirectoryService().getPackage(psiDirectory);
+    }
+
+    @Override
+    public JavaPsiFacade getJavaPsiFacade(Project project) {
+        return JavaPsiFacade.getInstance(project);
     }
 }

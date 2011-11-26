@@ -25,4 +25,6 @@ public interface PsiHelper {
     PsiPackage getPackage(PsiDirectory psiDirectory);
 
     JavaDirectoryService getJavaDirectoryService();
+
+    JavaPsiFacade getJavaPsiFacade(Project project);
 }
