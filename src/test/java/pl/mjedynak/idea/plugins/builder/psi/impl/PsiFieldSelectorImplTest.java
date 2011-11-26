@@ -80,7 +80,7 @@ public class PsiFieldSelectorImplTest {
     public void shouldTakeFieldWithProperSetMethodsWhenModifierListDoesNotExist() {
         // given
         given(correctPsiFieldWithSetMethod.getContainingClass()).willReturn(psiClass);
-        given(setMethod.getModifierList()).willReturn(psiModifierList);
+        given(setMethod.getModifierList()).willReturn(null);
         prepareMockForReturningCorrectName();
 
         // when
