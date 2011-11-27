@@ -2,6 +2,8 @@ package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
@@ -29,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
-        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class})
+        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class, ApplicationManager.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -213,6 +215,19 @@ public class PsiHelperImplTest {
 
         // then
         assertThat(result, is(commandProcessor));
+    }
 
+    @Test
+    public void shouldUseApplicationManagerToGetApplication() {
+        // given
+        mockStatic(ApplicationManager.class);
+        Application application = mock(Application.class);
+        given(ApplicationManager.getApplication()).willReturn(application);
+
+        // when
+        Application result = psiHelper.getApplication();
+
+        // then
+        assertThat(result, is(application));
     }
 }
