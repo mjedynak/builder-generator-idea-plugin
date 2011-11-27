@@ -15,7 +15,7 @@ public class MemberChooserDialogFactoryImpl implements MemberChooserDialogFactor
         MemberChooser<PsiElementClassMember> memberChooserDialog = new MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
         memberChooserDialog.setCopyJavadocVisible(false);
         memberChooserDialog.selectElements(psiElementClassMembers);
-        memberChooserDialog.setTitle("Select fields to be available in builder");
+        memberChooserDialog.setTitle(TITLE);
         return memberChooserDialog;
     }
 }
