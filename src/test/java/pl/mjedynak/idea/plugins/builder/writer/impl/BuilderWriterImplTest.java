@@ -5,7 +5,6 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +15,6 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriterRunnable;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -48,22 +46,15 @@ public class BuilderWriterImplTest {
     @Mock
     private PsiElementClassMember psiElementClassMember;
 
-    private List<PsiElementClassMember> psiElementClassMembers;
-
-    @Before
-    public void setUp() {
-        psiElementClassMembers = Arrays.asList(psiElementClassMember);
-    }
 
     @Test
     public void shouldExecuteCommandWithRunnable() {
         // given
-        String builderClassName = "BuilderClassName";
         CommandProcessor commandProcessor = mock(CommandProcessor.class);
         given(psiHelper.getCommandProcessor()).willReturn(commandProcessor);
 
         // when
-        builderWriter.writeBuilder(project, psiElementClassMembers, targetDirectory, builderClassName, srcClass);
+        builderWriter.writeBuilder(project, Arrays.asList(psiElementClassMember), targetDirectory, "anyBuilderClassName", srcClass);
 
         // then
         verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriterImpl.CREATE_BUILDER_STRING), eq(builderWriter));

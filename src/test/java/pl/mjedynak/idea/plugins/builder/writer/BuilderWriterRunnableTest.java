@@ -14,7 +14,6 @@ import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -44,14 +43,10 @@ public class BuilderWriterRunnableTest {
     @Mock
     private PsiElementClassMember psiElementClassMember;
 
-    private List<PsiElementClassMember> psiElementClassMembers;
-
-    private String builderClassName = "BuilderClassName";
-
     @Before
     public void setUp() {
-        psiElementClassMembers = Arrays.asList(psiElementClassMember);
-        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, project, psiElementClassMembers, targetDirectory, builderClassName, srcClass, psiHelper);
+        builderWriterRunnable = new BuilderWriterRunnable(
+                builderPsiClassBuilder, project, Arrays.asList(psiElementClassMember), targetDirectory, "anyBuilderClassName", srcClass, psiHelper);
     }
 
     @Test
@@ -66,8 +61,4 @@ public class BuilderWriterRunnableTest {
         // then
         verify(application).runWriteAction(any(BuilderWriterComputable.class));
     }
-
-
-
-
 }
