@@ -96,14 +96,14 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public PsiClass build() {
         checkBuilderField();
         StringBuilder buildMethodText = new StringBuilder();
-        buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();");
+        buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassFieldName).append(" = new ").append(srcClassName).append("();");
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
             String fieldName = psiField.getName();
             String fieldNameUppercase = StringUtils.capitalize(fieldName);
-            buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
+            buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
-        buildMethodText.append("return " + srcClassFieldName + ";}");
+        buildMethodText.append("return ").append(srcClassFieldName).append(";}");
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
         builderClass.add(buildMethod);
         return builderClass;
