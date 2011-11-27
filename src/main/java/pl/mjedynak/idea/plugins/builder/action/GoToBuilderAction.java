@@ -7,6 +7,7 @@ import pl.mjedynak.idea.plugins.builder.finder.impl.BuilderFinderImpl;
 import pl.mjedynak.idea.plugins.builder.finder.impl.ClassFinderImpl;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.impl.PopupDisplayerImpl;
 import pl.mjedynak.idea.plugins.builder.gui.helper.impl.GuiHelperImpl;
+import pl.mjedynak.idea.plugins.builder.psi.impl.BuilderPsiClassBuilderImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiFieldSelectorImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.verifier.impl.BuilderVerifierImpl;
@@ -15,11 +16,13 @@ import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 
 public class GoToBuilderAction extends EditorAction {
 
+    private static PsiHelperImpl psiHelper = new PsiHelperImpl();
+
     protected GoToBuilderAction() {
         super(new GoToBuilderActionHandler(
-                new PsiHelperImpl(),
+                psiHelper,
                 new BuilderVerifierImpl(),
-                new BuilderFinderImpl(new ClassFinderImpl(new PsiHelperImpl())),
+                new BuilderFinderImpl(new ClassFinderImpl(psiHelper)),
                 new PopupDisplayerImpl(new PopupChooserBuilderFactoryImpl()),
                 new PopupListFactoryImpl(),
                 new PsiManagerFactoryImpl(),
@@ -28,6 +31,6 @@ public class GoToBuilderAction extends EditorAction {
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
                 new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
                 new MemberChooserDialogFactoryImpl(),
-                new BuilderWriterImpl()));
+                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper))));
     }
 }

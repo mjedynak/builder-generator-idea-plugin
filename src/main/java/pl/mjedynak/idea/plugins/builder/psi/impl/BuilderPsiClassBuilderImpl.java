@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.psi.impl;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -79,18 +80,32 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withSetMethods() {
         checkFields();
-        return this;
-    }
-
-    @Override
-    public BuilderPsiClassBuilder withBuildMethod() {
-        checkFields();
+        for (PsiElementClassMember classMember : psiElementClassMembers) {
+            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
+            String fieldName = psiField.getName();
+            String fieldType = psiField.getType().getPresentableText();
+            String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            PsiMethod method = elementFactory.createMethodFromText(
+                    "public " + builderClassName + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
+            builderClass.add(method);
+        }
         return this;
     }
 
     @Override
     public PsiClass build() {
         checkBuilderField();
+        StringBuilder buildMethodText = new StringBuilder();
+        buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();");
+        for (PsiElementClassMember classMember : psiElementClassMembers) {
+            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
+            String fieldName = psiField.getName();
+            String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
+        }
+        buildMethodText.append("return " + srcClassFieldName + ";}");
+        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
+        builderClass.add(buildMethod);
         return builderClass;
     }
 

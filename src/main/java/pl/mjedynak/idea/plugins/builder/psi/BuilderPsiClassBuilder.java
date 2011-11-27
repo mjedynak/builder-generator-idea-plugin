@@ -19,7 +19,5 @@ public interface BuilderPsiClassBuilder {
 
     BuilderPsiClassBuilder withSetMethods();
 
-    BuilderPsiClassBuilder withBuildMethod();
-
     PsiClass build();
 }

@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.psi.impl;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -139,6 +141,42 @@ public class BuilderPsiClassBuilderImplTest {
         verify(builderClass).add(method);
     }
 
+    @Test
+    public void shouldAddSetMethods() {
+        // given
+        PsiFieldImpl psiField = mock(PsiFieldImpl.class);
+        given(psiElementClassMember.getPsiElement()).willReturn(psiField);
+        given(psiField.getName()).willReturn("name");
+        PsiType type = mock(PsiType.class);
+        given(type.getPresentableText()).willReturn("String");
+        given(psiField.getType()).willReturn(type);
+        PsiMethod method = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + builderClassName + " withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
+
+        // when
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withSetMethods();
+
+        // then
+        verify(builderClass).add(method);
+    }
+
+    @Test
+    public void shouldReturnBuilderObjectWithBuildMethod() {
+        // given
+        PsiFieldImpl psiField = mock(PsiFieldImpl.class);
+        given(psiElementClassMember.getPsiElement()).willReturn(psiField);
+        given(psiField.getName()).willReturn("name");
+        PsiMethod method = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();"
+                + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
+        // when
+        PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).build();
+
+        // then
+        verify(builderClass).add(method);
+        assertThat(result, is(notNullValue()));
+    }
+
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenInvokingWithPrivateConstructorIfFieldsNotSetBefore() {
         // when
@@ -158,12 +196,6 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingWithBuildMethodIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.withBuildMethod();
-    }
-
-    @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenInvokingWithFieldsMethodIfFieldsNotSetBefore() {
         // when
         psiClassBuilder.withFields();
@@ -172,6 +204,6 @@ public class BuilderPsiClassBuilderImplTest {
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenInvokingBuildMethodIfFieldsNotSetBefore() {
         // when
-        psiClassBuilder.withBuildMethod();
+        psiClassBuilder.build();
     }
 }

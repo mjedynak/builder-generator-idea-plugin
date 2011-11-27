@@ -9,15 +9,23 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiFieldImpl;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.apache.commons.lang.WordUtils;
+import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.List;
 
 public class BuilderWriterImpl implements BuilderWriter {
+
+    private BuilderPsiClassBuilder builderPsiClassBuilder;
+
+    public BuilderWriterImpl(BuilderPsiClassBuilder builderPsiClassBuilder) {
+        this.builderPsiClassBuilder = builderPsiClassBuilder;
+    }
+
     @Override
     public void writeBuilder(final Project project, final List<PsiElementClassMember> classMembers, final PsiDirectory targetDirectory, final String className, final PsiClass psiClassFromEditor) {
         CommandProcessor.getInstance().executeCommand(project, new Runnable() {
@@ -46,49 +54,8 @@ public class BuilderWriterImpl implements BuilderWriter {
     }
 
     private PsiClass getBuilderPsiClass(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
-        PsiClass targetClass = JavaDirectoryService.getInstance().createClass(targetDirectory, className);
-        PsiElementFactory psiElementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
-
-        String srcClassName = psiClassFromEditor.getName();
-        String srcClassFieldName = WordUtils.uncapitalize(srcClassName);
-
-        PsiField srcClassNameField = psiElementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", psiClassFromEditor);
-        targetClass.add(srcClassNameField);
-
-        for (PsiElementClassMember classMember : classMembers) {
-            targetClass.add(classMember.getPsiElement());
-        }
-
-        PsiMethod constructor = psiElementFactory.createConstructor();
-        constructor.getModifierList().setModifierProperty("private", true);
-        targetClass.add(constructor);
-
-        PsiMethod staticMethod = psiElementFactory.createMethodFromText(
-                "public static " + className + " a" + srcClassName + "() { return new " + className + "();}", psiClassFromEditor);
-        targetClass.add(staticMethod);
-
-        for (PsiElementClassMember classMember : classMembers) {
-            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-            String fieldName = psiField.getName();
-            String fieldType = psiField.getType().getPresentableText();
-            String fieldNameUppercase = WordUtils.capitalize(fieldName);
-            PsiMethod method = psiElementFactory.createMethodFromText(
-                    "public " + className + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
-            targetClass.add(method);
-        }
-
-        StringBuilder buildMethodText = new StringBuilder();
-        buildMethodText.append("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();  ");
-        for (PsiElementClassMember classMember : classMembers) {
-            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-            String fieldName = psiField.getName();
-            String fieldNameUppercase = WordUtils.capitalize(fieldName);
-            buildMethodText.append(srcClassFieldName + ".set" + fieldNameUppercase + "(" + fieldName + ");");
-        }
-        buildMethodText.append("return " + srcClassFieldName + ";}");
-        PsiMethod buildMethod = psiElementFactory.createMethodFromText(buildMethodText.toString(), psiClassFromEditor);
-        targetClass.add(buildMethod);
-        return targetClass;
+        return builderPsiClassBuilder.aBuilder(project,targetDirectory, psiClassFromEditor, className, classMembers)
+                .withFields().withPrivateConstructor().withInitializingMethod().withSetMethods().build();
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {
