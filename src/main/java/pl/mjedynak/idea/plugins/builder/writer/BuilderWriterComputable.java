@@ -1,12 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -28,7 +24,7 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiHelper psiHelper;
 
     public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, List<PsiElementClassMember> classMembers,
-                                    PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper) {
+                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.classMembers = classMembers;
@@ -43,9 +39,9 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         return createBuilder(project, classMembers, targetDirectory, className, psiClassFromEditor);
     }
 
-    private PsiElement createBuilder(final Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, final String className, PsiClass psiClassFromEditor) {
+    private PsiElement createBuilder(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
         try {
-            IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
+            psiHelper.includeCurrentPlaceAsChangePlace(project);
             PsiClass targetClass = getBuilderPsiClass(project, classMembers, targetDirectory, className, psiClassFromEditor);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
@@ -62,17 +58,11 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {
-        CodeInsightUtil.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
+        psiHelper.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
     }
 
-    private void showErrorMessage(final Project project, final String className) {
+    private void showErrorMessage(Project project, String className) {
         Application application = psiHelper.getApplication();
-        application.invokeLater(new Runnable() {
-            public void run() {
-                Messages.showErrorDialog(project,
-                        CodeInsightBundle.message("intention.error.cannot.create.class.message", className),
-                        CodeInsightBundle.message("intention.error.cannot.create.class.title"));
-            }
-        });
+        application.invokeLater(new BuilderWriterErrorRunnable(project, className));
     }
 }
