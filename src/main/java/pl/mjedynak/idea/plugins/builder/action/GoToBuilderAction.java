@@ -31,6 +31,6 @@ public class GoToBuilderAction extends EditorAction {
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
                 new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
                 new MemberChooserDialogFactoryImpl(),
-                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper))));
+                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper)));
     }
 }
