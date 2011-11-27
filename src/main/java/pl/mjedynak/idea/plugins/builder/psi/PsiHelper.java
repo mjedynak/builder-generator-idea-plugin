@@ -33,4 +33,6 @@ public interface PsiHelper {
     CommandProcessor getCommandProcessor();
 
     Application getApplication();
+
+    void includeCurrentPlaceAsChangePlace(Project project);
 }

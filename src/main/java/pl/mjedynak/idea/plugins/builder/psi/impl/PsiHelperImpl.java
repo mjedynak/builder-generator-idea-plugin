@@ -5,6 +5,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -95,5 +96,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public Application getApplication() {
         return ApplicationManager.getApplication();
+    }
+
+    @Override
+    public void includeCurrentPlaceAsChangePlace(Project project) {
+        IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
     }
 }
