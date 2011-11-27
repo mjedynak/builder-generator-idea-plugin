@@ -7,6 +7,7 @@ import com.intellij.psi.PsiDirectory;
 import org.junit.Before;
 import org.mockito.Mock;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,9 @@ import java.util.List;
 public class BuilderWriterRunnableTest {
 
     private BuilderWriterRunnable builderWriterRunnable;
+
+    @Mock
+    private PsiHelper psiHelper;
 
     @Mock
     private BuilderPsiClassBuilder builderPsiClassBuilder;
@@ -37,7 +41,7 @@ public class BuilderWriterRunnableTest {
     @Before
     public void setUp() {
         psiElementClassMembers = Arrays.asList(psiElementClassMember);
-        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, project, psiElementClassMembers, targetDirectory, builderClassName, srcClass);
+        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, project, psiElementClassMembers, targetDirectory, builderClassName, srcClass, psiHelper);
     }
 
 

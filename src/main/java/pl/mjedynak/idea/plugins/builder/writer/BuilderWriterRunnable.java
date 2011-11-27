@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.writer;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
@@ -13,6 +14,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import java.util.List;
 
@@ -24,20 +26,23 @@ public class BuilderWriterRunnable implements Runnable {
     private PsiDirectory targetDirectory;
     private String className;
     private PsiClass psiClassFromEditor;
+    private PsiHelper psiHelper;
 
-    public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project,
-                                 List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+    public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, List<PsiElementClassMember> classMembers,
+                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.classMembers = classMembers;
         this.targetDirectory = targetDirectory;
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
+        this.psiHelper = psiHelper;
     }
 
     @Override
     public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Computable<PsiElement>() {
+        Application application = psiHelper.getApplication();
+        application.runWriteAction(new Computable<PsiElement>() {
             public PsiElement compute() {
                 return createBuilder(project, classMembers, targetDirectory, className, psiClassFromEditor);
             }

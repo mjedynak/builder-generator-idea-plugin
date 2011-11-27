@@ -27,7 +27,7 @@ public class BuilderWriterImpl implements BuilderWriter {
     public void writeBuilder(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
         commandProcessor.executeCommand(project,
-                new BuilderWriterRunnable(builderPsiClassBuilder, project, classMembers, targetDirectory, className, psiClassFromEditor),
+                new BuilderWriterRunnable(builderPsiClassBuilder, project, classMembers, targetDirectory, className, psiClassFromEditor, psiHelper),
                 CREATE_BUILDER_STRING, this);
     }
 }
