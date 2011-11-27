@@ -1,0 +1,11 @@
+improvements
+
+- test for GoToBuilderAction
+- move some methods from PsiHelper to GuiHelper and other classes
+- try to have one level indentation per method
+
+
+issues
+
+* escape during select fields window - builder is still getting created
+* anInventory, aPerson
