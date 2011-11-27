@@ -1,6 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.ide.util.PackageUtil;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -82,5 +83,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public JavaPsiFacade getJavaPsiFacade(Project project) {
         return JavaPsiFacade.getInstance(project);
+    }
+
+    @Override
+    public CommandProcessor getCommandProcessor() {
+        return CommandProcessor.getInstance();
     }
 }

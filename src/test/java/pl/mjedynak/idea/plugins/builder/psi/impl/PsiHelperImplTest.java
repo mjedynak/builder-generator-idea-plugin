@@ -2,6 +2,7 @@ package pl.mjedynak.idea.plugins.builder.psi.impl;
 
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -28,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
-        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class})
+        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -197,7 +198,21 @@ public class PsiHelperImplTest {
 
         // then
         assertThat(result, is(javaPsiFacadeInstance));
-
     }
 
+
+    @Test
+    public void shouldGetCommandProcessor() {
+        // given
+        mockStatic(CommandProcessor.class);
+        CommandProcessor commandProcessor = mock(CommandProcessor.class);
+        given(CommandProcessor.getInstance()).willReturn(commandProcessor);
+
+        // when
+        CommandProcessor result = psiHelper.getCommandProcessor();
+
+        // then
+        assertThat(result, is(commandProcessor));
+
+    }
 }

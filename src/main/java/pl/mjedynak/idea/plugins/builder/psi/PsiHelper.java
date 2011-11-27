@@ -1,5 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -27,4 +28,6 @@ public interface PsiHelper {
     JavaDirectoryService getJavaDirectoryService();
 
     JavaPsiFacade getJavaPsiFacade(Project project);
+
+    CommandProcessor getCommandProcessor();
 }
