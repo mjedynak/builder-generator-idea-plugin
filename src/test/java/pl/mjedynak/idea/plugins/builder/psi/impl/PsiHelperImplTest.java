@@ -1,5 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
+import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.application.Application;
@@ -33,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
         RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class,
-        ApplicationManager.class, IdeDocumentHistory.class})
+        ApplicationManager.class, IdeDocumentHistory.class, CodeInsightUtil.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -245,5 +246,21 @@ public class PsiHelperImplTest {
 
         // then
         verify(ideDocumentHistory).includeCurrentPlaceAsChangePlace();
+    }
+
+    @Test
+    public void shouldUseCodeInsightUtilToPositionCursor() {
+        // given
+        mockStatic(CodeInsightUtil.class);
+        PsiElement psiElement = mock(PsiElement.class);
+        PsiFile psiFile = mock(PsiFile.class);
+
+        // when
+        psiHelper.positionCursor(project, psiFile, psiElement);
+
+        // then
+        verifyStatic();
+        CodeInsightUtil.positionCursor(project, psiFile, psiElement);
+
     }
 }

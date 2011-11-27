@@ -1,5 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
+import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -101,5 +102,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public void includeCurrentPlaceAsChangePlace(Project project) {
         IdeDocumentHistory.getInstance(project).includeCurrentPlaceAsChangePlace();
+    }
+
+    @Override
+    public void positionCursor(Project project, PsiFile psiFile, PsiElement psiElement) {
+        CodeInsightUtil.positionCursor(project, psiFile, psiElement);
     }
 }
