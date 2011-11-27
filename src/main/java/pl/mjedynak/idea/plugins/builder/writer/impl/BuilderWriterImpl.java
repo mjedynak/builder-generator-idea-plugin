@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BuilderWriterImpl implements BuilderWriter {
 
-    private static final String CREATE_BUILDER_STRING = "Create Builder";
+    static final String CREATE_BUILDER_STRING = "Create Builder";
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private PsiHelper psiHelper;
 
