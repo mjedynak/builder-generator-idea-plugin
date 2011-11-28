@@ -1,6 +1,16 @@
 <idea-plugin version="2">
     <name>Builder Generator</name>
-    <description>Adds ability to generate builder for a class and switch between them. Switching to builder (and back) is similar to 'Go To Test' action.</description>
+    <description>
+    <![CDATA[
+     Adds ability to generate builder for a class with setter methods and switch between them.
+     Switching between builder and source class is similar to 'Go To Test' action.
+     Generated builder class does not use reflection, only setter methods.
+     Usage:
+      <ul>
+          <li>ALT+SHIFT+B inside a class.</li>
+      </ul>
+      ]]>
+    </description>
     <version>1.0-SNAPSHOT</version>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
