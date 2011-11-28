@@ -4,7 +4,3 @@ improvements
 - move some methods from PsiHelper to GuiHelper and other classes
 - try to have one level indentation per method
 
-
-issues
-
-* anInventory, aPerson

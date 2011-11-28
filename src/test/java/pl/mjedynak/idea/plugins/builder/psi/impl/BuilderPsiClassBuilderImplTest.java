@@ -142,6 +142,22 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test
+    public void shouldAddInitializingMethodStartingWithAnIfSourceClassNameStartsWithVowel() {
+        // given
+        PsiMethod method = mock(PsiMethod.class);
+        String srcClassNameStartingWithVowel = "Inventory";
+        given(srcClass.getName()).willReturn(srcClassNameStartingWithVowel);
+        given(elementFactory.createMethodFromText(
+                "public static " + builderClassName + " an" + srcClassNameStartingWithVowel + "() { return new " + builderClassName + "();}", srcClass)).willReturn(method);
+
+        // when
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withInitializingMethod();
+
+        // then
+        verify(builderClass).add(method);
+    }
+
+    @Test
     public void shouldAddSetMethods() {
         // given
         PsiFieldImpl psiField = mock(PsiFieldImpl.class);

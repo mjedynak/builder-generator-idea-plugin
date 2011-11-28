@@ -10,10 +10,14 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import java.util.List;
 
+import static com.intellij.openapi.util.text.StringUtil.isVowel;
+
 public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     private static final String PRIVATE_STRING = "private";
     private static final String SPACE = " ";
+    private static final String A_PREFIX = " a";
+    private static final String AN_PREFIX = " an";
 
     private PsiHelper psiHelper;
 
@@ -71,8 +75,9 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withInitializingMethod() {
         checkFields();
+        String prefix = isVowel(srcClassName.toLowerCase().charAt(0)) ? AN_PREFIX : A_PREFIX;
         PsiMethod staticMethod = elementFactory.createMethodFromText(
-                "public static " + builderClassName + " a" + srcClassName + "() { return new " + builderClassName + "();}", srcClass);
+                "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "();}", srcClass);
         builderClass.add(staticMethod);
         return this;
     }
