@@ -55,21 +55,22 @@ public class DisplayChoosersRunnable implements Runnable {
 
     @Override
     public void run() {
-        final CreateBuilderDialog createBuilderDialog = showDialog();
-        if (!createBuilderDialog.isOK()) {
-            return;
+        CreateBuilderDialog createBuilderDialog = showDialog();
+        if (createBuilderDialog.isOK()) {
+            PsiDirectory targetDirectory = createBuilderDialog.getTargetDirectory();
+            String className = createBuilderDialog.getClassName();
+            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
+            MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
+            memberChooserDialog.show();
+            writeBuilderIfNecessary(targetDirectory, className, memberChooserDialog);
         }
-        final PsiDirectory targetDirectory = createBuilderDialog.getTargetDirectory();
-        final String className = createBuilderDialog.getClassName();
+    }
 
-        List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
-        final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
-        memberChooserDialog.show();
-        if (!memberChooserDialog.isOK()) {
-            return;
+    private void writeBuilderIfNecessary(PsiDirectory targetDirectory, String className, MemberChooser<PsiElementClassMember> memberChooserDialog) {
+        if (memberChooserDialog.isOK()) {
+            List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
+            builderWriter.writeBuilder(project, selectedElements, targetDirectory, className, psiClassFromEditor);
         }
-        List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
-        builderWriter.writeBuilder(project, selectedElements, targetDirectory, className, psiClassFromEditor);
     }
 
     private CreateBuilderDialog showDialog() {
