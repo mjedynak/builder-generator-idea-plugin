@@ -65,6 +65,9 @@ public class DisplayChoosersRunnable implements Runnable {
         List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
         final MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
         memberChooserDialog.show();
+        if (!memberChooserDialog.isOK()) {
+            return;
+        }
         List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
         builderWriter.writeBuilder(project, selectedElements, targetDirectory, className, psiClassFromEditor);
     }
@@ -83,8 +86,7 @@ public class DisplayChoosersRunnable implements Runnable {
 
     private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz) {
         List<PsiField> localFields = Arrays.asList(clazz.getAllFields());
-        List<PsiElementClassMember> fieldsToInclude = psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
-        return fieldsToInclude;
+        return psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
     }
 
 }

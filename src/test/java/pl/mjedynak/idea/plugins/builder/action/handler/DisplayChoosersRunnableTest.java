@@ -27,7 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DisplayChoosersRunnableTest {
@@ -68,7 +69,14 @@ public class DisplayChoosersRunnableTest {
     private PsiManager psiManager;
     @Mock
     private CreateBuilderDialog createBuilderDialog;
+    @Mock
+    private MemberChooser memberChooserDialog;
+
     private String className = "className";
+
+    private PsiField[] allFields = {};
+
+    private List<PsiElementClassMember> selectedFields = new ArrayList<PsiElementClassMember>();
 
     @Before
     public void setUp() {
@@ -93,24 +101,45 @@ public class DisplayChoosersRunnableTest {
         verifyZeroInteractions(psiFieldSelector, memberChooserDialogFactory, builderWriter);
     }
 
+
     @Test
-    public void shouldDisplayCreateBuilderAndMemberChooserDialogAndWriteBuilderWhenOKSelected() {
+    public void shouldNotWriteBuilderWhenOkNotSelectedFromMemberChooserDialog() {
         // given
         given(createBuilderDialog.isOK()).willReturn(true);
+        given(memberChooserDialog.isOK()).willReturn(false);
         given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
         given(createBuilderDialog.getClassName()).willReturn(className);
-        PsiField[] allFields = {};
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
-        List<PsiElementClassMember> selectedFields = new ArrayList<PsiElementClassMember>();
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(Arrays.asList(allFields))).willReturn(selectedFields);
-        MemberChooser memberChooserDialog = mock(MemberChooser.class);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
+
+        // when
+        displayChoosersRunnable.run();
+
+        // then
+        verify(createBuilderDialog).isOK();
+        verify(memberChooserDialog).isOK();
+        verify(createBuilderDialog).show();
+        verifyZeroInteractions(builderWriter);
+    }
+
+    @Test
+    public void shouldDisplayCreateBuilderAndMemberChooserDialogAndWriteBuilderWhenOKSelectedFromBothWindows() {
+        // given
+        given(createBuilderDialog.isOK()).willReturn(true);
+        given(memberChooserDialog.isOK()).willReturn(true);
+        given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
+        given(createBuilderDialog.getClassName()).willReturn(className);
+        given(psiClassFromEditor.getAllFields()).willReturn(allFields);
+        given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(Arrays.asList(allFields))).willReturn(selectedFields);
         given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
 
         // when
         displayChoosersRunnable.run();
 
         // then
+        verify(createBuilderDialog).isOK();
+        verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
         verify(builderWriter).writeBuilder(project, selectedFields, psiDirectory, className, psiClassFromEditor);
