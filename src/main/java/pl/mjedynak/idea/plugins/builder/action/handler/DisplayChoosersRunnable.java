@@ -74,13 +74,12 @@ public class DisplayChoosersRunnable implements Runnable {
     }
 
     private CreateBuilderDialog showDialog() {
-        final Module srcModule = psiHelper.findModuleForPsiElement(psiClassFromEditor);
+        Module srcModule = psiHelper.findModuleForPsiElement(psiClassFromEditor);
         PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
         PsiPackage srcPackage = psiHelper.getPackage(srcDir);
         PsiManager psiManager = psiManagerFactory.getPsiManager(project);
-        final CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor.getName() + BUILDER_SUFFIX, project,
+        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor.getName() + BUILDER_SUFFIX, project,
                 srcPackage, srcModule, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper);
-
         dialog.show();
         return dialog;
     }
@@ -89,5 +88,4 @@ public class DisplayChoosersRunnable implements Runnable {
         List<PsiField> localFields = Arrays.asList(clazz.getAllFields());
         return psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
     }
-
 }
