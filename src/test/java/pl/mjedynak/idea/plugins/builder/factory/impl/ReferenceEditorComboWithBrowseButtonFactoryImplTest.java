@@ -10,7 +10,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -32,16 +31,16 @@ public class ReferenceEditorComboWithBrowseButtonFactoryImplTest {
     @Test
     public void shouldCreateNewReferenceEditorComboWithBrowseButton() throws Exception {
         // given
-        ReferenceEditorComboWithBrowseButton button = mock(ReferenceEditorComboWithBrowseButton.class);
+        ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton = mock(ReferenceEditorComboWithBrowseButton.class);
         String packageName = "packageName";
         String recentsKey = "recentsKey";
-        whenNew(ReferenceEditorComboWithBrowseButton.class).withArguments(null, packageName, psiManager, false, recentsKey).thenReturn(button);
+        whenNew(ReferenceEditorComboWithBrowseButton.class).withArguments(null, packageName, psiManager, false, recentsKey).thenReturn(referenceEditorComboWithBrowseButton);
 
         // when
-        ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton
+        ReferenceEditorComboWithBrowseButton result
                 = factory.getReferenceEditorComboWithBrowseButton(psiManager, packageName, recentsKey);
 
         // then
-        assertThat(referenceEditorComboWithBrowseButton, is(notNullValue()));
+        assertThat(result, is(referenceEditorComboWithBrowseButton));
     }
 }
