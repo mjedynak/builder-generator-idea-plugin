@@ -5,6 +5,7 @@
      Adds ability to generate builder for a class with setter methods and switch between them.
      Switching between builder and source class is similar to 'Go To Test' action.
      Generated builder class does not use reflection, only setter methods.
+     <br/>
      Usage:
       <ul>
           <li>ALT+SHIFT+B inside a class.</li>
