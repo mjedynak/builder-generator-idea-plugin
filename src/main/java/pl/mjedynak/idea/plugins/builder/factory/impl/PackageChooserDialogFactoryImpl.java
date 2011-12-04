@@ -8,6 +8,10 @@ public class PackageChooserDialogFactoryImpl implements PackageChooserDialogFact
 
     @Override
     public PackageChooserDialog getPackageChooserDialog(String message, Project project) {
+        return createNewInstance(message, project);
+    }
+
+    PackageChooserDialog createNewInstance(String message, Project project) {
         return new PackageChooserDialog(message, project);
     }
 }
