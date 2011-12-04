@@ -11,11 +11,15 @@ public class MemberChooserDialogFactoryImpl implements MemberChooserDialogFactor
     public static final String TITLE = "Select fields to be available in builder";
 
     public MemberChooser<PsiElementClassMember> getMemberChooserDialog(List<PsiElementClassMember> elements, Project project) {
-        PsiElementClassMember[] psiElementClassMembers = elements.toArray(new PsiElementClassMember[0]);
-        MemberChooser<PsiElementClassMember> memberChooserDialog = new MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
+        PsiElementClassMember[] psiElementClassMembers = elements.toArray(new PsiElementClassMember[elements.size()]);
+        MemberChooser<PsiElementClassMember> memberChooserDialog = createNewInstance(project, psiElementClassMembers);
         memberChooserDialog.setCopyJavadocVisible(false);
         memberChooserDialog.selectElements(psiElementClassMembers);
         memberChooserDialog.setTitle(TITLE);
         return memberChooserDialog;
+    }
+
+    MemberChooser<PsiElementClassMember> createNewInstance(Project project, PsiElementClassMember[] psiElementClassMembers) {
+        return new MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
     }
 }

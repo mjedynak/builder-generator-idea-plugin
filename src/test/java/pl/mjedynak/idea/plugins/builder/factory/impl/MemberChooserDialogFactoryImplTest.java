@@ -2,54 +2,47 @@ package pl.mjedynak.idea.plugins.builder.factory.impl;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.ide.util.MemberChooser;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ApplicationManager.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MemberChooserDialogFactoryImplTest {
 
+    @Spy
     private MemberChooserDialogFactoryImpl memberChooserDialogFactory;
 
     @Mock
     private Project project;
 
-    @Before
-    public void setUp() {
-        memberChooserDialogFactory = new MemberChooserDialogFactoryImpl();
-    }
+    @Mock
+    private MemberChooser memberChooser;
 
-    @Ignore  // http://code.google.com/p/powermock/issues/detail?id=297
+
     @Test
     public void shouldCreateNewMemberChooserDialog() {
-        mockStatic(ApplicationManager.class);
         // given
         List<PsiElementClassMember> elements = Arrays.asList(mock(PsiElementClassMember.class));
-        given(ApplicationManager.getApplication()).willReturn(mock(Application.class));
+        final PsiElementClassMember[] arrayElements = elements.toArray(new PsiElementClassMember[elements.size()]);
+        doReturn(memberChooser).when(memberChooserDialogFactory).createNewInstance(project, arrayElements);
 
         // when
-        MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(elements, project);
+        MemberChooser<PsiElementClassMember> result = memberChooserDialogFactory.getMemberChooserDialog(elements, project);
 
         // then
-        assertThat(memberChooserDialog.isCopyJavadoc(), is(false));
-        assertThat(memberChooserDialog.getTitle(), is(MemberChooserDialogFactoryImpl.TITLE));
-        assertThat(memberChooserDialog.getSelectedElements(), is(elements));
+        assertThat(result, is(memberChooser));
+        verify(result).setCopyJavadocVisible(false);
+        verify(result).setTitle(MemberChooserDialogFactoryImpl.TITLE);
+        verify(result).selectElements(arrayElements);
     }
 }
