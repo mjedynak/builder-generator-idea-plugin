@@ -34,7 +34,4 @@ public interface PsiHelper {
 
     Application getApplication();
 
-    void includeCurrentPlaceAsChangePlace(Project project);
-
-    void positionCursor(Project project, PsiFile psiFile, PsiElement psiElement);
 }

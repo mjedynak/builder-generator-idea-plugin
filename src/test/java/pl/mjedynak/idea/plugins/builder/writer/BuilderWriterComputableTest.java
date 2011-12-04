@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -37,6 +38,9 @@ public class BuilderWriterComputableTest {
     private PsiHelper psiHelper;
 
     @Mock
+    private GuiHelper guiHelper;
+
+    @Mock
     private BuilderPsiClassBuilder builderPsiClassBuilder;
 
     @Mock
@@ -58,7 +62,7 @@ public class BuilderWriterComputableTest {
     @Before
     public void setUp() {
         classMembers = Arrays.asList(psiElementClassMember);
-        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, classMembers, targetDirectory, builderClassName, srcClass, psiHelper);
+        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, classMembers, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper);
     }
 
     @Test
@@ -80,8 +84,8 @@ public class BuilderWriterComputableTest {
         PsiElement result = builderWriterComputable.compute();
 
         // then
-        verify(psiHelper).includeCurrentPlaceAsChangePlace(project);
-        verify(psiHelper).positionCursor(project, psiFile, psiElement);
+        verify(guiHelper).includeCurrentPlaceAsChangePlace(project);
+        verify(guiHelper).positionCursor(project, psiFile, psiElement);
         assertThat(result, is(instanceOf(PsiClass.class)));
         assertThat((PsiClass) result, is(builderClass));
     }

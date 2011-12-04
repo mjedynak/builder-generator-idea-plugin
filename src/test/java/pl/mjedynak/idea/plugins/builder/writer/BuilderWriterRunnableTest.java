@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -29,6 +30,9 @@ public class BuilderWriterRunnableTest {
     private PsiHelper psiHelper;
 
     @Mock
+    private GuiHelper guiHelper;
+
+    @Mock
     private BuilderPsiClassBuilder builderPsiClassBuilder;
 
     @Mock
@@ -46,7 +50,7 @@ public class BuilderWriterRunnableTest {
     @Before
     public void setUp() {
         builderWriterRunnable = new BuilderWriterRunnable(
-                builderPsiClassBuilder, project, Arrays.asList(psiElementClassMember), targetDirectory, "anyBuilderClassName", srcClass, psiHelper);
+                builderPsiClassBuilder, project, Arrays.asList(psiElementClassMember), targetDirectory, "anyBuilderClassName", srcClass, psiHelper, guiHelper);
     }
 
     @Test

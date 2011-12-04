@@ -17,6 +17,7 @@ import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 public class GoToBuilderAction extends EditorAction {
 
     private static PsiHelperImpl psiHelper = new PsiHelperImpl();
+    private static GuiHelperImpl guiHelper = new GuiHelperImpl();
 
     protected GoToBuilderAction() {
         super(new GoToBuilderActionHandler(
@@ -27,10 +28,10 @@ public class GoToBuilderAction extends EditorAction {
                 new PopupListFactoryImpl(),
                 new PsiManagerFactoryImpl(),
                 new CreateBuilderDialogFactoryImpl(),
-                new GuiHelperImpl(),
+                guiHelper,
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
                 new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
                 new MemberChooserDialogFactoryImpl(),
-                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper)));
+                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper, guiHelper)));
     }
 }

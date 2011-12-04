@@ -8,6 +8,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -21,10 +22,11 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiDirectory targetDirectory;
     private String className;
     private PsiClass psiClassFromEditor;
+    private GuiHelper guiHelper;
     private PsiHelper psiHelper;
 
     public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, List<PsiElementClassMember> classMembers,
-                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper) {
+                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.classMembers = classMembers;
@@ -32,6 +34,7 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
         this.psiHelper = psiHelper;
+        this.guiHelper = guiHelper;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
 
     private PsiElement createBuilder(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
         try {
-            psiHelper.includeCurrentPlaceAsChangePlace(project);
+            guiHelper.includeCurrentPlaceAsChangePlace(project);
             PsiClass targetClass = getBuilderPsiClass(project, classMembers, targetDirectory, className, psiClassFromEditor);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
@@ -58,7 +61,7 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {
-        psiHelper.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
+        guiHelper.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
     }
 
     private void showErrorMessage(Project project, String className) {

@@ -1,13 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
-import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -34,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
         RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class,
-        ApplicationManager.class, IdeDocumentHistory.class, CodeInsightUtil.class})
+        ApplicationManager.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -232,35 +230,5 @@ public class PsiHelperImplTest {
 
         // then
         assertThat(result, is(application));
-    }
-    
-    @Test
-    public void shouldUseIdeDocumentHistoryToIncludeCurrentPlaceAsChangePlace() {
-        // given
-        mockStatic(IdeDocumentHistory.class);
-        IdeDocumentHistory ideDocumentHistory = mock(IdeDocumentHistory.class);
-        given(IdeDocumentHistory.getInstance(project)).willReturn(ideDocumentHistory);
-
-        // when
-        psiHelper.includeCurrentPlaceAsChangePlace(project);
-
-        // then
-        verify(ideDocumentHistory).includeCurrentPlaceAsChangePlace();
-    }
-
-    @Test
-    public void shouldUseCodeInsightUtilToPositionCursor() {
-        // given
-        mockStatic(CodeInsightUtil.class);
-        PsiElement psiElement = mock(PsiElement.class);
-        PsiFile psiFile = mock(PsiFile.class);
-
-        // when
-        psiHelper.positionCursor(project, psiFile, psiElement);
-
-        // then
-        verifyStatic();
-        CodeInsightUtil.positionCursor(project, psiFile, psiElement);
-
     }
 }
