@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin version="2" url="https://github.com/mjedynak/Builder-Generator">
     <name>Builder Generator</name>
     <description>
     <![CDATA[
@@ -12,10 +12,10 @@
       </ul>
       ]]>
     </description>
-    <version>1.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="8000"/>
+    <idea-version since-build="107.777"/>
 
     <application-components>
     </application-components>
