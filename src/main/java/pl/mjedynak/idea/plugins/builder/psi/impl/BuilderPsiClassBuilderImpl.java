@@ -54,8 +54,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     @Override
     public BuilderPsiClassBuilder withFields() {
-        checkFields();
-        PsiField srcClassNameField = elementFactory.createFieldFromText(PRIVATE_STRING + SPACE + srcClassName + " " + srcClassFieldName + ";", srcClass);
+        checkClassFieldsRequiredForBuilding();
+        PsiField srcClassNameField = elementFactory.createFieldFromText(PRIVATE_STRING + SPACE + srcClassName + SPACE + srcClassFieldName + ";", srcClass);
         builderClass.add(srcClassNameField);
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             builderClass.add(classMember.getPsiElement());
@@ -65,7 +65,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     @Override
     public BuilderPsiClassBuilder withPrivateConstructor() {
-        checkFields();
+        checkClassFieldsRequiredForBuilding();
         PsiMethod constructor = elementFactory.createConstructor();
         constructor.getModifierList().setModifierProperty(PRIVATE_STRING, true);
         builderClass.add(constructor);
@@ -74,7 +74,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     @Override
     public BuilderPsiClassBuilder withInitializingMethod() {
-        checkFields();
+        checkClassFieldsRequiredForBuilding();
         String prefix = isVowel(srcClassName.toLowerCase().charAt(0)) ? AN_PREFIX : A_PREFIX;
         PsiMethod staticMethod = elementFactory.createMethodFromText(
                 "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "();}", srcClass);
@@ -84,7 +84,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     @Override
     public BuilderPsiClassBuilder withSetMethods() {
-        checkFields();
+        checkClassFieldsRequiredForBuilding();
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
             String fieldName = psiField.getName();
@@ -120,7 +120,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         }
     }
 
-    private void checkFields() {
+    private void checkClassFieldsRequiredForBuilding() {
         if (anyFieldIsNull()) {
             throw new IllegalStateException("Fields not set. Invoke aBuilder() method before.");
         }
