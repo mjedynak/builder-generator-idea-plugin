@@ -47,8 +47,6 @@ public class BuilderPsiClassBuilderImplTest {
 
     private List<PsiElementClassMember> psiElementClassMembers;
 
-    private String builderClassName = "BuilderClassName";
-
     @Mock
     private JavaDirectoryService javaDirectoryService;
 
@@ -60,6 +58,8 @@ public class BuilderPsiClassBuilderImplTest {
 
     @Mock
     private PsiElementFactory elementFactory;
+
+    private String builderClassName = "BuilderClassName";
 
     private String srcClassName = "ClassName";
 
@@ -78,6 +78,7 @@ public class BuilderPsiClassBuilderImplTest {
         given(srcClass.getName()).willReturn(srcClassName);
     }
 
+    @SuppressWarnings(value = "unchecked")
     @Test
     public void shouldSetPassedFieldsAndCreateRequiredOnes() {
         // when
@@ -97,18 +98,26 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test
-    public void shouldAddFieldsToBuilderClass() {
+    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotation() {
         // given
+        PsiField psiFieldOfOriginalClass = mock(PsiField.class);
+        PsiField copyPsiField = mock(PsiField.class) ;
+        PsiModifierList psiModifierList = mock(PsiModifierList.class);
+        PsiAnnotation annotation = mock(PsiAnnotation.class);
         given(elementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", srcClass)).willReturn(srcClassNameField);
-        PsiElement psiElement = mock(PsiElement.class);
-        given(psiElementClassMember.getPsiElement()).willReturn(psiElement);
+        given(psiFieldOfOriginalClass.copy()).willReturn(copyPsiField);
+        given(copyPsiField.getModifierList()).willReturn(psiModifierList);
+        PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
+        given(psiModifierList.getAnnotations()).willReturn(annotationArray);
+        given(psiElementClassMember.getPsiElement()).willReturn(psiFieldOfOriginalClass);
 
         // when
         psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withFields();
 
         // then
+        verify(annotation).delete();
         verify(builderClass).add(srcClassNameField);
-        verify(builderClass).add(psiElement);
+        verify(builderClass).add(copyPsiField);
     }
 
     @Test
@@ -221,5 +230,11 @@ public class BuilderPsiClassBuilderImplTest {
     public void shouldThrowExceptionWhenInvokingBuildMethodIfFieldsNotSetBefore() {
         // when
         psiClassBuilder.build();
+    }
+
+    private PsiAnnotation[] createAnnotationArray(PsiAnnotation annotation) {
+        PsiAnnotation[] annotationArray = new PsiAnnotation[1];
+        annotationArray[0] = annotation;
+        return annotationArray;
     }
 }

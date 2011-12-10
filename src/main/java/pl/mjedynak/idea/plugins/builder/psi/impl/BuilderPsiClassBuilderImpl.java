@@ -58,7 +58,12 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         PsiField srcClassNameField = elementFactory.createFieldFromText(PRIVATE_STRING + SPACE + srcClassName + SPACE + srcClassFieldName + ";", srcClass);
         builderClass.add(srcClassNameField);
         for (PsiElementClassMember classMember : psiElementClassMembers) {
-            builderClass.add(classMember.getPsiElement());
+            PsiElement copy = classMember.getPsiElement().copy();
+            PsiAnnotation[] annotations = ((PsiField) copy).getModifierList().getAnnotations();
+            for (PsiAnnotation annotation : annotations) {
+                annotation.delete();
+            }
+            builderClass.add(copy);
         }
         return this;
     }
