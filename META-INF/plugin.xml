@@ -1,18 +1,29 @@
 <idea-plugin version="2" url="https://github.com/mjedynak/Builder-Generator">
     <name>Builder Generator</name>
     <description>
-    <![CDATA[
-     Adds ability to generate builder for a class with setter methods and switch between them.
-     Switching between builder and source class is similar to 'Go To Test' action.
-     Generated builder class does not use reflection, only setter methods.
-     <br/>
-     Usage:
-      <ul>
-          <li>ALT+SHIFT+B inside a class.</li>
-      </ul>
-      ]]>
+        <![CDATA[
+         Adds ability to generate builder for a class with setter methods and switch between them.
+         Switching between builder and source class is similar to 'Go To Test' action.
+         Generated builder class does not use reflection, only setter methods.
+          <br/>
+         <b>This version works only with IDEA 10.5.x</b>
+         <br/>
+         Usage:
+          <ul>
+              <li>ALT+SHIFT+B inside a class.</li>
+          </ul>
+        ]]>
     </description>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
+    <change-notes>
+        <![CDATA[version 1.0.1<br/>
+           <ul>
+           <li>Annotations of fields are now ignored when creating a builder</li>
+           <li>Source class in builder is no longer a field, but a local variable in build() method</li>
+           </ul>
+         ]]>
+    </change-notes>
+
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
     <idea-version since-build="107.777"/>
