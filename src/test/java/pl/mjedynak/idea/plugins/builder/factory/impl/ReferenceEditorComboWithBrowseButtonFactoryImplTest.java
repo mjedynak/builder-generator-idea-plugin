@@ -1,6 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.factory.impl;
 
-import com.intellij.psi.PsiManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,19 +26,19 @@ public class ReferenceEditorComboWithBrowseButtonFactoryImplTest {
     }
 
     @Mock
-    private PsiManager psiManager;
+    private Project project;
 
     @Test
     public void shouldCreateNewReferenceEditorComboWithBrowseButton() throws Exception {
         // given
         ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton = mock(ReferenceEditorComboWithBrowseButton.class);
-        String packageName = "packageName";
         String recentsKey = "recentsKey";
-        whenNew(ReferenceEditorComboWithBrowseButton.class).withArguments(null, packageName, psiManager, false, recentsKey).thenReturn(referenceEditorComboWithBrowseButton);
+        String packageName = "packageName";
+        whenNew(ReferenceEditorComboWithBrowseButton.class).withArguments(null, packageName, project, true, recentsKey).thenReturn(referenceEditorComboWithBrowseButton);
 
         // when
         ReferenceEditorComboWithBrowseButton result
-                = factory.getReferenceEditorComboWithBrowseButton(psiManager, packageName, recentsKey);
+                = factory.getReferenceEditorComboWithBrowseButton(project, packageName, recentsKey);
 
         // then
         assertThat(result, is(referenceEditorComboWithBrowseButton));

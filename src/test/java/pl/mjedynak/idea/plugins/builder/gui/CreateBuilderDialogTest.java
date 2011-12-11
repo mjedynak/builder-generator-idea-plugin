@@ -61,10 +61,10 @@ public class CreateBuilderDialogTest {
         String packageName = "packageName";
         given(targetPackage.getQualifiedName()).willReturn(packageName);
         given(referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(
-                psiManager, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
+                project, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
 
         createBuilderDialog = new CreateBuilderDialog(
-                project, title, className, targetPackage, targetModule, psiHelper, guiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory);
+                project, title, className, targetPackage, targetModule, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
     }
 
 
@@ -115,7 +115,7 @@ public class CreateBuilderDialogTest {
 
         // then
         assertThat(centerPanel, is(instanceOf(JPanel.class)));
-        assertThat(centerPanel.getComponentCount() > 0,is(true));
+        assertThat(centerPanel.getComponentCount() > 0, is(true));
         assertThat(centerPanel.getLayout(), is(instanceOf(GridBagLayout.class)));
     }
 

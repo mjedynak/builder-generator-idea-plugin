@@ -17,6 +17,6 @@ public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactor
                                                    Module srcModule, PsiHelper psiHelper, PsiManager psiManager,
                                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
         return new CreateBuilderDialog(project, "CreateBuilder", builderName, srcPackage, srcModule, psiHelper, guiHelper,
-                psiManager, referenceEditorComboWithBrowseButtonFactory);
+                referenceEditorComboWithBrowseButtonFactory);
     }
 }

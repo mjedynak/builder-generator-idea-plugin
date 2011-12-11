@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply from: 'https://raw.github.com/breskeby/gradleplugins/master/emmaPlugin/emma.gradle'
 
-ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 10.5.2'
-ideaJdk = 'IDEA IC-107.587'
+ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.0'
+ideaJdk = 'IDEA IC-111.69'
 sourceCompatibility = 1.6
 
 idea {

@@ -43,7 +43,7 @@ public class PsiHelperImpl implements PsiHelper {
 
     @Override
     public PsiShortNamesCache getPsiShortNamesCache(Project project) {
-        return getJavaPsiFacade(project).getShortNamesCache();
+        return PsiShortNamesCache.getInstance(project);
     }
 
     @Override

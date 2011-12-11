@@ -11,6 +11,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
+import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RefactoringMessageUtil;
 import org.junit.Before;
@@ -32,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
         RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class,
-        ApplicationManager.class})
+        ApplicationManager.class, PsiShortNamesCache.class})
 public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
@@ -52,17 +53,17 @@ public class PsiHelperImplTest {
     }
 
     @Test
-    public void shouldGetShortNamesCacheUsingPsiJavaFacade() {
+    public void shouldGetShortNamesCacheUsingPsiShortNamesCache() {
         // given
-        mockStatic(JavaPsiFacade.class);
-        JavaPsiFacade javaPsiFacadeInstance = mock(JavaPsiFacade.class);
-        given(JavaPsiFacade.getInstance(project)).willReturn(javaPsiFacadeInstance);
+        mockStatic(PsiShortNamesCache.class);
+        PsiShortNamesCache psiShortNamesCacheInstance = mock(PsiShortNamesCache.class);
+        given(PsiShortNamesCache.getInstance(project)).willReturn(psiShortNamesCacheInstance);
 
         // when
-        psiHelper.getPsiShortNamesCache(project);
+        PsiShortNamesCache result = psiHelper.getPsiShortNamesCache(project);
 
         // then
-        verify(javaPsiFacadeInstance).getShortNamesCache();
+        assertThat(result, is(psiShortNamesCacheInstance));
     }
 
     @Test

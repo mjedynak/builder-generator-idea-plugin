@@ -62,7 +62,7 @@ public class CreateBuilderDialogFactoryImplTest {
     public void shouldCreateNewBuilderDialogWithGivenFields() {
         // given
         String builderName = "builderName";
-        given(referenceEditorFactory.getReferenceEditorComboWithBrowseButton(any(PsiManager.class), anyString(), anyString())).willReturn(referenceEditor);
+        given(referenceEditorFactory.getReferenceEditorComboWithBrowseButton(any(Project.class), anyString(), anyString())).willReturn(referenceEditor);
 
         // when
         CreateBuilderDialog builderDialog = createBuilderDialogFactory.createBuilderDialog(

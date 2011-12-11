@@ -10,7 +10,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
@@ -46,7 +45,6 @@ public class CreateBuilderDialog extends DialogWrapper {
                                Module targetModule,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
-                               PsiManager psiManager,
                                ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
         super(project, true);
         this.psiHelper = psiHelper;
@@ -57,7 +55,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         setPreferredSize(targetClassNameField);
 
         String targetPackageName = (targetPackage != null) ? targetPackage.getQualifiedName() : "";
-        targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(psiManager, targetPackageName, RECENTS_KEY);
+        targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(project, targetPackageName, RECENTS_KEY);
         targetPackageField.addActionListener(new ChooserDisplayerActionListener(targetPackageField, new PackageChooserDialogFactoryImpl(), project));
         setTitle(title);
     }

@@ -5,8 +5,8 @@
          Adds ability to generate builder for a class with setter methods and switch between them.
          Switching between builder and source class is similar to 'Go To Test' action.
          Generated builder class does not use reflection, only setter methods.
-          <br/>
-         <b>This version works only with IDEA 10.5.x</b>
+         <br/>
+         <i>If you're using IDEA version older than 11, please download plugin version 1.0.1</i>
          <br/>
          Usage:
           <ul>
@@ -14,9 +14,16 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <change-notes>
-        <![CDATA[version 1.0.1<br/>
+        <![CDATA[
+           version 1.0.2
+           <br/>
+           <ul>
+           <li>Updated for IDEA 11.0</li>
+           </ul>
+           version 1.0.1
+           <br/>
            <ul>
            <li>Annotations of fields are now ignored when creating a builder</li>
            <li>Source class in builder is no longer a field, but a local variable in build() method</li>
