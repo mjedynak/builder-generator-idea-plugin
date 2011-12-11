@@ -55,8 +55,6 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withFields() {
         checkClassFieldsRequiredForBuilding();
-        PsiField srcClassNameField = elementFactory.createFieldFromText(PRIVATE_STRING + SPACE + srcClassName + SPACE + srcClassFieldName + ";", srcClass);
-        builderClass.add(srcClassNameField);
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             PsiElement copy = classMember.getPsiElement().copy();
             removeAnnotationsFromElement(copy);
@@ -119,7 +117,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public PsiClass build() {
         checkBuilderField();
         StringBuilder buildMethodText = new StringBuilder();
-        buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassFieldName).append(" = new ").append(srcClassName).append("();");
+        buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
+                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("();");
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
             String fieldName = psiField.getName();

@@ -21,8 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderImplTest {
@@ -104,7 +103,6 @@ public class BuilderPsiClassBuilderImplTest {
         PsiField copyPsiField = mock(PsiField.class) ;
         PsiModifierList psiModifierList = mock(PsiModifierList.class);
         PsiAnnotation annotation = mock(PsiAnnotation.class);
-        given(elementFactory.createFieldFromText("private " + srcClassName + " " + srcClassFieldName + ";", srcClass)).willReturn(srcClassNameField);
         given(psiFieldOfOriginalClass.copy()).willReturn(copyPsiField);
         given(copyPsiField.getModifierList()).willReturn(psiModifierList);
         PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
@@ -116,8 +114,8 @@ public class BuilderPsiClassBuilderImplTest {
 
         // then
         verify(annotation).delete();
-        verify(builderClass).add(srcClassNameField);
         verify(builderClass).add(copyPsiField);
+        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -134,6 +132,7 @@ public class BuilderPsiClassBuilderImplTest {
         // then
         verify(modifierList).setModifierProperty("private", true);
         verify(builderClass).add(constructor);
+        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -148,6 +147,7 @@ public class BuilderPsiClassBuilderImplTest {
 
         // then
         verify(builderClass).add(method);
+        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -164,6 +164,7 @@ public class BuilderPsiClassBuilderImplTest {
 
         // then
         verify(builderClass).add(method);
+        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -183,6 +184,7 @@ public class BuilderPsiClassBuilderImplTest {
 
         // then
         verify(builderClass).add(method);
+        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -192,13 +194,14 @@ public class BuilderPsiClassBuilderImplTest {
         given(psiElementClassMember.getPsiElement()).willReturn(psiField);
         given(psiField.getName()).willReturn("name");
         PsiMethod method = mock(PsiMethod.class);
-        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " + srcClassFieldName + " = new " + srcClassName + "();"
+        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " +srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "();"
                 + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
         // when
         PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).build();
 
         // then
         verify(builderClass).add(method);
+        verifyNoMoreInteractions(builderClass);
         assertThat(result, is(notNullValue()));
     }
 
