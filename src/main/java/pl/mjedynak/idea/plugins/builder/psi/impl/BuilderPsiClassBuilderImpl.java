@@ -59,13 +59,26 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         builderClass.add(srcClassNameField);
         for (PsiElementClassMember classMember : psiElementClassMembers) {
             PsiElement copy = classMember.getPsiElement().copy();
-            PsiAnnotation[] annotations = ((PsiField) copy).getModifierList().getAnnotations();
-            for (PsiAnnotation annotation : annotations) {
-                annotation.delete();
-            }
+            removeAnnotationsFromElement(copy);
             builderClass.add(copy);
         }
         return this;
+    }
+
+    private void removeAnnotationsFromElement(PsiElement psiElement) {
+        if (psiElement instanceof PsiField) {
+            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
+            if (modifierList != null) {
+                deleteAnnotationsFromModifierList(modifierList);
+            }
+        }
+    }
+
+    private void deleteAnnotationsFromModifierList(PsiModifierList modifierList) {
+        PsiAnnotation[] annotations = modifierList.getAnnotations();
+        for (PsiAnnotation annotation : annotations) {
+            annotation.delete();
+        }
     }
 
     @Override
