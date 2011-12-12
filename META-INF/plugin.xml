@@ -6,7 +6,7 @@
          Switching between builder and source class is similar to 'Go To Test' action.
          Generated builder class does not use reflection, only setter methods.
          <br/>
-         <i>If you're using IDEA version older than 11, please download plugin version 1.0.1</i>
+         <i>If you're using IDEA version older than 11, please download plugin version 1.0.1 from http://plugins.intellij.net/plugin/?idea&id=6585</i>
          <br/>
          Usage:
           <ul>
@@ -33,7 +33,7 @@
 
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="107.777"/>
+    <idea-version since-build="111.69"/>
 
     <application-components>
     </application-components>
