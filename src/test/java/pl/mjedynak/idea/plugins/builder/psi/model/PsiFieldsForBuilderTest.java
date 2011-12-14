@@ -1,11 +1,10 @@
-package pl.mjedynak.idea.plugins.builder.psi;
+package pl.mjedynak.idea.plugins.builder.psi.model;
 
 import com.intellij.psi.PsiField;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
