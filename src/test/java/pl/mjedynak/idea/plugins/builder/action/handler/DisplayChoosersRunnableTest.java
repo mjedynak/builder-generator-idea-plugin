@@ -102,6 +102,7 @@ public class DisplayChoosersRunnableTest {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldNotWriteBuilderWhenOkNotSelectedFromMemberChooserDialog() {
         // given
@@ -122,6 +123,7 @@ public class DisplayChoosersRunnableTest {
         verifyZeroInteractions(builderWriter);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldDisplayCreateBuilderAndMemberChooserDialogAndWriteBuilderWhenOKSelectedFromBothWindows() {
         // given
