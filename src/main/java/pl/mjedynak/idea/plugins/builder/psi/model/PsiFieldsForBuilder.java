@@ -1,8 +1,8 @@
-package pl.mjedynak.idea.plugins.builder.psi;
+package pl.mjedynak.idea.plugins.builder.psi.model;
 
+import com.google.common.collect.ImmutableList;
 import com.intellij.psi.PsiField;
 
-import java.util.Collections;
 import java.util.List;
 
 public class PsiFieldsForBuilder {
@@ -11,8 +11,8 @@ public class PsiFieldsForBuilder {
     private List<PsiField> psiFieldsForConstructor;
 
     public PsiFieldsForBuilder(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor) {
-        this.psiFieldsForSetters = Collections.unmodifiableList(psiFieldsForSetters);
-        this.psiFieldsForConstructor = Collections.unmodifiableList(psiFieldsForConstructor);
+        this.psiFieldsForSetters = ImmutableList.copyOf(psiFieldsForSetters);
+        this.psiFieldsForConstructor = ImmutableList.copyOf(psiFieldsForConstructor);
     }
 
     public List<PsiField> getFieldsForSetters() {
