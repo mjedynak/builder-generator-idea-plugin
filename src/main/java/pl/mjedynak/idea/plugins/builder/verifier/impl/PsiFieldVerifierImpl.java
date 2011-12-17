@@ -1,9 +1,14 @@
 package pl.mjedynak.idea.plugins.builder.verifier.impl;
 
 import com.intellij.psi.*;
+import org.apache.commons.lang.WordUtils;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 public class PsiFieldVerifierImpl implements PsiFieldVerifier {
+
+    static final String PRIVATE_MODIFIER = "private";
+    static final String SET_PREFIX = "set";
+
     @Override
     public boolean isSetInConstructor(PsiField psiField, PsiClass psiClass) {
         boolean result = false;
@@ -46,6 +51,36 @@ public class PsiFieldVerifierImpl implements PsiFieldVerifier {
 
     private boolean areNameAndTypeEqual(PsiField psiField, PsiParameter parameter) {
         return parameter.getName().equals(psiField.getName()) && parameter.getType().equals(psiField.getType());
+    }
+
+    @Override
+    public boolean isSetInSetterMethod(PsiField psiField, PsiClass psiClass) {
+        boolean result = false;
+        for (PsiMethod method : psiClass.getAllMethods()) {
+            if (methodIsNotPrivate(method) && methodIsSetterWithProperName(psiField, method)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private boolean methodIsNotPrivate(PsiMethod method) {
+        PsiModifierList modifierList = method.getModifierList();
+        return hasNoModifierList(modifierList) || modifierListHasNoPrivate(modifierList);
+    }
+
+
+    private boolean methodIsSetterWithProperName(PsiField psiField, PsiMethod method) {
+        return method.getName().equals(SET_PREFIX + WordUtils.capitalize(psiField.getName()));
+    }
+
+    private boolean hasNoModifierList(PsiModifierList modifierList) {
+        return modifierList == null;
+    }
+
+    private boolean modifierListHasNoPrivate(PsiModifierList modifierList) {
+        return !modifierList.hasExplicitModifier(PRIVATE_MODIFIER);
     }
 
 }

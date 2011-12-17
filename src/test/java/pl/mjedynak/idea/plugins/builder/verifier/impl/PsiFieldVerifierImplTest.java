@@ -17,6 +17,7 @@ public class PsiFieldVerifierImplTest {
 
     private PsiFieldVerifierImpl psiFieldVerifier;
     private PsiMethod[] constructors;
+    private PsiMethod[] methods;
     private PsiParameter[] parameters;
     
     @Mock
@@ -31,6 +32,12 @@ public class PsiFieldVerifierImplTest {
     private PsiParameter parameter;
     @Mock
     private PsiType psiType;
+    @Mock
+    private PsiMethod method;
+    @Mock
+    private PsiModifierList modifierList;
+    
+    
     private String name;
 
     @Before
@@ -38,6 +45,8 @@ public class PsiFieldVerifierImplTest {
         psiFieldVerifier = new PsiFieldVerifierImpl();
         constructors = new PsiMethod[1];
         constructors[0] = constructor;
+        methods = new PsiMethod[1];
+        methods[0] = method;
         parameters = new PsiParameter[1];
         parameters[0] = parameter;
         name = "name";
@@ -114,6 +123,64 @@ public class PsiFieldVerifierImplTest {
 
         // then
         assertThat(result, is(true));
+    }
+
+    
+    @Test
+    public void shouldVerifyThatFieldIsSetInSetterMethodIfItIsNotPrivateAndHasCorrectParameter() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+//        given(modifierList.hasExplicitModifier(PsiFieldVerifierImpl.PRIVATE_MODIFIER)).willReturn(false);
+        given(method.getName()).willReturn("setField");
+        // when
+        boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void shouldVerifyThatFieldIsSetInSetterMethodIfItHasNoModifierListAndHasCorrectParameter() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(psiField.getName()).willReturn("field");
+        given(method.getName()).willReturn("setField");
+        // when
+        boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsPrivate() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+        given(modifierList.hasExplicitModifier(PsiFieldVerifierImpl.PRIVATE_MODIFIER)).willReturn(true);
+        given(method.getName()).willReturn("setField");
+        // when
+        boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsNotPrivateButHasIncorrectParameter() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+        given(method.getName()).willReturn("setAnotherField");
+        // when
+        boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result, is(false));
     }
 
 

@@ -6,5 +6,7 @@ import com.intellij.psi.PsiField;
 public interface PsiFieldVerifier {
 
     boolean isSetInConstructor(PsiField psiField, PsiClass psiClass);
+
+    boolean isSetInSetterMethod(PsiField psiField, PsiClass psiClass);
     
 }
