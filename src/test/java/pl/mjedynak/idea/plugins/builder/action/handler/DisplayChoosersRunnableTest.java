@@ -23,7 +23,6 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -133,7 +132,7 @@ public class DisplayChoosersRunnableTest {
         given(createBuilderDialog.getClassName()).willReturn(className);
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(Arrays.asList(allFields))).willReturn(selectedFields);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor)).willReturn(selectedFields);
         given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
 
         // when

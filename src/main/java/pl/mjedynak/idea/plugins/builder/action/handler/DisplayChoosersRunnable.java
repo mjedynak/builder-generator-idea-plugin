@@ -5,7 +5,10 @@ import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
@@ -16,7 +19,6 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DisplayChoosersRunnable implements Runnable {
@@ -85,7 +87,6 @@ public class DisplayChoosersRunnable implements Runnable {
     }
 
     private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz) {
-        List<PsiField> localFields = Arrays.asList(clazz.getAllFields());
-        return psiFieldSelector.selectFieldsToIncludeInBuilder(localFields);
+        return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz);
     }
 }

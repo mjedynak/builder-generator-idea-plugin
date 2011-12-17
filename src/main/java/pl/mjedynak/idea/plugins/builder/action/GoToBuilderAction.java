@@ -11,6 +11,7 @@ import pl.mjedynak.idea.plugins.builder.psi.impl.BuilderPsiClassBuilderImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiFieldSelectorImpl;
 import pl.mjedynak.idea.plugins.builder.psi.impl.PsiHelperImpl;
 import pl.mjedynak.idea.plugins.builder.verifier.impl.BuilderVerifierImpl;
+import pl.mjedynak.idea.plugins.builder.verifier.impl.PsiFieldVerifierImpl;
 import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 
 
@@ -30,7 +31,7 @@ public class GoToBuilderAction extends EditorAction {
                 new CreateBuilderDialogFactoryImpl(),
                 guiHelper,
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
-                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl()),
+                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl(), new PsiFieldVerifierImpl()),
                 new MemberChooserDialogFactoryImpl(),
                 new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper, guiHelper)));
     }
