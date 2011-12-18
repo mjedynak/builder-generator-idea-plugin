@@ -2,9 +2,9 @@
     <name>Builder Generator</name>
     <description>
         <![CDATA[
-         Adds ability to generate builder for a class with setter methods and switch between them.
+         Adds ability to generate builder for a class and switch between them.
          Switching between builder and source class is similar to 'Go To Test' action.
-         Generated builder class does not use reflection, only setter methods.
+         Generated builder class does not use reflection, only setter methods or constructor.
          <br/>
          <i>If you're using IDEA version older than 11, please download plugin version 1.0.1 from http://plugins.intellij.net/plugin/?idea&id=6585</i>
          <br/>
@@ -14,9 +14,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <change-notes>
         <![CDATA[
+           version 1.0.3
+           <br/>
+           <ul>
+           <li>Added ability to create builder for class with fields initialized in constructor</li>
+           </ul>
            version 1.0.2
            <br/>
            <ul>
