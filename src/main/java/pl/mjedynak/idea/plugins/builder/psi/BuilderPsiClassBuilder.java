@@ -1,15 +1,13 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-
-import java.util.List;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public interface BuilderPsiClassBuilder {
 
-    BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, List<PsiElementClassMember> psiElementClassMembers);
+    BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, PsiFieldsForBuilder psiFieldsForBuilder);
 
     BuilderPsiClassBuilder withFields();
 

@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -11,25 +10,24 @@ import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-
-import java.util.List;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public class BuilderWriterComputable implements Computable<PsiElement> {
 
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private Project project;
-    private List<PsiElementClassMember> classMembers;
+    private PsiFieldsForBuilder psiFieldsForBuilder;
     private PsiDirectory targetDirectory;
     private String className;
     private PsiClass psiClassFromEditor;
     private GuiHelper guiHelper;
     private PsiHelper psiHelper;
 
-    public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, List<PsiElementClassMember> classMembers,
+    public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
                                    PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
-        this.classMembers = classMembers;
+        this.psiFieldsForBuilder = psiFieldsForBuilder;
         this.targetDirectory = targetDirectory;
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
@@ -39,13 +37,13 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
 
     @Override
     public PsiElement compute() {
-        return createBuilder(project, classMembers, targetDirectory, className, psiClassFromEditor);
+        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor);
     }
 
-    private PsiElement createBuilder(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
         try {
             guiHelper.includeCurrentPlaceAsChangePlace(project);
-            PsiClass targetClass = getBuilderPsiClass(project, classMembers, targetDirectory, className, psiClassFromEditor);
+            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
@@ -55,8 +53,8 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         }
     }
 
-    private PsiClass getBuilderPsiClass(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
-        return builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, classMembers)
+    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+        return builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder)
                 .withFields().withPrivateConstructor().withInitializingMethod().withSetMethods().build();
     }
 

@@ -19,6 +19,7 @@ public class GoToBuilderAction extends EditorAction {
 
     private static PsiHelperImpl psiHelper = new PsiHelperImpl();
     private static GuiHelperImpl guiHelper = new GuiHelperImpl();
+    private static PsiFieldVerifierImpl psiFieldVerifier = new PsiFieldVerifierImpl();
 
     protected GoToBuilderAction() {
         super(new GoToBuilderActionHandler(
@@ -31,8 +32,9 @@ public class GoToBuilderAction extends EditorAction {
                 new CreateBuilderDialogFactoryImpl(),
                 guiHelper,
                 new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
-                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl(), new PsiFieldVerifierImpl()),
+                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl(), psiFieldVerifier),
                 new MemberChooserDialogFactoryImpl(),
-                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper, guiHelper)));
+                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper, guiHelper),
+                new PsiFieldsForBuilderFactoryImpl(psiFieldVerifier)));
     }
 }

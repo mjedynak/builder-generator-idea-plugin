@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -16,9 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-
-import java.util.Arrays;
-import java.util.List;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -53,16 +50,13 @@ public class BuilderWriterComputableTest {
     private PsiClass srcClass;
 
     @Mock
-    private PsiElementClassMember psiElementClassMember;
-
-    private List<PsiElementClassMember> classMembers;
+    private PsiFieldsForBuilder psiFieldsForBuilder;
 
     private String builderClassName = "builderClassName";
 
     @Before
     public void setUp() {
-        classMembers = Arrays.asList(psiElementClassMember);
-        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, classMembers, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper);
+        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper);
     }
 
     @Test
@@ -71,7 +65,7 @@ public class BuilderWriterComputableTest {
         PsiClass builderClass = mock(PsiClass.class);
         PsiFile psiFile = mock(PsiFile.class);
         PsiElement psiElement = mock(PsiElement.class);
-        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, classMembers)).willReturn(builderPsiClassBuilder);
+        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder)).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withFields()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withPrivateConstructor()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
@@ -90,10 +84,11 @@ public class BuilderWriterComputableTest {
         assertThat((PsiClass) result, is(builderClass));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldInvokeBuilderWriterErrorRunnableWhenExceptionOccurs() {
         // given
-        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, classMembers)).willThrow(IncorrectOperationException.class);
+        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder)).willThrow(IncorrectOperationException.class);
         Application application = mock(Application.class);
         given(psiHelper.getApplication()).willReturn(application);
 

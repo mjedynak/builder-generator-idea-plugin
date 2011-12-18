@@ -58,6 +58,7 @@ public class GoToBuilderActionHandlerTest {
     @Mock
     private PopupDisplayer popupDisplayer;
 
+//
     @Mock
     JList list;
 

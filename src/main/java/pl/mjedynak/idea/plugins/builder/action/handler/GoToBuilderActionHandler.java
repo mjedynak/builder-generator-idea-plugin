@@ -43,12 +43,14 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private BuilderWriter builderWriter;
 
+    private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
+
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
                                     PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
                                     CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                     ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
                                     PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
-                                    BuilderWriter builderWriter) {
+                                    BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
@@ -61,6 +63,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         this.psiFieldSelector = psiFieldSelector;
         this.memberChooserDialogFactory = memberChooserDialogFactory;
         this.builderWriter = builderWriter;
+        this.psiFieldsForBuilderFactory = psiFieldsForBuilderFactory;
 
     }
 
@@ -94,7 +97,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         popupDisplayer.displayPopupChooser(editor, popupList,
                 new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
                         createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector,
-                        memberChooserDialogFactory, builderWriter));
+                        memberChooserDialogFactory, builderWriter, psiFieldsForBuilderFactory));
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {

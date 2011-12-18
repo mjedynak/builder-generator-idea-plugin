@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +25,6 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private PsiDirectory targetDirectory;
     private PsiClass srcClass;
     private String builderClassName;
-    private List<PsiElementClassMember> psiElementClassMembers;
 
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
@@ -53,22 +51,6 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
         psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
-        return this;
-    }
-
-    @Override
-    public BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, List<PsiElementClassMember> psiElementClassMembers) {
-        this.project = project;
-        this.targetDirectory = targetDirectory;
-        this.srcClass = psiClass;
-        this.builderClassName = builderClassName;
-        this.psiElementClassMembers = psiElementClassMembers;
-        JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
-        builderClass = javaDirectoryService.createClass(targetDirectory, builderClassName);
-        JavaPsiFacade javaPsiFacade = psiHelper.getJavaPsiFacade(project);
-        elementFactory = javaPsiFacade.getElementFactory();
-        srcClassName = psiClass.getName();
-        srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         return this;
     }
 

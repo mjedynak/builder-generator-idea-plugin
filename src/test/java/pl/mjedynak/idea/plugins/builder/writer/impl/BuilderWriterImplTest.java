@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.writer.impl;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -12,9 +11,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriterRunnable;
-
-import java.util.Arrays;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -44,7 +42,7 @@ public class BuilderWriterImplTest {
     private PsiClass srcClass;
 
     @Mock
-    private PsiElementClassMember psiElementClassMember;
+    PsiFieldsForBuilder psiFieldsForBuilder;
 
 
     @Test
@@ -54,7 +52,7 @@ public class BuilderWriterImplTest {
         given(psiHelper.getCommandProcessor()).willReturn(commandProcessor);
 
         // when
-        builderWriter.writeBuilder(project, Arrays.asList(psiElementClassMember), targetDirectory, "anyBuilderClassName", srcClass);
+        builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass);
 
         // then
         verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriterImpl.CREATE_BUILDER_STRING), eq(builderWriter));

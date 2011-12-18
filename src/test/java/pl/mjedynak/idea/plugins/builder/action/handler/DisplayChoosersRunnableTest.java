@@ -12,14 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
-import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
+import pl.mjedynak.idea.plugins.builder.factory.*;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.ArrayList;
@@ -70,6 +68,10 @@ public class DisplayChoosersRunnableTest {
     private CreateBuilderDialog createBuilderDialog;
     @Mock
     private MemberChooser memberChooserDialog;
+    @Mock
+    private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
+    @Mock
+    private PsiFieldsForBuilder psiFieldsForBuilder;
 
     private String className = "className";
 
@@ -85,6 +87,7 @@ public class DisplayChoosersRunnableTest {
         given(psiHelper.getPackage(psiDirectory)).willReturn(psiPackage);
         given(psiManagerFactory.getPsiManager(project)).willReturn(psiManager);
         given(psiClassFromEditor.getName()).willReturn(className);
+        given(psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedFields, psiClassFromEditor)).willReturn(psiFieldsForBuilder);
         given(createBuilderDialogFactory.createBuilderDialog(className + DisplayChoosersRunnable.BUILDER_SUFFIX, project,
                 psiPackage, module, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper)).willReturn(createBuilderDialog);
     }
@@ -143,6 +146,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(project, selectedFields, psiDirectory, className, psiClassFromEditor);
+        verify(builderWriter).writeBuilder(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor);
     }
 }

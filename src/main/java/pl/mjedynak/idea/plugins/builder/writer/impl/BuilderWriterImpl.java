@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.writer.impl;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -8,10 +7,9 @@ import com.intellij.psi.PsiDirectory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriterRunnable;
-
-import java.util.List;
 
 public class BuilderWriterImpl implements BuilderWriter {
 
@@ -27,10 +25,10 @@ public class BuilderWriterImpl implements BuilderWriter {
     }
 
     @Override
-    public void writeBuilder(Project project, List<PsiElementClassMember> classMembers, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+    public void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
         commandProcessor.executeCommand(project,
-                new BuilderWriterRunnable(builderPsiClassBuilder, project, classMembers, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper),
+                new BuilderWriterRunnable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper),
                 CREATE_BUILDER_STRING, this);
     }
 }
