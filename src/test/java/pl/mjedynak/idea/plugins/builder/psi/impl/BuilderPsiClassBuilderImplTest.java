@@ -41,9 +41,6 @@ public class BuilderPsiClassBuilderImplTest {
     @Mock
     private PsiClass srcClass;
 
-//    @Mock
-//    private PsiElementClassMember psiElementClassMember;
-
     @Mock
     private JavaDirectoryService javaDirectoryService;
 
