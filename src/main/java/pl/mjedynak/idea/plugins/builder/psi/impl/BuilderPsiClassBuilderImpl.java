@@ -3,10 +3,10 @@ package pl.mjedynak.idea.plugins.builder.psi.impl;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import java.util.List;
 
@@ -27,6 +27,9 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private String builderClassName;
     private List<PsiElementClassMember> psiElementClassMembers;
 
+    private List<PsiField> psiFieldsForSetters;
+    private List<PsiField> psiFieldsForConstructor;
+
     private PsiClass builderClass;
     private PsiElementFactory elementFactory;
     private String srcClassName;
@@ -34,6 +37,22 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     public BuilderPsiClassBuilderImpl(PsiHelper psiHelper) {
         this.psiHelper = psiHelper;
+    }
+
+    public BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, PsiFieldsForBuilder psiFieldsForBuilder) {
+        this.project = project;
+        this.targetDirectory = targetDirectory;
+        this.srcClass = psiClass;
+        this.builderClassName = builderClassName;
+        JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
+        builderClass = javaDirectoryService.createClass(targetDirectory, builderClassName);
+        JavaPsiFacade javaPsiFacade = psiHelper.getJavaPsiFacade(project);
+        elementFactory = javaPsiFacade.getElementFactory();
+        srcClassName = psiClass.getName();
+        srcClassFieldName = StringUtils.uncapitalize(srcClassName);
+        psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
+        psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
+        return this;
     }
 
     @Override
@@ -55,12 +74,19 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withFields() {
         checkClassFieldsRequiredForBuilding();
-        for (PsiElementClassMember classMember : psiElementClassMembers) {
-            PsiElement copy = classMember.getPsiElement().copy();
-            removeAnnotationsFromElement(copy);
-            builderClass.add(copy);
+        for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
+            removeAnnotationFromCopyAndSet(psiFieldsForSetter);
+        }
+        for (PsiField psiFieldsForSetter : psiFieldsForConstructor) {
+            removeAnnotationFromCopyAndSet(psiFieldsForSetter);
         }
         return this;
+    }
+
+    private void removeAnnotationFromCopyAndSet(PsiField psiFieldsForSetter) {
+        PsiElement copy = psiFieldsForSetter.copy();
+        removeAnnotationsFromElement(copy);
+        builderClass.add(copy);
     }
 
     private void removeAnnotationsFromElement(PsiElement psiElement) {
@@ -101,16 +127,23 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withSetMethods() {
         checkClassFieldsRequiredForBuilding();
-        for (PsiElementClassMember classMember : psiElementClassMembers) {
-            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-            String fieldName = psiField.getName();
-            String fieldType = psiField.getType().getPresentableText();
-            String fieldNameUppercase = StringUtils.capitalize(fieldName);
-            PsiMethod method = elementFactory.createMethodFromText(
-                    "public " + builderClassName + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }", psiField);
-            builderClass.add(method);
+        for (PsiField psiFieldForSetter : psiFieldsForSetters) {
+            createAndAddMethod(psiFieldForSetter);
+        }
+        for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
+            createAndAddMethod(psiFieldForConstructor);
         }
         return this;
+    }
+
+    private void createAndAddMethod(PsiField psiField) {
+        String fieldName = psiField.getName();
+        String fieldType = psiField.getType().getPresentableText();
+        String fieldNameUppercase = StringUtils.capitalize(fieldName);
+        PsiMethod method = elementFactory.createMethodFromText(
+                "public " + builderClassName + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }",
+                psiField);
+        builderClass.add(method);
     }
 
     @Override
@@ -119,9 +152,9 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         StringBuilder buildMethodText = new StringBuilder();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
                 .append(srcClassFieldName).append(" = new ").append(srcClassName).append("();");
-        for (PsiElementClassMember classMember : psiElementClassMembers) {
-            PsiFieldImpl psiField = (PsiFieldImpl) classMember.getPsiElement();
-            String fieldName = psiField.getName();
+
+        for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
+            String fieldName = psiFieldsForSetter.getName();
             String fieldNameUppercase = StringUtils.capitalize(fieldName);
             buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
@@ -144,6 +177,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     }
 
     private boolean anyFieldIsNull() {
-        return (project == null || targetDirectory == null || srcClass == null || builderClassName == null || psiElementClassMembers == null);
+        return (project == null || targetDirectory == null || srcClass == null || builderClassName == null || psiFieldsForSetters == null || psiFieldsForConstructor == null);
     }
+
+
 }

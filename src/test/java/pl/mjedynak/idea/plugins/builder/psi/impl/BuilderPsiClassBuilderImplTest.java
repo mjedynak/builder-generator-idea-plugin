@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.psi.impl;
 
-import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiFieldImpl;
@@ -13,8 +12,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -41,10 +41,8 @@ public class BuilderPsiClassBuilderImplTest {
     @Mock
     private PsiClass srcClass;
 
-    @Mock
-    private PsiElementClassMember psiElementClassMember;
-
-    private List<PsiElementClassMember> psiElementClassMembers;
+//    @Mock
+//    private PsiElementClassMember psiElementClassMember;
 
     @Mock
     private JavaDirectoryService javaDirectoryService;
@@ -58,30 +56,38 @@ public class BuilderPsiClassBuilderImplTest {
     @Mock
     private PsiElementFactory elementFactory;
 
-    private String builderClassName = "BuilderClassName";
-
-    private String srcClassName = "ClassName";
-
-    private String srcClassFieldName = "className";
+    @Mock
+    private PsiFieldsForBuilder psiFieldsForBuilder;
 
     @Mock
     private PsiField srcClassNameField;
 
+    private List<PsiField> psiFieldsForSetters;
+
+    private List<PsiField> psiFieldsForConstructor;
+
+    private String builderClassName = "BuilderClassName";
+    private String srcClassName = "ClassName";
+    private String srcClassFieldName = "className";
+
     @Before
     public void setUp() {
-        psiElementClassMembers = Arrays.asList(psiElementClassMember);
+        psiFieldsForConstructor = new ArrayList<PsiField>();
+        psiFieldsForSetters = new ArrayList<PsiField>();
         given(psiHelper.getJavaDirectoryService()).willReturn(javaDirectoryService);
         given(javaDirectoryService.createClass(targetDirectory, builderClassName)).willReturn(builderClass);
         given(psiHelper.getJavaPsiFacade(project)).willReturn(javaPsiFacade);
         given(javaPsiFacade.getElementFactory()).willReturn(elementFactory);
         given(srcClass.getName()).willReturn(srcClassName);
+        given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
+        given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
     }
 
     @SuppressWarnings(value = "unchecked")
     @Test
     public void shouldSetPassedFieldsAndCreateRequiredOnes() {
         // when
-        BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers);
+        BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
 
         // then
         assertThat((BuilderPsiClassBuilderImpl) result, is(psiClassBuilder));
@@ -89,7 +95,8 @@ public class BuilderPsiClassBuilderImplTest {
         assertThat((PsiDirectory) ReflectionTestUtils.getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
         assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "srcClass"), is(srcClass));
         assertThat((String) ReflectionTestUtils.getField(psiClassBuilder, "builderClassName"), is(builderClassName));
-        assertThat((List<PsiElementClassMember>) ReflectionTestUtils.getField(psiClassBuilder, "psiElementClassMembers"), is(psiElementClassMembers));
+        assertThat((List<PsiField>) ReflectionTestUtils.getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
+        assertThat((List<PsiField>) ReflectionTestUtils.getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
         assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "builderClass"), is(builderClass));
         assertThat((PsiElementFactory) ReflectionTestUtils.getField(psiClassBuilder, "elementFactory"), is(elementFactory));
         assertThat((String) ReflectionTestUtils.getField(psiClassBuilder, "srcClassName"), is(srcClassName));
@@ -100,6 +107,7 @@ public class BuilderPsiClassBuilderImplTest {
     public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotation() {
         // given
         PsiField psiFieldOfOriginalClass = mock(PsiField.class);
+        psiFieldsForSetters.add(psiFieldOfOriginalClass);
         PsiField copyPsiField = mock(PsiField.class) ;
         PsiModifierList psiModifierList = mock(PsiModifierList.class);
         PsiAnnotation annotation = mock(PsiAnnotation.class);
@@ -107,10 +115,9 @@ public class BuilderPsiClassBuilderImplTest {
         given(copyPsiField.getModifierList()).willReturn(psiModifierList);
         PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
         given(psiModifierList.getAnnotations()).willReturn(annotationArray);
-        given(psiElementClassMember.getPsiElement()).willReturn(psiFieldOfOriginalClass);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withFields();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withFields();
 
         // then
         verify(annotation).delete();
@@ -127,7 +134,7 @@ public class BuilderPsiClassBuilderImplTest {
         given(elementFactory.createConstructor()).willReturn(constructor);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withPrivateConstructor();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withPrivateConstructor();
 
         // then
         verify(modifierList).setModifierProperty("private", true);
@@ -143,7 +150,7 @@ public class BuilderPsiClassBuilderImplTest {
                 "public static " + builderClassName + " a" + srcClassName + "() { return new " + builderClassName + "();}", srcClass)).willReturn(method);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withInitializingMethod();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withInitializingMethod();
 
         // then
         verify(builderClass).add(method);
@@ -160,7 +167,7 @@ public class BuilderPsiClassBuilderImplTest {
                 "public static " + builderClassName + " an" + srcClassNameStartingWithVowel + "() { return new " + builderClassName + "();}", srcClass)).willReturn(method);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withInitializingMethod();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withInitializingMethod();
 
         // then
         verify(builderClass).add(method);
@@ -168,36 +175,53 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test
-    public void shouldAddSetMethods() {
+    public void shouldAddSetMethodsForFieldsFromBothLists() {
         // given
-        PsiFieldImpl psiField = mock(PsiFieldImpl.class);
-        given(psiElementClassMember.getPsiElement()).willReturn(psiField);
-        given(psiField.getName()).willReturn("name");
-        PsiType type = mock(PsiType.class);
-        given(type.getPresentableText()).willReturn("String");
-        given(psiField.getType()).willReturn(type);
-        PsiMethod method = mock(PsiMethod.class);
-        given(elementFactory.createMethodFromText("public " + builderClassName + " withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
+        PsiFieldImpl psiFieldForSetter = mock(PsiFieldImpl.class);
+        psiFieldsForSetters.add(psiFieldForSetter);
+        given(psiFieldForSetter.getName()).willReturn("name");
+        PsiType typeForFieldForSetter = mock(PsiType.class);
+        given(typeForFieldForSetter.getPresentableText()).willReturn("String");
+        given(psiFieldForSetter.getType()).willReturn(typeForFieldForSetter);
+        PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + builderClassName + " withName(String name) { this.name = name; return this; }", psiFieldForSetter))
+                .willReturn(methodForFieldForSetter);
+
+        PsiFieldImpl psiFieldForConstructor = mock(PsiFieldImpl.class);
+        psiFieldsForConstructor.add(psiFieldForConstructor);
+        given(psiFieldForConstructor.getName()).willReturn("age");
+        PsiType typeForFieldForConstructor = mock(PsiType.class);
+        given(typeForFieldForConstructor.getPresentableText()).willReturn("int");
+        given(psiFieldForConstructor.getType()).willReturn(typeForFieldForConstructor);
+        PsiMethod methodForFieldForConstructor = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + builderClassName + " withAge(int age) { this.age = age; return this; }", psiFieldForConstructor))
+                .willReturn(methodForFieldForConstructor);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).withSetMethods();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods();
 
         // then
-        verify(builderClass).add(method);
+        verify(builderClass).add(methodForFieldForSetter);
+        verify(builderClass).add(methodForFieldForConstructor);
         verifyNoMoreInteractions(builderClass);
     }
 
     @Test
-    public void shouldReturnBuilderObjectWithBuildMethod() {
+    public void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructor() {
         // given
-        PsiFieldImpl psiField = mock(PsiFieldImpl.class);
-        given(psiElementClassMember.getPsiElement()).willReturn(psiField);
-        given(psiField.getName()).willReturn("name");
+        PsiField psiFieldForSetter = mock(PsiField.class);
+        psiFieldsForSetters.add(psiFieldForSetter);
+
+        PsiField psiFieldForConstructor = mock(PsiField.class);
+        psiFieldsForConstructor.add(psiFieldForConstructor);
+        given(psiFieldForConstructor.getName()).willReturn("age");
+
+        given(psiFieldForSetter.getName()).willReturn("name");
         PsiMethod method = mock(PsiMethod.class);
-        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " +srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "();"
+        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " +srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age);"
                 + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
         // when
-        PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiElementClassMembers).build();
+        PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).build();
 
         // then
         verify(builderClass).add(method);
