@@ -101,24 +101,35 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test
-    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotation() {
+    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotationAndFinalModifier() {
         // given
-        PsiField psiFieldOfOriginalClass = mock(PsiField.class);
-        psiFieldsForSetters.add(psiFieldOfOriginalClass);
-        PsiField copyPsiField = mock(PsiField.class) ;
-        PsiModifierList psiModifierList = mock(PsiModifierList.class);
+        String finalModifier = "final";
+        PsiField psiFieldForSetters = mock(PsiField.class);
+        psiFieldsForSetters.add(psiFieldForSetters);
+        PsiField copyPsiFieldForSetter = mock(PsiField.class);
+        PsiModifierList psiModifierListForSetter = mock(PsiModifierList.class);
         PsiAnnotation annotation = mock(PsiAnnotation.class);
-        given(psiFieldOfOriginalClass.copy()).willReturn(copyPsiField);
-        given(copyPsiField.getModifierList()).willReturn(psiModifierList);
+        given(psiFieldForSetters.copy()).willReturn(copyPsiFieldForSetter);
+        given(copyPsiFieldForSetter.getModifierList()).willReturn(psiModifierListForSetter);
         PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
-        given(psiModifierList.getAnnotations()).willReturn(annotationArray);
+        given(psiModifierListForSetter.getAnnotations()).willReturn(annotationArray);
+
+        PsiField psiFieldForConstructor = mock(PsiField.class);
+        psiFieldsForConstructor.add(psiFieldForConstructor);
+        PsiField copyPsiFieldForConstructor = mock(PsiField.class);
+        PsiModifierList psiModifierListForConstructor = mock(PsiModifierList.class);
+        given(psiModifierListForConstructor.hasExplicitModifier(finalModifier)).willReturn(true);
+        given(psiFieldForConstructor.copy()).willReturn(copyPsiFieldForConstructor);
+        given(copyPsiFieldForConstructor.getModifierList()).willReturn(psiModifierListForConstructor);
 
         // when
         psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withFields();
 
         // then
         verify(annotation).delete();
-        verify(builderClass).add(copyPsiField);
+        verify(psiModifierListForConstructor).setModifierProperty(finalModifier, false);
+        verify(builderClass).add(copyPsiFieldForSetter);
+        verify(builderClass).add(copyPsiFieldForConstructor);
         verifyNoMoreInteractions(builderClass);
     }
 
@@ -215,7 +226,7 @@ public class BuilderPsiClassBuilderImplTest {
 
         given(psiFieldForSetter.getName()).willReturn("name");
         PsiMethod method = mock(PsiMethod.class);
-        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " +srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age);"
+        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age);"
                 + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
         // when
         PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).build();

@@ -18,6 +18,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
+    private static final String FINAL = "final";
 
     private PsiHelper psiHelper;
 
@@ -58,18 +59,28 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public BuilderPsiClassBuilder withFields() {
         checkClassFieldsRequiredForBuilding();
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
-            removeAnnotationFromCopyAndAddToBuilder(psiFieldsForSetter);
+            removeModifiers(psiFieldsForSetter);
         }
-        for (PsiField psiFieldsForSetter : psiFieldsForConstructor) {
-            removeAnnotationFromCopyAndAddToBuilder(psiFieldsForSetter);
+        for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
+            removeModifiers(psiFieldForConstructor);
         }
         return this;
     }
 
-    private void removeAnnotationFromCopyAndAddToBuilder(PsiField psiFieldsForSetter) {
-        PsiElement copy = psiFieldsForSetter.copy();
+    private void removeModifiers(PsiField psiField) {
+        PsiElement copy = psiField.copy();
         removeAnnotationsFromElement(copy);
+        removeFinalModifierFromElement(copy);
         builderClass.add(copy);
+    }
+
+    private void removeFinalModifierFromElement(PsiElement psiElement) {
+        if (psiElement instanceof PsiField) {
+            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
+            if (modifierList != null && modifierList.hasExplicitModifier(FINAL)) {
+                modifierList.setModifierProperty(FINAL, false);
+            }
+        }
     }
 
     private void removeAnnotationsFromElement(PsiElement psiElement) {
@@ -83,8 +94,10 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     private void deleteAnnotationsFromModifierList(PsiModifierList modifierList) {
         PsiAnnotation[] annotations = modifierList.getAnnotations();
-        for (PsiAnnotation annotation : annotations) {
-            annotation.delete();
+        if (annotations != null) {
+            for (PsiAnnotation annotation : annotations) {
+                annotation.delete();
+            }
         }
     }
 
