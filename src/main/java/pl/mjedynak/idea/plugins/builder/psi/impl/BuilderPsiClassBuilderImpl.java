@@ -58,15 +58,15 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public BuilderPsiClassBuilder withFields() {
         checkClassFieldsRequiredForBuilding();
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
-            removeAnnotationFromCopyAndSet(psiFieldsForSetter);
+            removeAnnotationFromCopyAndAddToBuilder(psiFieldsForSetter);
         }
         for (PsiField psiFieldsForSetter : psiFieldsForConstructor) {
-            removeAnnotationFromCopyAndSet(psiFieldsForSetter);
+            removeAnnotationFromCopyAndAddToBuilder(psiFieldsForSetter);
         }
         return this;
     }
 
-    private void removeAnnotationFromCopyAndSet(PsiField psiFieldsForSetter) {
+    private void removeAnnotationFromCopyAndAddToBuilder(PsiField psiFieldsForSetter) {
         PsiElement copy = psiFieldsForSetter.copy();
         removeAnnotationsFromElement(copy);
         builderClass.add(copy);
