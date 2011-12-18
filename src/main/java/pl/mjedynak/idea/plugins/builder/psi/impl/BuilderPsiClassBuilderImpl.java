@@ -18,6 +18,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private static final String SPACE = " ";
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
+    private static final String SEMICOLON = ",";
 
     private PsiHelper psiHelper;
 
@@ -150,8 +151,9 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public PsiClass build() {
         checkBuilderField();
         StringBuilder buildMethodText = new StringBuilder();
+        String constructorParameters = createConstructorParameters();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
-                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("();");
+                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(" + constructorParameters + ");");
 
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             String fieldName = psiFieldsForSetter.getName();
@@ -162,6 +164,21 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
         builderClass.add(buildMethod);
         return builderClass;
+    }
+
+    private String createConstructorParameters() {
+        StringBuilder sb = new StringBuilder();
+        for (PsiField psiField : psiFieldsForConstructor) {
+            sb.append(psiField.getName()).append(SEMICOLON);
+        }
+        removeLastSemicolon(sb);
+        return sb.toString();
+    }
+
+    private void removeLastSemicolon(StringBuilder sb) {
+        if (sb.toString().endsWith(SEMICOLON)) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
     }
 
     private void checkBuilderField() {
@@ -177,7 +194,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     }
 
     private boolean anyFieldIsNull() {
-        return (project == null || targetDirectory == null || srcClass == null || builderClassName == null || psiFieldsForSetters == null || psiFieldsForConstructor == null);
+        return (project == null || targetDirectory == null || srcClass == null || builderClassName == null
+                || psiFieldsForSetters == null || psiFieldsForConstructor == null);
     }
 
 
