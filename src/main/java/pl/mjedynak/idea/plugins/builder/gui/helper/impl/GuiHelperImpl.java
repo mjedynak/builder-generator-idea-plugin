@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 public class GuiHelperImpl implements GuiHelper {
     @Override

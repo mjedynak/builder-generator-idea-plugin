@@ -3,7 +3,7 @@ package pl.mjedynak.idea.plugins.builder.gui.displayer;
 
 import com.intellij.openapi.editor.Editor;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 public interface PopupDisplayer {
 

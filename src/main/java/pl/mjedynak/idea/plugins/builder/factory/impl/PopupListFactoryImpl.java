@@ -5,7 +5,7 @@ import pl.mjedynak.idea.plugins.builder.action.GoToBuilderAdditionalAction;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
-import javax.swing.*;
+import javax.swing.JList;
 import java.util.Arrays;
 
 public class PopupListFactoryImpl implements PopupListFactory {

@@ -42,7 +42,7 @@ public class BuilderWriterImplTest {
     private PsiClass srcClass;
 
     @Mock
-    PsiFieldsForBuilder psiFieldsForBuilder;
+    private PsiFieldsForBuilder psiFieldsForBuilder;
 
 
     @Test

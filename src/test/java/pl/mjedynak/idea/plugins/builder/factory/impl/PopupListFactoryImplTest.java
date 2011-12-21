@@ -6,7 +6,7 @@ import org.junit.Test;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

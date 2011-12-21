@@ -14,7 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;

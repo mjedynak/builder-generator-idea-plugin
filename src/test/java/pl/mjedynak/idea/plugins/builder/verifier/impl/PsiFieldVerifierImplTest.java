@@ -1,6 +1,12 @@
 package pl.mjedynak.idea.plugins.builder.verifier.impl;
 
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +25,7 @@ public class PsiFieldVerifierImplTest {
     private PsiMethod[] constructors;
     private PsiMethod[] methods;
     private PsiParameter[] parameters;
-    
+
     @Mock
     private PsiField psiField;
     @Mock
@@ -36,8 +42,8 @@ public class PsiFieldVerifierImplTest {
     private PsiMethod method;
     @Mock
     private PsiModifierList modifierList;
-    
-    
+
+
     private String name;
 
     @Before
@@ -125,7 +131,7 @@ public class PsiFieldVerifierImplTest {
         assertThat(result, is(true));
     }
 
-    
+
     @Test
     public void shouldVerifyThatFieldIsSetInSetterMethodIfItIsNotPrivateAndHasCorrectParameter() {
         // given

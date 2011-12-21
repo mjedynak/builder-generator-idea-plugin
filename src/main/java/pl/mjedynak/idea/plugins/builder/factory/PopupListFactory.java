@@ -1,6 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 public interface PopupListFactory {
 

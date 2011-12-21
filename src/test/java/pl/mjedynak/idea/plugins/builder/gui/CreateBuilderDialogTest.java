@@ -15,10 +15,15 @@ import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseBu
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -121,11 +126,14 @@ public class CreateBuilderDialogTest {
 
     @Test
     public void shouldCreateThreeActions() {
+        // given
+        final int actionsCount = 3;
+
         // when
         Action[] actions = createBuilderDialog.createActions();
 
         // then
-        assertThat(actions.length, is(3));
+        assertThat(actions.length, is(actionsCount));
     }
 }
 

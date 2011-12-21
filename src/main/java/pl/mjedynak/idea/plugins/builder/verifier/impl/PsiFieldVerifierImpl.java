@@ -1,6 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.verifier.impl;
 
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
 import org.apache.commons.lang.WordUtils;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 

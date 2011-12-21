@@ -1,6 +1,6 @@
-Plugin for IntelliJ IDEA that adds ability to generate builder for a class with setter methods and switch between them.
+Plugin for IntelliJ IDEA that adds ability to generate builder for a class and switch between them.
 Switching between builder and source class is similar to 'Go To Test' action.
-Generated builder class does not use reflection, only setter methods.
+Generated builder class does not use reflection, only setter methods or constructor.
 Requires gradle and IntelliJ IDEA for building.
 Build instructions:
 - edit build.gradle and change values of 'ideaInstallationPath' and 'ideaJdk' to be in sync with your environment

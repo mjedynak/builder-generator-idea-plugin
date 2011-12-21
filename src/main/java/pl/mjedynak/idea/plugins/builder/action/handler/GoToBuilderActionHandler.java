@@ -6,7 +6,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import pl.mjedynak.idea.plugins.builder.factory.*;
+import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
@@ -15,7 +20,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 public class GoToBuilderActionHandler extends EditorActionHandler {
 

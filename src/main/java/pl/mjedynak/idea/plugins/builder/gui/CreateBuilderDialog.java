@@ -20,15 +20,26 @@ import pl.mjedynak.idea.plugins.builder.factory.impl.PackageChooserDialogFactory
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class CreateBuilderDialog extends DialogWrapper {
 
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
+    private static final int WIDTH = 40;
 
     private PsiHelper psiHelper;
     private GuiHelper guiHelper;
@@ -69,7 +80,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private void setPreferredSize(JTextField field) {
         Dimension size = field.getPreferredSize();
         FontMetrics fontMetrics = field.getFontMetrics(field.getFont());
-        size.width = fontMetrics.charWidth('a') * 40;
+        size.width = fontMetrics.charWidth('a') * WIDTH;
         field.setPreferredSize(size);
     }
 
@@ -114,11 +125,12 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.gridx = 1;
         gbConstraints.weightx = 1;
 
-        new AnAction() {
+        AnAction clickAction = new AnAction() {
             public void actionPerformed(AnActionEvent e) {
                 targetPackageField.getButton().doClick();
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
+        };
+        clickAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
                 targetPackageField.getChildComponent());
 
         addInnerPanel(panel, gbConstraints);

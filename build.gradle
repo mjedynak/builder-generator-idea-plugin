@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'code-quality'
 apply plugin: 'idea'
 apply from: 'https://raw.github.com/breskeby/gradleplugins/master/emmaPlugin/emma.gradle'
 

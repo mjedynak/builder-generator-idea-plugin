@@ -3,7 +3,7 @@ package pl.mjedynak.idea.plugins.builder.action;
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
 import com.intellij.openapi.util.IconLoader;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 public class GoToBuilderAdditionalAction implements GotoTargetHandler.AdditionalAction {
 

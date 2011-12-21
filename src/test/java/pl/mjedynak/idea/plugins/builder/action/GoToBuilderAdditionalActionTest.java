@@ -3,10 +3,10 @@ package pl.mjedynak.idea.plugins.builder.action;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GoToBuilderAdditionalActionTest {
 

@@ -17,10 +17,13 @@ import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GoToBuilderActionHandlerTest {
@@ -58,9 +61,8 @@ public class GoToBuilderActionHandlerTest {
     @Mock
     private PopupDisplayer popupDisplayer;
 
-//
     @Mock
-    JList list;
+    private JList list;
 
     @Before
     public void setUp() {

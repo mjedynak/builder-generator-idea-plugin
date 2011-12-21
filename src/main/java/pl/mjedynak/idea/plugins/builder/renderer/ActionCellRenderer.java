@@ -2,8 +2,9 @@ package pl.mjedynak.idea.plugins.builder.renderer;
 
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+import java.awt.Component;
 
 public class ActionCellRenderer extends DefaultListCellRenderer {
 
