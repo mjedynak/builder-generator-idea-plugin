@@ -40,6 +40,7 @@ public class DisplayChoosersRunnable implements Runnable {
     private BuilderWriter builderWriter;
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,

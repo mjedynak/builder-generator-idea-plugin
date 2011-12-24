@@ -50,6 +50,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
                                     PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
                                     CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,

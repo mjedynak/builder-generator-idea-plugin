@@ -20,6 +20,7 @@ import java.util.List;
 
 import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     private static final String PRIVATE_STRING = "private";

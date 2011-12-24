@@ -24,6 +24,32 @@ idea {
     }
 }
 
+
+configurations {
+    pmdConf
+}
+
+task pmd << {
+    println 'Running PMD static code analysis'
+    ant {
+        taskdef(name: 'pmd', classname: 'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmdConf.asPath)
+
+        pmd(shortFilenames: 'true', failonruleviolation: 'true', rulesetfiles: 'rulesets/basic.xml,rulesets/codesize.xml') {
+            formatter(type: 'text', toConsole: 'true')
+            fileset(dir: "src/main/java") {
+                include(name: '**/*.java')
+            }
+            fileset(dir: "src/test/java") {
+                exclude(name: '**/*.java')
+            }
+        }
+    }
+}
+
+checkstyleMain.dependsOn {
+    pmd
+}
+
 repositories {
     mavenCentral()
 }
@@ -35,6 +61,8 @@ dependencies {
     testCompile 'org.powermock:powermock-api-mockito:1.4.10'
     testCompile 'org.springframework:spring-test:3.0.6.RELEASE'
     testCompile 'org.springframework:spring-core:3.0.6.RELEASE'
+
+    pmdConf 'pmd:pmd:4.3'
 
     emma "emma:emma:2.0.5312"
     emma "emma:emma_ant:2.0.5312"
