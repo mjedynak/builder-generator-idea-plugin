@@ -34,7 +34,8 @@ task pmd << {
     ant {
         taskdef(name: 'pmd', classname: 'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmdConf.asPath)
 
-        pmd(shortFilenames: 'true', failonruleviolation: 'true', rulesetfiles: 'rulesets/basic.xml,rulesets/codesize.xml') {
+        pmd(shortFilenames: 'true', failonruleviolation: 'true', rulesetfiles:
+                'rulesets/basic.xml, rulesets/codesize.xml, rulesets/coupling.xml') {
             formatter(type: 'text', toConsole: 'true')
             fileset(dir: "src/main/java") {
                 include(name: '**/*.java')

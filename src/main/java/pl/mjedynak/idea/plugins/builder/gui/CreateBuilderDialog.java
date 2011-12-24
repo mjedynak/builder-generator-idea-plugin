@@ -36,6 +36,7 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+@SuppressWarnings("PMD.ExcessiveImports")
 public class CreateBuilderDialog extends DialogWrapper {
 
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
