@@ -87,15 +87,10 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         PsiClass classToGo = findClassToGo(psiClassFromEditor, isBuilder);
         if (classToGo != null) {
             psiHelper.navigateToClass(classToGo);
-        } else if (canDisplayPopup(isBuilder, classToGo)) {
+        } else if (!isBuilder) {
             displayPopup(editor, psiClassFromEditor, dataContext);
         }
     }
-
-    private boolean canDisplayPopup(boolean isBuilder, PsiClass classToGo) {
-        return classToGo == null && !isBuilder;
-    }
-
 
     private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();

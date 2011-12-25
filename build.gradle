@@ -3,10 +3,14 @@ apply plugin: 'code-quality'
 apply plugin: 'idea'
 apply from: 'https://raw.github.com/breskeby/gradleplugins/master/emmaPlugin/emma.gradle'
 
+
+// --- properties ---
 ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.0'
 ideaJdk = 'IDEA IC-111.69'
 sourceCompatibility = 1.6
+// --- properties ---
 
+// --- changes to idea plugin ---
 idea {
     module {
         iml {
@@ -23,14 +27,68 @@ idea {
         }
     }
 }
-
+// --- changes to idea plugin ---
 
 configurations {
     pmdConf
+    findbugs
 }
 
+
+// --- findbugs ---
+findbugsOutputDirName = "findbugs"
+findbugsReportDir     = new File(reportsDir, findbugsOutputDirName)
+findbugsOutputType    = 'xml'
+findbugsJvmargs       = '-Xmx512M'
+findbugsWarning       = false
+
+sourceSets.each { sourceSet ->
+
+    def findbugsTask = task(sourceSet.getTaskName('findbugs', null)) {
+
+        def outputFile = new File(findbugsReportDir, "${sourceSet.name}.${findbugsOutputType}")
+
+        dependsOn sourceSet.classesTaskName
+        inputs.dir sourceSet.classesDir
+        outputs.file outputFile
+
+        doLast {
+
+            ant {
+                taskdef(resource: 'edu/umd/cs/findbugs/anttask/tasks.properties',
+                        classpath: configurations.findbugs.asPath)
+
+                mkdir(dir: findbugsReportDir)
+
+                findbugs(classpath: configurations.findbugs.asPath,
+                        pluginlist: '',
+                        output: findbugsOutputType,
+                        outputFile: outputFile,
+                        failOnError: true,
+                        jvmargs: findbugsJvmargs,
+//                        reportLevel: 'low',
+                        workHard: true,
+                        errorProperty: 'findbugsError',
+                        warningsProperty: 'findbugsWarning') {
+
+                    auxClassPath(path: configurations.compile.asPath)
+                    sourceSet.allJava.srcDirs.each { sourcepath(path: it) }
+                    "class"(location: sourceSet.classesDir)
+                }
+                if (findbugsWarning) {
+                    throw new IllegalStateException('Findbugs found warnings, please take a look at findbugs report.')
+                }
+            }
+        }
+    }
+    tasks['check'].dependsOn findbugsTask
+}
+findbugsTest.enabled = false // disable checking test sources
+// --- findbugs ---
+
+
+// --- pmd ---
 task pmd << {
-    println 'Running PMD static code analysis'
     ant {
         taskdef(name: 'pmd', classname: 'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmdConf.asPath)
 
@@ -52,6 +110,7 @@ task pmd << {
 checkstyleMain.dependsOn {
     pmd
 }
+// --- pmd ---
 
 repositories {
     mavenCentral()
@@ -66,6 +125,8 @@ dependencies {
     testCompile 'org.springframework:spring-core:3.0.6.RELEASE'
 
     pmdConf 'pmd:pmd:4.3'
+
+    findbugs "com.google.code.findbugs:findbugs-ant:1.3.9"
 
     emma "emma:emma:2.0.5312"
     emma "emma:emma_ant:2.0.5312"
