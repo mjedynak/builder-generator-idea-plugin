@@ -66,9 +66,9 @@ sourceSets.each { sourceSet ->
                         outputFile: outputFile,
                         failOnError: true,
                         jvmargs: findbugsJvmargs,
-//                        reportLevel: 'low',
+                        reportLevel: 'low',
                         workHard: true,
-                        errorProperty: 'findbugsError',
+                        // sets this variable to true if any warnings found
                         warningsProperty: 'findbugsWarning') {
 
                     auxClassPath(path: configurations.compile.asPath)

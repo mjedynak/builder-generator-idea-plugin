@@ -17,6 +17,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import java.util.List;
+import java.util.Locale;
 
 import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
@@ -32,18 +33,18 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
     private PsiHelper psiHelper;
 
-    private Project project;
-    private PsiDirectory targetDirectory;
-    private PsiClass srcClass;
-    private String builderClassName;
+    private Project project = null;
+    private PsiDirectory targetDirectory = null;
+    private PsiClass srcClass = null;
+    private String builderClassName = null;
 
-    private List<PsiField> psiFieldsForSetters;
-    private List<PsiField> psiFieldsForConstructor;
+    private List<PsiField> psiFieldsForSetters = null;
+    private List<PsiField> psiFieldsForConstructor = null;
 
-    private PsiClass builderClass;
-    private PsiElementFactory elementFactory;
-    private String srcClassName;
-    private String srcClassFieldName;
+    private PsiClass builderClass = null;
+    private PsiElementFactory elementFactory = null;
+    private String srcClassName = null;
+    private String srcClassFieldName = null;
 
     public BuilderPsiClassBuilderImpl(PsiHelper psiHelper) {
         this.psiHelper = psiHelper;
@@ -123,7 +124,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     @Override
     public BuilderPsiClassBuilder withInitializingMethod() {
         checkClassFieldsRequiredForBuilding();
-        String prefix = isVowel(srcClassName.toLowerCase().charAt(0)) ? AN_PREFIX : A_PREFIX;
+        String prefix = isVowel(srcClassName.toLowerCase(Locale.ENGLISH).charAt(0)) ? AN_PREFIX : A_PREFIX;
         PsiMethod staticMethod = elementFactory.createMethodFromText(
                 "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "();}", srcClass);
         builderClass.add(staticMethod);
