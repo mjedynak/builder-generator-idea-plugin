@@ -36,6 +36,7 @@ public class PsiElementClassMemberFactoryImplTest {
         psiElementClassMemberFactory = new PsiElementClassMemberFactoryImpl();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldCreateNewPsiElementClassMemberFromPsiField() {
         // given
