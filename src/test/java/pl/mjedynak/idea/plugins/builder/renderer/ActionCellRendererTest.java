@@ -9,8 +9,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.swing.Icon;
 import javax.swing.JList;
+import java.awt.Component;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -45,10 +48,12 @@ public class ActionCellRendererTest {
         given(action.getIcon()).willReturn(icon);
 
         // when
-        actionCellRenderer.getListCellRendererComponent(list, action, anyIndex, anyBooleanValue, anyBooleanValue);
+        Component result = actionCellRenderer.getListCellRendererComponent(list, action, anyIndex, anyBooleanValue, anyBooleanValue);
 
         // then
         assertThat(actionCellRenderer.getText(), is(actionText));
         assertThat(actionCellRenderer.getIcon(), is(icon));
+        assertThat(result, is(notNullValue()));
+        assertThat(result, instanceOf(ActionCellRenderer.class));
     }
 }
