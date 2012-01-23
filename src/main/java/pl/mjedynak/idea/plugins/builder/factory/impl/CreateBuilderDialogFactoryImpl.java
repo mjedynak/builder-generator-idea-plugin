@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.factory.impl;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
@@ -14,9 +13,9 @@ public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactor
 
     @Override
     public CreateBuilderDialog createBuilderDialog(String builderName, Project project, PsiPackage srcPackage,
-                                                   Module srcModule, PsiHelper psiHelper, PsiManager psiManager,
+                                                   PsiHelper psiHelper, PsiManager psiManager,
                                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
-        return new CreateBuilderDialog(project, "CreateBuilder", builderName, srcPackage, srcModule, psiHelper, guiHelper,
+        return new CreateBuilderDialog(project, "CreateBuilder", builderName, srcPackage, psiHelper, guiHelper,
                 referenceEditorComboWithBrowseButtonFactory);
     }
 }

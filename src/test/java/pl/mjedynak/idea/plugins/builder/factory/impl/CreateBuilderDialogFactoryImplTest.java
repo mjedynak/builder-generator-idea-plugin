@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.factory.impl;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
@@ -36,9 +35,6 @@ public class CreateBuilderDialogFactoryImplTest {
     private PsiPackage srcPackage;
 
     @Mock
-    private Module srcModule;
-
-    @Mock
     private PsiHelper psiHelper;
 
     @Mock
@@ -66,13 +62,12 @@ public class CreateBuilderDialogFactoryImplTest {
 
         // when
         CreateBuilderDialog builderDialog = createBuilderDialogFactory.createBuilderDialog(
-                builderName, project, srcPackage, srcModule, psiHelper, psiManager, referenceEditorFactory, guiHelper);
+                builderName, project, srcPackage, psiHelper, psiManager, referenceEditorFactory, guiHelper);
 
         // then
         assertThat(builderDialog, is(notNullValue()));
         assertThat((PsiHelper) ReflectionTestUtils.getField(builderDialog, "psiHelper"), is(psiHelper));
         assertThat((GuiHelper) ReflectionTestUtils.getField(builderDialog, "guiHelper"), is(guiHelper));
         assertThat((Project) ReflectionTestUtils.getField(builderDialog, "project"), is(project));
-        assertThat((Module) ReflectionTestUtils.getField(builderDialog, "module"), is(srcModule));
     }
 }

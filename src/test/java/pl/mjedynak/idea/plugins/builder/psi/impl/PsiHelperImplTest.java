@@ -7,7 +7,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.JavaDirectoryService;
@@ -15,7 +14,6 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassOwner;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.PsiShortNamesCache;
@@ -39,7 +37,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
-        RefactoringMessageUtil.class, ModuleUtil.class, JavaDirectoryService.class, CommandProcessor.class,
+        RefactoringMessageUtil.class, JavaDirectoryService.class, CommandProcessor.class,
         ApplicationManager.class, PsiShortNamesCache.class})
 public class PsiHelperImplTest {
 
@@ -149,21 +147,6 @@ public class PsiHelperImplTest {
         // then
         verifyStatic();
         RefactoringMessageUtil.checkCanCreateClass(anyDirectory, anyClassName);
-    }
-
-    @Test
-    public void shouldDelegateFindingModuleForPsiElementToModuleUtil() {
-        // given
-        mockStatic(ModuleUtil.class);
-        Module module = mock(Module.class);
-        PsiElement psiElement = mock(PsiElement.class);
-        given(ModuleUtil.findModuleForPsiElement(psiElement)).willReturn(module);
-
-        // when
-        Module result = psiHelper.findModuleForPsiElement(psiElement);
-
-        // then
-        assertThat(result, is(module));
     }
 
     @Test

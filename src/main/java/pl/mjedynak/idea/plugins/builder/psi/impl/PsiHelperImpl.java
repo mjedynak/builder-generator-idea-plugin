@@ -14,7 +14,6 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassOwner;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.PsiShortNamesCache;
@@ -75,11 +74,6 @@ public class PsiHelperImpl implements PsiHelper {
     }
 
     @Override
-    public Module findModuleForPsiElement(PsiElement psiElement) {
-        return ModuleUtil.findModuleForPsiElement(psiElement);
-    }
-
-    @Override
     public JavaDirectoryService getJavaDirectoryService() {
         return JavaDirectoryService.getInstance();
     }
@@ -102,5 +96,10 @@ public class PsiHelperImpl implements PsiHelper {
     @Override
     public Application getApplication() {
         return ApplicationManager.getApplication();
+    }
+
+    @Override
+    public Module getModuleFromProject(Project project) {
+        return ModuleUtil.findModuleForFile(project.getProjectFile(), project);
     }
 }

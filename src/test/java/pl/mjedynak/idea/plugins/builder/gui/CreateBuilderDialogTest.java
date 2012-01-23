@@ -26,7 +26,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateBuilderDialogTest {
@@ -69,7 +73,7 @@ public class CreateBuilderDialogTest {
                 project, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
 
         createBuilderDialog = new CreateBuilderDialog(
-                project, title, className, targetPackage, targetModule, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
+                project, title, className, targetPackage, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
     }
 
 
@@ -134,6 +138,26 @@ public class CreateBuilderDialogTest {
 
         // then
         assertThat(actions.length, is(actionsCount));
+    }
+
+    @Test
+    public void shouldHandleClickingOK() {
+        // given
+        CreateBuilderDialog dialog = spy(createBuilderDialog);
+        String text = "text";
+        given(referenceEditorComboWithBrowseButton.getText()).willReturn(text);
+        given(psiHelper.getModuleFromProject(project)).willReturn(mock(Module.class));
+        doNothing().when(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
+        doNothing().when(dialog).executeCommand(any(OKActionRunnable.class));
+        doNothing().when(dialog).callSuper();
+
+        // when
+        dialog.doOKAction();
+
+        // then
+        verify(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
+        verify(dialog).executeCommand(any(OKActionRunnable.class));
+        verify(dialog).callSuper();
     }
 }
 

@@ -36,7 +36,7 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.TooManyMethods"})
 public class CreateBuilderDialog extends DialogWrapper {
 
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
@@ -45,7 +45,6 @@ public class CreateBuilderDialog extends DialogWrapper {
     private PsiHelper psiHelper;
     private GuiHelper guiHelper;
     private Project project;
-    private Module module;
     private PsiDirectory targetDirectory;
     private JTextField targetClassNameField;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
@@ -54,7 +53,6 @@ public class CreateBuilderDialog extends DialogWrapper {
                                String title,
                                String targetClassName,
                                PsiPackage targetPackage,
-                               Module targetModule,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
                                ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
@@ -62,7 +60,6 @@ public class CreateBuilderDialog extends DialogWrapper {
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
         this.project = project;
-        module = targetModule;
         targetClassNameField = new JTextField(targetClassName);
         setPreferredSize(targetClassNameField);
 
@@ -151,10 +148,23 @@ public class CreateBuilderDialog extends DialogWrapper {
     }
 
     protected void doOKAction() {
-        RecentsManager.getInstance(project).registerRecentEntry(RECENTS_KEY, targetPackageField.getText());
-        CommandProcessor.getInstance().executeCommand(
-                project, new OKActionRunnable(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName()), CodeInsightBundle.message("create.directory.command"), null);
+        registerEntry(RECENTS_KEY, targetPackageField.getText());
+        Module module = psiHelper.getModuleFromProject(project);
+        OKActionRunnable okActionRunnable = new OKActionRunnable(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
+        executeCommand(okActionRunnable);
+        callSuper();
+    }
+
+    void registerEntry(String key, String entry) {
+        RecentsManager.getInstance(project).registerRecentEntry(key, entry);
+    }
+
+    void callSuper() {
         super.doOKAction();
+    }
+
+    void executeCommand(OKActionRunnable okActionRunnable) {
+        CommandProcessor.getInstance().executeCommand(project, okActionRunnable, CodeInsightBundle.message("create.directory.command"), null);
     }
 
     private String getPackageName() {

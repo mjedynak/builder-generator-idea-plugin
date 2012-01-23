@@ -3,7 +3,6 @@ package pl.mjedynak.idea.plugins.builder.action.handler;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -82,12 +81,11 @@ public class DisplayChoosersRunnable implements Runnable {
     }
 
     private CreateBuilderDialog showDialog() {
-        Module srcModule = psiHelper.findModuleForPsiElement(psiClassFromEditor);
         PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
         PsiPackage srcPackage = psiHelper.getPackage(srcDir);
         PsiManager psiManager = psiManagerFactory.getPsiManager(project);
         CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor.getName() + BUILDER_SUFFIX, project,
-                srcPackage, srcModule, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper);
+                srcPackage, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper);
         dialog.show();
         return dialog;
     }

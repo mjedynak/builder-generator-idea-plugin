@@ -3,7 +3,6 @@ package pl.mjedynak.idea.plugins.builder.action.handler;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -64,8 +63,6 @@ public class DisplayChoosersRunnableTest {
     @Mock
     private BuilderWriter builderWriter;
     @Mock
-    private Module module;
-    @Mock
     private PsiFile psiFile;
     @Mock
     private PsiDirectory psiDirectory;
@@ -90,7 +87,6 @@ public class DisplayChoosersRunnableTest {
 
     @Before
     public void setUp() {
-        given(psiHelper.findModuleForPsiElement(psiClassFromEditor)).willReturn(module);
         given(psiHelper.getPsiFileFromEditor(editor, project)).willReturn(psiFile);
         given(psiFile.getContainingDirectory()).willReturn(psiDirectory);
         given(psiHelper.getPackage(psiDirectory)).willReturn(psiPackage);
@@ -98,7 +94,7 @@ public class DisplayChoosersRunnableTest {
         given(psiClassFromEditor.getName()).willReturn(className);
         given(psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedFields, psiClassFromEditor)).willReturn(psiFieldsForBuilder);
         given(createBuilderDialogFactory.createBuilderDialog(className + DisplayChoosersRunnable.BUILDER_SUFFIX, project,
-                psiPackage, module, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper)).willReturn(createBuilderDialog);
+                psiPackage, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper)).willReturn(createBuilderDialog);
     }
 
     @Test
