@@ -14,9 +14,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <change-notes>
         <![CDATA[
+           version 1.0.4
+           <br/>
+           <ul>
+           <li>Fixed bug that prevented generating builder for class that was added as a project dependency</li>
+           </ul>
            version 1.0.3
            <br/>
            <ul>
