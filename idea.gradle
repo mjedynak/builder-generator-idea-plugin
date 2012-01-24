@@ -1,0 +1,42 @@
+
+// --- changes to idea plugin ---
+idea {
+    module {
+        iml {
+            whenMerged { module ->
+                removeIdeaJdkDependencies(module)
+            }
+            withXml {
+                def module = it.asNode()
+                changeModuleType(module)
+                removeUnnecessaryComponent(module)
+                appendRequiredComponent(module)
+                changeComponentWithNewModuleRootManager(module)
+            }
+        }
+    }
+}
+// --- changes to idea plugin ---
+
+
+def removeIdeaJdkDependencies(def module) {
+    module.dependencies.removeAll(module.dependencies.findAll {it.classes.url[0].contains(ideaInstallationPath)})
+}
+
+def changeModuleType(def module) {
+    module.@type = 'PLUGIN_MODULE'
+}
+
+def removeUnnecessaryComponent(def module) {
+    module.remove(module.component.find { it.@name == 'ModuleRootManager'})
+}
+
+def appendRequiredComponent(def module) {
+    module.appendNode('component', ['name': 'DevKit.ModuleBuildProperties', 'url': 'file://$MODULE_DIR$/META-INF/plugin.xml'])
+}
+
+def changeComponentWithNewModuleRootManager(def module) {
+    def componentWithNewModuleRootManager = module.component.find { it.@name == 'NewModuleRootManager'}
+    componentWithNewModuleRootManager.remove(componentWithNewModuleRootManager.orderEntry.find { it.@type == 'inheritedJdk'})
+    componentWithNewModuleRootManager.appendNode('orderEntry', ['type': 'jdk', 'jdkName': ideaJdk, 'jdkType': 'IDEA JDK'])
+}
