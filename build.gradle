@@ -30,7 +30,7 @@ idea {
 // --- changes to idea plugin ---
 
 configurations {
-    pmdConf
+    pmd
     findbugs
     pit
 }
@@ -91,7 +91,7 @@ findbugsTest.enabled = false // disable checking test sources
 // --- pmd ---
 task pmd << {
     ant {
-        taskdef(name: 'pmd', classname: 'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmdConf.asPath)
+        taskdef(name: 'pmd', classname: 'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmd.asPath)
 
         pmd(shortFilenames: 'true', failonruleviolation: 'true', rulesetfiles:
                 '''rulesets/basic.xml, rulesets/codesize.xml, rulesets/coupling.xml, rulesets/imports.xml,
@@ -136,7 +136,7 @@ dependencies {
     testCompile 'org.springframework:spring-test:3.1.0.RELEASE'
     testCompile 'org.springframework:spring-core:3.1.0.RELEASE'
 
-    pmdConf 'pmd:pmd:4.3'
+    pmd 'pmd:pmd:4.3'
 
     findbugs "com.google.code.findbugs:findbugs-ant:1.3.9"
 
