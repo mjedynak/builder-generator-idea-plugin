@@ -1,5 +1,6 @@
 improvements
 
+- move idea plugin build modifications to separate file
 - test for GoToBuilderAction
 - try to have one level indentation per method
 
