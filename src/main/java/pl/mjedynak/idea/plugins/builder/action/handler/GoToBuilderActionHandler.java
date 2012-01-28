@@ -95,10 +95,10 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
     private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
         Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
-        popupDisplayer.displayPopupChooser(editor, popupList,
-                new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
-                        createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector,
-                        memberChooserDialogFactory, builderWriter, psiFieldsForBuilderFactory));
+        DisplayChoosersRunnable displayChoosersRunnable = new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
+                createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector,
+                memberChooserDialogFactory, builderWriter, psiFieldsForBuilderFactory);
+        popupDisplayer.displayPopupChooser(editor, popupList, displayChoosersRunnable);
     }
 
     private PsiClass findClassToGo(PsiClass psiClassFromEditor, boolean isBuilder) {
