@@ -55,7 +55,6 @@ public class GoToBuilderAction extends EditorAction {
         picoContainer.registerComponentImplementation(DisplayChoosersRunnable.class);
 
         goToBuilderActionHandler = (GoToBuilderActionHandler) picoContainer.getComponentInstanceOfType(GoToBuilderActionHandler.class);
-        System.out.println(goToBuilderActionHandler);
     }
 
 
