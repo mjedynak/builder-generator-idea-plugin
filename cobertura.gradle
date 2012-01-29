@@ -41,7 +41,7 @@ cobertura.doLast{
     if (new File(classesCopy).exists()) {
         ant.'cobertura-report'(destdir:"${project.reportsDir}/cobertura",
                 format:'html', srcdir:"src/main/java", datafile: serFile)
-        ant.'cobertura-check'(datafile: serFile, totallinerate:95)
+        ant.'cobertura-check'(datafile: serFile, totallinerate:90)
 
         ant.delete(file: classes)
         ant.move(file: classesCopy, tofile: classes)

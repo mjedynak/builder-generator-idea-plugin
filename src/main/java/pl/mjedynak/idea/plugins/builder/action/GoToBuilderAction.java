@@ -1,6 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
 import com.intellij.openapi.editor.actionSystem.EditorAction;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
 import pl.mjedynak.idea.plugins.builder.action.handler.GoToBuilderActionHandler;
 import pl.mjedynak.idea.plugins.builder.factory.impl.CreateBuilderDialogFactoryImpl;
 import pl.mjedynak.idea.plugins.builder.factory.impl.MemberChooserDialogFactoryImpl;
@@ -24,24 +26,37 @@ import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 
 public class GoToBuilderAction extends EditorAction {
 
-    private static PsiHelperImpl psiHelper = new PsiHelperImpl();
-    private static GuiHelperImpl guiHelper = new GuiHelperImpl();
-    private static PsiFieldVerifierImpl psiFieldVerifier = new PsiFieldVerifierImpl();
+    private static GoToBuilderActionHandler goToBuilderActionHandler;
+
+    private static MutablePicoContainer picoContainer = new DefaultPicoContainer();
+
+    static {
+        picoContainer.registerComponentImplementation(PsiHelperImpl.class);
+        picoContainer.registerComponentImplementation(BuilderVerifierImpl.class);
+        picoContainer.registerComponentImplementation(ClassFinderImpl.class);
+        picoContainer.registerComponentImplementation(BuilderPsiClassBuilderImpl.class);
+        picoContainer.registerComponentImplementation(BuilderFinderImpl.class);
+        picoContainer.registerComponentImplementation(PopupChooserBuilderFactoryImpl.class);
+        picoContainer.registerComponentImplementation(PopupDisplayerImpl.class);
+        picoContainer.registerComponentImplementation(PopupListFactoryImpl.class);
+        picoContainer.registerComponentImplementation(PsiManagerFactoryImpl.class);
+        picoContainer.registerComponentImplementation(CreateBuilderDialogFactoryImpl.class);
+        picoContainer.registerComponentImplementation(GuiHelperImpl.class);
+        picoContainer.registerComponentImplementation(PsiFieldVerifierImpl.class);
+        picoContainer.registerComponentImplementation(PsiElementClassMemberFactoryImpl.class);
+        picoContainer.registerComponentImplementation(ReferenceEditorComboWithBrowseButtonFactoryImpl.class);
+        picoContainer.registerComponentImplementation(MemberChooserDialogFactoryImpl.class);
+        picoContainer.registerComponentImplementation(BuilderWriterImpl.class);
+        picoContainer.registerComponentImplementation(PsiFieldSelectorImpl.class);
+        picoContainer.registerComponentImplementation(PsiFieldsForBuilderFactoryImpl.class);
+        picoContainer.registerComponentImplementation(GoToBuilderActionHandler.class);
+
+        goToBuilderActionHandler = (GoToBuilderActionHandler) picoContainer.getComponentInstanceOfType(GoToBuilderActionHandler.class);
+
+    }
+
 
     protected GoToBuilderAction() {
-        super(new GoToBuilderActionHandler(
-                psiHelper,
-                new BuilderVerifierImpl(),
-                new BuilderFinderImpl(new ClassFinderImpl(psiHelper)),
-                new PopupDisplayerImpl(new PopupChooserBuilderFactoryImpl()),
-                new PopupListFactoryImpl(),
-                new PsiManagerFactoryImpl(),
-                new CreateBuilderDialogFactoryImpl(),
-                guiHelper,
-                new ReferenceEditorComboWithBrowseButtonFactoryImpl(),
-                new PsiFieldSelectorImpl(new PsiElementClassMemberFactoryImpl(), psiFieldVerifier),
-                new MemberChooserDialogFactoryImpl(),
-                new BuilderWriterImpl(new BuilderPsiClassBuilderImpl(psiHelper), psiHelper, guiHelper),
-                new PsiFieldsForBuilderFactoryImpl(psiFieldVerifier)));
+        super(goToBuilderActionHandler);
     }
 }
