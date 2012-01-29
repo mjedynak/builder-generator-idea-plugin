@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.action;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import pl.mjedynak.idea.plugins.builder.action.handler.DisplayChoosersRunnable;
 import pl.mjedynak.idea.plugins.builder.action.handler.GoToBuilderActionHandler;
 import pl.mjedynak.idea.plugins.builder.factory.impl.CreateBuilderDialogFactoryImpl;
 import pl.mjedynak.idea.plugins.builder.factory.impl.MemberChooserDialogFactoryImpl;
@@ -24,6 +25,7 @@ import pl.mjedynak.idea.plugins.builder.verifier.impl.PsiFieldVerifierImpl;
 import pl.mjedynak.idea.plugins.builder.writer.impl.BuilderWriterImpl;
 
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class GoToBuilderAction extends EditorAction {
 
     private static GoToBuilderActionHandler goToBuilderActionHandler;
@@ -50,9 +52,10 @@ public class GoToBuilderAction extends EditorAction {
         picoContainer.registerComponentImplementation(PsiFieldSelectorImpl.class);
         picoContainer.registerComponentImplementation(PsiFieldsForBuilderFactoryImpl.class);
         picoContainer.registerComponentImplementation(GoToBuilderActionHandler.class);
+        picoContainer.registerComponentImplementation(DisplayChoosersRunnable.class);
 
         goToBuilderActionHandler = (GoToBuilderActionHandler) picoContainer.getComponentInstanceOfType(GoToBuilderActionHandler.class);
-
+        System.out.println(goToBuilderActionHandler);
     }
 
 

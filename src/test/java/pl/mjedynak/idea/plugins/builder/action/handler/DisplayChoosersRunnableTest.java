@@ -87,6 +87,9 @@ public class DisplayChoosersRunnableTest {
 
     @Before
     public void setUp() {
+        displayChoosersRunnable.setEditor(editor);
+        displayChoosersRunnable.setProject(project);
+        displayChoosersRunnable.setPsiClassFromEditor(psiClassFromEditor);
         given(psiHelper.getPsiFileFromEditor(editor, project)).willReturn(psiFile);
         given(psiFile.getContainingDirectory()).willReturn(psiDirectory);
         given(psiHelper.getPackage(psiDirectory)).willReturn(psiPackage);

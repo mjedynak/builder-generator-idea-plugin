@@ -20,8 +20,6 @@ import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 import javax.swing.JList;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -33,6 +31,21 @@ public class GoToBuilderActionHandlerTest {
 
     @Mock
     private BuilderVerifier builderVerifier;
+
+    @Mock
+    private BuilderFinder builderFinder;
+
+    @Mock
+    private PsiHelper psiHelper;
+
+    @Mock
+    private PopupListFactory popupListFactory;
+
+    @Mock
+    private PopupDisplayer popupDisplayer;
+
+    @Mock
+    private DisplayChoosersRunnable displayChoosersRunnable;
 
     @Mock
     private PsiClass psiClass;
@@ -48,18 +61,6 @@ public class GoToBuilderActionHandlerTest {
 
     @Mock
     private DataContext dataContext;
-
-    @Mock
-    private BuilderFinder builderFinder;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private PopupListFactory popupListFactory;
-
-    @Mock
-    private PopupDisplayer popupDisplayer;
 
     @Mock
     private JList list;
@@ -109,7 +110,7 @@ public class GoToBuilderActionHandlerTest {
         goToBuilderActionHandler.execute(editor, dataContext);
 
         // then
-        verify(popupDisplayer).displayPopupChooser(eq(editor), eq(list), any(DisplayChoosersRunnable.class));
+        verify(popupDisplayer).displayPopupChooser(editor, list, displayChoosersRunnable);
     }
 
     @Test

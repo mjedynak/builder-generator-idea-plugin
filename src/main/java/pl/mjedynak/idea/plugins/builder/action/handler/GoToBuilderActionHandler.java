@@ -6,21 +6,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
-import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
-import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
-import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
-import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import javax.swing.JList;
+
 
 public class GoToBuilderActionHandler extends EditorActionHandler {
 
@@ -34,43 +27,17 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private PopupListFactory popupListFactory;
 
-    private PsiManagerFactory psiManagerFactory;
-
-    private CreateBuilderDialogFactory createBuilderDialogFactory;
-
-    private GuiHelper guiHelper;
-
-    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
-
-    private PsiFieldSelector psiFieldSelector;
-
-    private MemberChooserDialogFactory memberChooserDialogFactory;
-
-    private BuilderWriter builderWriter;
-
-    private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
+    private DisplayChoosersRunnable displayChoosersRunnable;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
-                                    PopupListFactory popupListFactory, PsiManagerFactory psiManagerFactory,
-                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
-                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
-                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
-                                    BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
+                                    PopupListFactory popupListFactory, DisplayChoosersRunnable displayChoosersRunnable) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
         this.popupDisplayer = popupDisplayer;
         this.popupListFactory = popupListFactory;
-        this.psiManagerFactory = psiManagerFactory;
-        this.createBuilderDialogFactory = createBuilderDialogFactory;
-        this.guiHelper = guiHelper;
-        this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
-        this.psiFieldSelector = psiFieldSelector;
-        this.memberChooserDialogFactory = memberChooserDialogFactory;
-        this.builderWriter = builderWriter;
-        this.psiFieldsForBuilderFactory = psiFieldsForBuilderFactory;
-
+        this.displayChoosersRunnable = displayChoosersRunnable;
     }
 
     @Override
@@ -95,9 +62,9 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
     private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
         Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
-        DisplayChoosersRunnable displayChoosersRunnable = new DisplayChoosersRunnable(psiClassFromEditor, project, editor, psiHelper, psiManagerFactory,
-                createBuilderDialogFactory, guiHelper, referenceEditorComboWithBrowseButtonFactory, psiFieldSelector,
-                memberChooserDialogFactory, builderWriter, psiFieldsForBuilderFactory);
+        displayChoosersRunnable.setEditor(editor);
+        displayChoosersRunnable.setProject(project);
+        displayChoosersRunnable.setPsiClassFromEditor(psiClassFromEditor);
         popupDisplayer.displayPopupChooser(editor, popupList, displayChoosersRunnable);
     }
 

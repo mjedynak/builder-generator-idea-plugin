@@ -40,14 +40,11 @@ public class DisplayChoosersRunnable implements Runnable {
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public DisplayChoosersRunnable(PsiClass psiClassFromEditor, Project project, Editor editor, PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
+    public DisplayChoosersRunnable(PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
                                    CreateBuilderDialogFactory createBuilderDialogFactory, GuiHelper guiHelper,
                                    ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
                                    BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
-        this.psiClassFromEditor = psiClassFromEditor;
-        this.project = project;
-        this.editor = editor;
         this.psiHelper = psiHelper;
         this.psiManagerFactory = psiManagerFactory;
         this.createBuilderDialogFactory = createBuilderDialogFactory;
@@ -92,5 +89,17 @@ public class DisplayChoosersRunnable implements Runnable {
 
     private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz) {
         return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz);
+    }
+
+    public void setPsiClassFromEditor(PsiClass psiClassFromEditor) {
+        this.psiClassFromEditor = psiClassFromEditor;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setEditor(Editor editor) {
+        this.editor = editor;
     }
 }
