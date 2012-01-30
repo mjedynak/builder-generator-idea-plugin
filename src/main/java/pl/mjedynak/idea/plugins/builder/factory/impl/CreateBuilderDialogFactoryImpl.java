@@ -11,10 +11,20 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactory {
 
+    private PsiHelper psiHelper;
+    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+    private GuiHelper guiHelper;
+
+
+    public CreateBuilderDialogFactoryImpl(PsiHelper psiHelper, ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
+        this.psiHelper = psiHelper;
+        this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
+        this.guiHelper = guiHelper;
+    }
+
     @Override
     public CreateBuilderDialog createBuilderDialog(String builderName, Project project, PsiPackage srcPackage,
-                                                   PsiHelper psiHelper, PsiManager psiManager,
-                                                   ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
+                                                   PsiManager psiManager) {
         return new CreateBuilderDialog(project, "CreateBuilder", builderName, srcPackage, psiHelper, guiHelper,
                 referenceEditorComboWithBrowseButtonFactory);
     }

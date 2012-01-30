@@ -4,13 +4,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
@@ -26,7 +25,8 @@ import static org.mockito.Matchers.anyString;
 @RunWith(MockitoJUnitRunner.class)
 public class CreateBuilderDialogFactoryImplTest {
 
-    private CreateBuilderDialogFactory createBuilderDialogFactory;
+    @InjectMocks
+    private CreateBuilderDialogFactoryImpl createBuilderDialogFactory;
 
     @Mock
     private Project project;
@@ -49,10 +49,6 @@ public class CreateBuilderDialogFactoryImplTest {
     @Mock
     private ReferenceEditorComboWithBrowseButton referenceEditor;
 
-    @Before
-    public void setUp() {
-        createBuilderDialogFactory = new CreateBuilderDialogFactoryImpl();
-    }
 
     @Test
     public void shouldCreateNewBuilderDialogWithGivenFields() {
@@ -62,12 +58,10 @@ public class CreateBuilderDialogFactoryImplTest {
 
         // when
         CreateBuilderDialog builderDialog = createBuilderDialogFactory.createBuilderDialog(
-                builderName, project, srcPackage, psiHelper, psiManager, referenceEditorFactory, guiHelper);
+                builderName, project, srcPackage, psiManager);
 
         // then
         assertThat(builderDialog, is(notNullValue()));
-        assertThat((PsiHelper) ReflectionTestUtils.getField(builderDialog, "psiHelper"), is(psiHelper));
-        assertThat((GuiHelper) ReflectionTestUtils.getField(builderDialog, "guiHelper"), is(guiHelper));
         assertThat((Project) ReflectionTestUtils.getField(builderDialog, "project"), is(project));
     }
 }

@@ -97,7 +97,7 @@ public class DisplayChoosersRunnableTest {
         given(psiClassFromEditor.getName()).willReturn(className);
         given(psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedFields, psiClassFromEditor)).willReturn(psiFieldsForBuilder);
         given(createBuilderDialogFactory.createBuilderDialog(className + DisplayChoosersRunnable.BUILDER_SUFFIX, project,
-                psiPackage, psiHelper, psiManager, referenceEditorComboWithBrowseButtonFactory, guiHelper)).willReturn(createBuilderDialog);
+                psiPackage, psiManager)).willReturn(createBuilderDialog);
     }
 
     @Test
