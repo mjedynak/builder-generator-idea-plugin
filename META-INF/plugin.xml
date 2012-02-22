@@ -14,9 +14,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <change-notes>
         <![CDATA[
+           version 1.0.5
+           <br/>
+           <ul>
+           <li>Added action to 'Navigate' menu (can be easier found in 'Find Action' box)</li>
+           </ul>
            version 1.0.4
            <br/>
            <ul>
@@ -54,6 +59,7 @@
     <actions>
         <action id="GoToBuilder" class="pl.mjedynak.idea.plugins.builder.action.GoToBuilderAction"
                 text="Builder" description="Generates Builder">
+            <add-to-group group-id="GoToCodeGroup" anchor="after" relative-to-action="GotoTest"/>
             <add-to-group group-id="EditorPopupMenu.GoTo" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt B"/>
         </action>
