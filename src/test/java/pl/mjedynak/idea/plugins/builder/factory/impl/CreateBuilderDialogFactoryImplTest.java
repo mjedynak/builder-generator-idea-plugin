@@ -1,6 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.factory.impl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
@@ -49,16 +50,18 @@ public class CreateBuilderDialogFactoryImplTest {
     @Mock
     private ReferenceEditorComboWithBrowseButton referenceEditor;
 
+    @Mock
+    private PsiClass sourceClass;
+
 
     @Test
     public void shouldCreateNewBuilderDialogWithGivenFields() {
         // given
-        String builderName = "builderName";
         given(referenceEditorFactory.getReferenceEditorComboWithBrowseButton(any(Project.class), anyString(), anyString())).willReturn(referenceEditor);
 
         // when
         CreateBuilderDialog builderDialog = createBuilderDialogFactory.createBuilderDialog(
-                builderName, project, srcPackage, psiManager);
+                sourceClass, project, srcPackage, psiManager);
 
         // then
         assertThat(builderDialog, is(notNullValue()));

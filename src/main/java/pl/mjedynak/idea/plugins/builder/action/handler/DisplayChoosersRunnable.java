@@ -22,7 +22,6 @@ import java.util.List;
 
 public class DisplayChoosersRunnable implements Runnable {
 
-    static final String BUILDER_SUFFIX = "Builder";
 
     private PsiClass psiClassFromEditor;
     private Project project;
@@ -74,7 +73,7 @@ public class DisplayChoosersRunnable implements Runnable {
         PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
         PsiPackage srcPackage = psiHelper.getPackage(srcDir);
         PsiManager psiManager = psiManagerFactory.getPsiManager(project);
-        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor.getName() + BUILDER_SUFFIX, project,
+        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project,
                 srcPackage, psiManager);
         dialog.show();
         return dialog;

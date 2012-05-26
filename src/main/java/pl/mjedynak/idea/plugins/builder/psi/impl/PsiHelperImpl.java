@@ -99,7 +99,7 @@ public class PsiHelperImpl implements PsiHelper {
     }
 
     @Override
-    public Module getModuleFromProject(Project project) {
-        return ModuleUtil.findModuleForFile(project.getProjectFile(), project);
+    public Module findModuleForPsiClass(PsiClass psiClass, Project project) {
+        return ModuleUtil.findModuleForFile(psiClass.getContainingFile().getVirtualFile(), project);
     }
 }

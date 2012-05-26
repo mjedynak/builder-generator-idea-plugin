@@ -37,5 +37,5 @@ public interface PsiHelper {
 
     Application getApplication();
 
-    Module getModuleFromProject(Project project);
+    Module findModuleForPsiClass(PsiClass psiClass, Project project);
 }

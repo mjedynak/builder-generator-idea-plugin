@@ -9,7 +9,7 @@ dependencies {
 }
 
 def serFile="${project.buildDir}/cobertura.ser"
-def classes="${project.sourceSets.main.classesDir}"
+def classes="${project.sourceSets.main.output.classesDir}"
 def classesCopy="${classes}-copy"
 
 task cobertura(type: Test){

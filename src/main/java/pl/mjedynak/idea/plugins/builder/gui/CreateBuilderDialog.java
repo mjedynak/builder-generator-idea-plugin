@@ -9,6 +9,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.DocumentAdapter;
@@ -46,11 +47,13 @@ public class CreateBuilderDialog extends DialogWrapper {
     private GuiHelper guiHelper;
     private Project project;
     private PsiDirectory targetDirectory;
+    private PsiClass sourceClass;
     private JTextField targetClassNameField;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
                                String title,
+                               PsiClass sourceClass,
                                String targetClassName,
                                PsiPackage targetPackage,
                                PsiHelper psiHelper,
@@ -60,6 +63,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
         this.project = project;
+        this.sourceClass = sourceClass;
         targetClassNameField = new JTextField(targetClassName);
         setPreferredSize(targetClassNameField);
 
@@ -149,7 +153,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     protected void doOKAction() {
         registerEntry(RECENTS_KEY, targetPackageField.getText());
-        Module module = psiHelper.getModuleFromProject(project);
+        Module module = psiHelper.findModuleForPsiClass(sourceClass, project);
+        if (module == null) {
+            throw new IllegalStateException("Cannot find module for class " + sourceClass.getName());
+        }
         OKActionRunnable okActionRunnable = new OKActionRunnable(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
         executeCommand(okActionRunnable);
         callSuper();

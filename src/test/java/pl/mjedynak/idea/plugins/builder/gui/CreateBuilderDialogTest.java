@@ -2,6 +2,7 @@ package pl.mjedynak.idea.plugins.builder.gui;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
@@ -56,6 +57,9 @@ public class CreateBuilderDialogTest {
     private PsiManager psiManager;
 
     @Mock
+    private PsiClass sourceClass;
+
+    @Mock
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
 
     @Mock
@@ -73,7 +77,7 @@ public class CreateBuilderDialogTest {
                 project, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
 
         createBuilderDialog = new CreateBuilderDialog(
-                project, title, className, targetPackage, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
+                project, title, sourceClass, className, targetPackage, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
     }
 
 
@@ -146,7 +150,7 @@ public class CreateBuilderDialogTest {
         CreateBuilderDialog dialog = spy(createBuilderDialog);
         String text = "text";
         given(referenceEditorComboWithBrowseButton.getText()).willReturn(text);
-        given(psiHelper.getModuleFromProject(project)).willReturn(mock(Module.class));
+        given(psiHelper.findModuleForPsiClass(sourceClass, project)).willReturn(mock(Module.class));
         doNothing().when(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
         doNothing().when(dialog).executeCommand(any(OKActionRunnable.class));
         doNothing().when(dialog).callSuper();
@@ -158,6 +162,19 @@ public class CreateBuilderDialogTest {
         verify(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
         verify(dialog).executeCommand(any(OKActionRunnable.class));
         verify(dialog).callSuper();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionWhenModuleNotFound() {
+        // given
+        CreateBuilderDialog dialog = spy(createBuilderDialog);
+        String text = "text";
+        given(referenceEditorComboWithBrowseButton.getText()).willReturn(text);
+        given(psiHelper.findModuleForPsiClass(sourceClass, project)).willReturn(null);
+        doNothing().when(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
+
+        // when
+        dialog.doOKAction();
     }
 }
 

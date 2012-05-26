@@ -5,8 +5,8 @@ apply from: 'cobertura.gradle'
 apply from: 'idea.gradle'
 
 // --- properties ---
-ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.0'
-ideaJdk = 'IDEA IC-111.167'
+ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.1'
+ideaJdk = 'IDEA IC-117.418'
 sourceCompatibility = 1.6
 // --- properties ---
 
@@ -31,7 +31,7 @@ sourceSets.each { sourceSet ->
         def outputFile = new File(findbugsReportDir, "${sourceSet.name}.${findbugsOutputType}")
 
         dependsOn sourceSet.classesTaskName
-        inputs.dir sourceSet.classesDir
+        inputs.dir sourceSet.output.classesDir
         outputs.file outputFile
 
         doLast {
@@ -55,7 +55,7 @@ sourceSets.each { sourceSet ->
 
                     auxClassPath(path: configurations.compile.asPath)
                     sourceSet.allJava.srcDirs.each { sourcepath(path: it) }
-                    "class"(location: sourceSet.classesDir)
+                    "class"(location: sourceSet.output.classesDir)
                 }
                 if (findbugsWarning) {
                     throw new IllegalStateException('Findbugs found warnings, please take a look at findbugs report.')
