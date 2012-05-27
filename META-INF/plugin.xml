@@ -14,9 +14,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <change-notes>
         <![CDATA[
+           version 1.0.6
+           <br/>
+           <ul>
+           <li>Fixed bug that prevented generating builder in multimodule project </li>
+           </ul>
            version 1.0.5
            <br/>
            <ul>
