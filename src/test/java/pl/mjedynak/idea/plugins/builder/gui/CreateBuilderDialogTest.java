@@ -18,9 +18,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.GridBagLayout;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -119,17 +117,6 @@ public class CreateBuilderDialogTest {
 
         // then
         assertThat(createBuilderDialog.getTargetDirectory(), is(targetDirectory));
-    }
-
-    @Test
-    public void shouldCreateJPanelWithComponentsAndGridBagLayout() {
-        // when
-        JComponent centerPanel = createBuilderDialog.createCenterPanel();
-
-        // then
-        assertThat(centerPanel, is(instanceOf(JPanel.class)));
-        assertThat(centerPanel.getComponentCount() > 0, is(true));
-        assertThat(centerPanel.getLayout(), is(instanceOf(GridBagLayout.class)));
     }
 
     @Test

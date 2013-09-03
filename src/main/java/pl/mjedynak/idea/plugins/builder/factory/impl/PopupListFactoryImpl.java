@@ -10,12 +10,12 @@ import java.util.Arrays;
 
 public class PopupListFactoryImpl implements PopupListFactory {
 
-    public static final ActionCellRenderer ACTION_CELL_RENDERER = new ActionCellRenderer();
+    private final ActionCellRenderer actionCellRenderer = new ActionCellRenderer();
 
     @Override
     public JList getPopupList() {
         JList list = new JBList(Arrays.asList(new GoToBuilderAdditionalAction()));
-        list.setCellRenderer(ACTION_CELL_RENDERER);
+        list.setCellRenderer(actionCellRenderer);
         return list;
     }
 }

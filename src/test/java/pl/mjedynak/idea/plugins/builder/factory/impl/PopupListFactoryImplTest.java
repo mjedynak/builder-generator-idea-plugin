@@ -1,7 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.factory.impl;
 
+import com.intellij.ui.ExpandedItemListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
-import org.junit.Before;
 import org.junit.Test;
 import pl.mjedynak.idea.plugins.builder.factory.PopupListFactory;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
@@ -14,12 +14,7 @@ import static org.junit.Assert.assertThat;
 
 public class PopupListFactoryImplTest {
 
-    private PopupListFactory popupListFactory;
-
-    @Before
-    public void setUp() {
-        popupListFactory = new PopupListFactoryImpl();
-    }
+    private PopupListFactory popupListFactory = new PopupListFactoryImpl();
 
     @Test
     public void shouldCreateJBListWithActionCellRenderer() {
@@ -28,7 +23,8 @@ public class PopupListFactoryImplTest {
 
         // then
         assertThat(popupList, instanceOf(JBList.class));
-        assertThat(popupList.getCellRenderer(), instanceOf(ActionCellRenderer.class));
+        assertThat(popupList.getCellRenderer(), instanceOf(ExpandedItemListCellRendererWrapper.class));
+        assertThat(((ExpandedItemListCellRendererWrapper) popupList.getCellRenderer()).getWrappee(), instanceOf(ActionCellRenderer.class));
         assertThat(((JBList) popupList).getItemsCount(), is(1));
     }
 }

@@ -14,13 +14,18 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <change-notes>
         <![CDATA[
+           version 1.0.7
+           <br/>
+           <ul>
+           <li>Attempt to fix a bug that caused deadlock during IDEA startup (issue #4)</li>
+           </ul>
            version 1.0.6
            <br/>
            <ul>
-           <li>Fixed bug that prevented generating builder in multimodule project </li>
+           <li>Fixed bug that prevented generating builder in multimodule project</li>
            </ul>
            version 1.0.5
            <br/>
@@ -53,7 +58,7 @@
 
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="111.69"/>
+    <idea-version since-build="129.354"/>
 
     <application-components>
     </application-components>
