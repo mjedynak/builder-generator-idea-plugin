@@ -17,11 +17,10 @@ repositories {
 
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
-    testCompile 'org.mockito:mockito-all:1.9.0'
-    testCompile 'org.powermock:powermock-module-junit4:1.4.10'
-    testCompile 'org.powermock:powermock-api-mockito:1.4.10'
-    testCompile 'org.springframework:spring-test:3.1.0.RELEASE'
-    testCompile 'org.springframework:spring-core:3.1.0.RELEASE'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.5.1'
+    testCompile 'org.powermock:powermock-api-mockito:1.5.1'
+    testCompile 'org.springframework:spring-test:3.2.4.RELEASE'
 }
 
 metaInf << files('/META-INF/plugin.xml')
