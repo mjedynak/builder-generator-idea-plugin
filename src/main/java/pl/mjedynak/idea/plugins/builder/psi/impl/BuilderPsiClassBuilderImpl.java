@@ -11,6 +11,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.javadoc.PsiDocComment;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -82,7 +83,17 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         PsiElement copy = psiField.copy();
         removeAnnotationsFromElement(copy);
         removeFinalModifierFromElement(copy);
+        removeComments(copy);
         builderClass.add(copy);
+    }
+
+    private void removeComments(PsiElement psiElement) {
+        if (psiElement instanceof PsiField) {
+            PsiDocComment docComment = ((PsiField) psiElement).getDocComment();
+            if (docComment != null) {
+                docComment.delete();
+            }
+        }
     }
 
     private void removeFinalModifierFromElement(PsiElement psiElement) {
@@ -104,11 +115,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     }
 
     private void deleteAnnotationsFromModifierList(PsiModifierList modifierList) {
-        PsiAnnotation[] annotations = modifierList.getAnnotations();
-        if (annotations != null) {
-            for (PsiAnnotation annotation : annotations) {
-                annotation.delete();
-            }
+        for (PsiAnnotation annotation : modifierList.getAnnotations()) {
+            annotation.delete();
         }
     }
 
@@ -159,7 +167,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
         StringBuilder buildMethodText = new StringBuilder();
         String constructorParameters = createConstructorParameters();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
-                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(" + constructorParameters + ");");
+                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
 
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             String fieldName = psiFieldsForSetter.getName();

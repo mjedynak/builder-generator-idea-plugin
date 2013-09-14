@@ -12,6 +12,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiFieldImpl;
+import com.intellij.psi.javadoc.PsiDocComment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,38 +39,17 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderImplTest {
 
-    @InjectMocks
-    private BuilderPsiClassBuilderImpl psiClassBuilder;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiDirectory targetDirectory;
-
-    @Mock
-    private PsiClass srcClass;
-
-    @Mock
-    private JavaDirectoryService javaDirectoryService;
-
-    @Mock
-    private PsiClass builderClass;
-
-    @Mock
-    private JavaPsiFacade javaPsiFacade;
-
-    @Mock
-    private PsiElementFactory elementFactory;
-
-    @Mock
-    private PsiFieldsForBuilder psiFieldsForBuilder;
-
-    @Mock
-    private PsiField srcClassNameField;
+    @InjectMocks private BuilderPsiClassBuilderImpl psiClassBuilder;
+    @Mock private PsiHelper psiHelper;
+    @Mock private Project project;
+    @Mock private PsiDirectory targetDirectory;
+    @Mock private PsiClass srcClass;
+    @Mock private JavaDirectoryService javaDirectoryService;
+    @Mock private PsiClass builderClass;
+    @Mock private JavaPsiFacade javaPsiFacade;
+    @Mock private PsiElementFactory elementFactory;
+    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock private PsiField srcClassNameField;
 
     private List<PsiField> psiFieldsForSetters;
 
@@ -112,7 +93,7 @@ public class BuilderPsiClassBuilderImplTest {
     }
 
     @Test
-    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotationAndFinalModifier() {
+    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotationAndFinalModifierAndComments() {
         // given
         String finalModifier = "final";
         PsiField psiFieldForSetters = mock(PsiField.class);
@@ -128,10 +109,12 @@ public class BuilderPsiClassBuilderImplTest {
         PsiField psiFieldForConstructor = mock(PsiField.class);
         psiFieldsForConstructor.add(psiFieldForConstructor);
         PsiField copyPsiFieldForConstructor = mock(PsiField.class);
-        PsiModifierList psiModifierListForConstructor = mock(PsiModifierList.class);
+        PsiModifierList psiModifierListForConstructor = mock(PsiModifierList.class, RETURNS_MOCKS);
         given(psiModifierListForConstructor.hasExplicitModifier(finalModifier)).willReturn(true);
         given(psiFieldForConstructor.copy()).willReturn(copyPsiFieldForConstructor);
         given(copyPsiFieldForConstructor.getModifierList()).willReturn(psiModifierListForConstructor);
+        PsiDocComment docComment = mock(PsiDocComment.class);
+        given(copyPsiFieldForConstructor.getDocComment()).willReturn(docComment);
 
         // when
         psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withFields();
@@ -139,6 +122,7 @@ public class BuilderPsiClassBuilderImplTest {
         // then
         verify(annotation).delete();
         verify(psiModifierListForConstructor).setModifierProperty(finalModifier, false);
+        verify(docComment).delete();
         verify(builderClass).add(copyPsiFieldForSetter);
         verify(builderClass).add(copyPsiFieldForConstructor);
         verifyNoMoreInteractions(builderClass);
