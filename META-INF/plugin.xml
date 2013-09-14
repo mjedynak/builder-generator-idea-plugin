@@ -5,18 +5,21 @@
          Adds ability to generate builder for a class and switch between them.
          Switching between builder and source class is similar to 'Go To Test' action.
          Generated builder class does not use reflection, only setter methods or constructor.
-         <br/>
-         <i>If you're using IDEA version older than 11, please download plugin version 1.0.1 from http://plugins.intellij.net/plugin/?idea&id=6585</i>
-         <br/>
          Usage:
           <ul>
               <li>ALT+SHIFT+B inside a class.</li>
           </ul>
         ]]>
     </description>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.8</version>
     <change-notes>
         <![CDATA[
+           version 1.0.8
+           <br/>
+           <ul>
+           <li>Comments are no longer copied when creating builder(issue #5)</li>
+           <li>Compiled for Java 6 (issue #6)</li>
+           </ul
            version 1.0.7
            <br/>
            <ul>
@@ -58,7 +61,7 @@
 
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="129.354"/>
+    <idea-version since-build="129.713"/>
 
     <application-components>
     </application-components>
