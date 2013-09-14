@@ -43,14 +43,9 @@ public class PsiHelperImplTest {
 
     private PsiHelper psiHelper;
 
-    @Mock
-    private Project project;
-
-    @Mock
-    private Editor editor;
-
-    @Mock
-    private PsiClass psiClass;
+    @Mock private Project project;
+    @Mock private Editor editor;
+    @Mock private PsiClass psiClass;
 
     @Before
     public void setUp() {
