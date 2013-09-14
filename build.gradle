@@ -5,8 +5,8 @@ apply from: 'idea.gradle'
 
 // --- properties ---
 ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 12.1'
-ext.ideaJdk = 'IDEA IC-129.354'
-ext.sourceCompatibility = 1.6
+ext.ideaJdk = 'IDEA IC-129.713'
+sourceCompatibility = 1.6
 // --- properties ---
 
 
