@@ -52,7 +52,7 @@ public class BuilderWriterImplTest {
         given(psiHelper.getCommandProcessor()).willReturn(commandProcessor);
 
         // when
-        builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass);
+        builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass,"anyMethodPrefix");
 
         // then
         verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriterImpl.CREATE_BUILDER_STRING), eq(builderWriter));

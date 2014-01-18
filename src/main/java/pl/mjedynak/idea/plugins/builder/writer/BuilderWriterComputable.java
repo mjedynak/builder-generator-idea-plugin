@@ -22,9 +22,11 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiClass psiClassFromEditor;
     private GuiHelper guiHelper;
     private PsiHelper psiHelper;
+    private String methodPrefix;
 
     public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper) {
+                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper,
+                                   String methodPrefix) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
@@ -33,17 +35,19 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         this.psiClassFromEditor = psiClassFromEditor;
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
+        this.methodPrefix = methodPrefix;
+
     }
 
     @Override
     public PsiElement compute() {
-        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor);
+        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor,methodPrefix);
     }
 
-    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix) {
         try {
             guiHelper.includeCurrentPlaceAsChangePlace(project);
-            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor);
+            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor,methodPrefix);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
@@ -53,9 +57,14 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         }
     }
 
-    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
-        return builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder)
-                .withFields().withPrivateConstructor().withInitializingMethod().withSetMethods().build();
+    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix) {
+        BuilderPsiClassBuilder builder =  builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder);
+        builder = builder.withFields();
+        builder = builder.withPrivateConstructor();
+        builder = builder.withInitializingMethod();
+        builder = builder.withSetMethods(methodPrefix);
+        PsiClass buildedClass = builder.build();
+        return buildedClass;
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {

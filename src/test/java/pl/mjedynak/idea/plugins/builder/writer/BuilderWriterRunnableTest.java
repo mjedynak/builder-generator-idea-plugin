@@ -48,7 +48,7 @@ public class BuilderWriterRunnableTest {
     @Before
     public void setUp() {
         builderWriterRunnable = new BuilderWriterRunnable(
-                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, psiHelper, guiHelper);
+                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, psiHelper, guiHelper,"anyMethodPrefix");
     }
 
     @Test

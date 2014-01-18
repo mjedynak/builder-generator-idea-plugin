@@ -32,6 +32,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private static final String SEMICOLON = ",";
     private static final String FINAL = "final";
 
+
     private PsiHelper psiHelper;
 
     private Project project = null;
@@ -140,25 +141,35 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     }
 
     @Override
-    public BuilderPsiClassBuilder withSetMethods() {
+    public BuilderPsiClassBuilder withSetMethods(String methodPrefix) {
         checkClassFieldsRequiredForBuilding();
         for (PsiField psiFieldForSetter : psiFieldsForSetters) {
-            createAndAddMethod(psiFieldForSetter);
+            createAndAddMethod(psiFieldForSetter,methodPrefix);
         }
         for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
-            createAndAddMethod(psiFieldForConstructor);
+            createAndAddMethod(psiFieldForConstructor,methodPrefix);
         }
         return this;
     }
 
-    private void createAndAddMethod(PsiField psiField) {
+    private void createAndAddMethod(PsiField psiField,String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
-        String fieldNameUppercase = StringUtils.capitalize(fieldName);
+        String methodName = createMethodName(methodPrefix,fieldName);
         PsiMethod method = elementFactory.createMethodFromText(
-                "public " + builderClassName + " with" + fieldNameUppercase + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }",
+                "public " + builderClassName + " " + methodName + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }",
                 psiField);
         builderClass.add(method);
+    }
+
+    private String createMethodName(String methodPrefix,String fieldName){
+        if(StringUtils.isEmpty(methodPrefix)){
+            String fieldNameLowercase = StringUtils.lowerCase(fieldName);
+            return fieldNameLowercase;
+        }else{
+            String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            return methodPrefix+fieldNameUppercase;
+        }
     }
 
     @Override
@@ -171,8 +182,9 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             String fieldName = psiFieldsForSetter.getName();
-            String fieldNameUppercase = StringUtils.capitalize(fieldName);
-            buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
+            //String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            String fieldNameLowercase = StringUtils.lowerCase(fieldName);
+            buildMethodText.append(srcClassFieldName).append(".").append(fieldNameLowercase).append("(").append(fieldName).append(");");
         }
         buildMethodText.append("return ").append(srcClassFieldName).append(";}");
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);

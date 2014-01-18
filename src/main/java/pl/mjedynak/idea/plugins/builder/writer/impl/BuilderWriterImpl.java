@@ -25,10 +25,10 @@ public class BuilderWriterImpl implements BuilderWriter {
     }
 
     @Override
-    public void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor) {
+    public void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
         commandProcessor.executeCommand(project,
-                new BuilderWriterRunnable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper),
+                new BuilderWriterRunnable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper,methodPrefix),
                 CREATE_BUILDER_STRING, this);
     }
 }
