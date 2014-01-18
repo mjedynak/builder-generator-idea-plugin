@@ -13,6 +13,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactory {
 
     static final String BUILDER_SUFFIX = "Builder";
+    static final String METHOD_PREFIX = "with";
     private static final String DIALOG_NAME = "CreateBuilder";
     private PsiHelper psiHelper;
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
@@ -28,7 +29,7 @@ public class CreateBuilderDialogFactoryImpl implements CreateBuilderDialogFactor
     @Override
     public CreateBuilderDialog createBuilderDialog(PsiClass sourceClass, Project project, PsiPackage srcPackage,
                                                    PsiManager psiManager) {
-        return new CreateBuilderDialog(project, DIALOG_NAME, sourceClass, sourceClass.getName() + BUILDER_SUFFIX, srcPackage, psiHelper, guiHelper,
+        return new CreateBuilderDialog(project, DIALOG_NAME, sourceClass, sourceClass.getName() + BUILDER_SUFFIX, METHOD_PREFIX, srcPackage, psiHelper, guiHelper,
                 referenceEditorComboWithBrowseButtonFactory);
     }
 }

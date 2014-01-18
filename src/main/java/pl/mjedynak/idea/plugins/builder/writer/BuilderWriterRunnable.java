@@ -19,9 +19,10 @@ public class BuilderWriterRunnable implements Runnable {
     private PsiClass psiClassFromEditor;
     private PsiHelper psiHelper;
     private GuiHelper guiHelper;
+    private String methodPrefix;
 
     public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper) {
+                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper,String methodPrefix) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
@@ -30,11 +31,12 @@ public class BuilderWriterRunnable implements Runnable {
         this.psiClassFromEditor = psiClassFromEditor;
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
+        this.methodPrefix = methodPrefix;
     }
 
     @Override
     public void run() {
         Application application = psiHelper.getApplication();
-        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper));
+        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper,methodPrefix));
     }
 }

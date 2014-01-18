@@ -49,12 +49,14 @@ public class CreateBuilderDialog extends DialogWrapper {
     private PsiDirectory targetDirectory;
     private PsiClass sourceClass;
     private JTextField targetClassNameField;
+    private JTextField targetMethodPrefix;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
                                String title,
                                PsiClass sourceClass,
                                String targetClassName,
+                               String methodPrefix,
                                PsiPackage targetPackage,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
@@ -65,7 +67,9 @@ public class CreateBuilderDialog extends DialogWrapper {
         this.project = project;
         this.sourceClass = sourceClass;
         targetClassNameField = new JTextField(targetClassName);
+        targetMethodPrefix = new JTextField(methodPrefix);
         setPreferredSize(targetClassNameField);
+        setPreferredSize(targetMethodPrefix);
 
         String targetPackageName = (targetPackage != null) ? targetPackage.getQualifiedName() : "";
         targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(project, targetPackageName, RECENTS_KEY);
@@ -111,6 +115,23 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
         panel.add(targetClassNameField, gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.gridy = 2;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Method prefix"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(targetMethodPrefix, gbConstraints);
 
         targetClassNameField.getDocument().addDocumentListener(new DocumentAdapter() {
             protected void textChanged(DocumentEvent e) {
@@ -185,6 +206,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public String getClassName() {
         return targetClassNameField.getText();
+    }
+
+    public String getMethodPrefix() {
+        return targetMethodPrefix.getText();
     }
 
     public PsiDirectory getTargetDirectory() {

@@ -81,6 +81,8 @@ public class DisplayChoosersRunnableTest {
 
     private String className = "className";
 
+    private String methodPrefix = "with";
+
     private PsiField[] allFields = {};
 
     private List<PsiElementClassMember> selectedFields = new ArrayList<PsiElementClassMember>();
@@ -141,6 +143,7 @@ public class DisplayChoosersRunnableTest {
         given(memberChooserDialog.isOK()).willReturn(true);
         given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
         given(createBuilderDialog.getClassName()).willReturn(className);
+        given(createBuilderDialog.getMethodPrefix()).willReturn(methodPrefix);
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
         given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor)).willReturn(selectedFields);
@@ -154,6 +157,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor);
+        verify(builderWriter).writeBuilder(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor,methodPrefix);
     }
 }

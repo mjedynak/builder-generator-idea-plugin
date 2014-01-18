@@ -56,6 +56,7 @@ public class BuilderPsiClassBuilderImplTest {
     private List<PsiField> psiFieldsForConstructor;
 
     private String builderClassName = "BuilderClassName";
+    private String methodPrefix = "with";
     private String srcClassName = "ClassName";
     private String srcClassFieldName = "className";
 
@@ -201,7 +202,39 @@ public class BuilderPsiClassBuilderImplTest {
                 .willReturn(methodForFieldForConstructor);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods();
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods(methodPrefix);
+
+        // then
+        verify(builderClass).add(methodForFieldForSetter);
+        verify(builderClass).add(methodForFieldForConstructor);
+        verifyNoMoreInteractions(builderClass);
+    }
+
+    @Test
+    public void shouldAddSetMethodsWithPrefixForFieldsFromBothLists() {
+        // given
+        PsiFieldImpl psiFieldForSetter = mock(PsiFieldImpl.class);
+        psiFieldsForSetters.add(psiFieldForSetter);
+        given(psiFieldForSetter.getName()).willReturn("name");
+        PsiType typeForFieldForSetter = mock(PsiType.class);
+        given(typeForFieldForSetter.getPresentableText()).willReturn("String");
+        given(psiFieldForSetter.getType()).willReturn(typeForFieldForSetter);
+        PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + builderClassName + " name(String name) { this.name = name; return this; }", psiFieldForSetter))
+                .willReturn(methodForFieldForSetter);
+
+        PsiFieldImpl psiFieldForConstructor = mock(PsiFieldImpl.class);
+        psiFieldsForConstructor.add(psiFieldForConstructor);
+        given(psiFieldForConstructor.getName()).willReturn("age");
+        PsiType typeForFieldForConstructor = mock(PsiType.class);
+        given(typeForFieldForConstructor.getPresentableText()).willReturn("int");
+        given(psiFieldForConstructor.getType()).willReturn(typeForFieldForConstructor);
+        PsiMethod methodForFieldForConstructor = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + builderClassName + " age(int age) { this.age = age; return this; }", psiFieldForConstructor))
+                .willReturn(methodForFieldForConstructor);
+
+        // when
+        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods("");
 
         // then
         verify(builderClass).add(methodForFieldForSetter);
@@ -247,7 +280,7 @@ public class BuilderPsiClassBuilderImplTest {
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenInvokingWithSetMethodsIfFieldsNotSetBefore() {
         // when
-        psiClassBuilder.withSetMethods();
+        psiClassBuilder.withSetMethods("with");
     }
 
     @Test(expected = IllegalStateException.class)

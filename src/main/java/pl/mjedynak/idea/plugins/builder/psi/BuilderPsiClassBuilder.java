@@ -15,7 +15,7 @@ public interface BuilderPsiClassBuilder {
 
     BuilderPsiClassBuilder withInitializingMethod();
 
-    BuilderPsiClassBuilder withSetMethods();
+    BuilderPsiClassBuilder withSetMethods(String methodPrefix);
 
     PsiClass build();
 }
