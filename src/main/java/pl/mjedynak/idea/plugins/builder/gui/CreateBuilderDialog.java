@@ -56,6 +56,7 @@ public class CreateBuilderDialog extends DialogWrapper {
                                String title,
                                PsiClass sourceClass,
                                String targetClassName,
+                               String methodPrefix,
                                PsiPackage targetPackage,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
@@ -66,7 +67,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         this.project = project;
         this.sourceClass = sourceClass;
         targetClassNameField = new JTextField(targetClassName);
-        targetMethodPrefix = new JTextField("");
+        targetMethodPrefix = new JTextField(methodPrefix);
         setPreferredSize(targetClassNameField);
         setPreferredSize(targetMethodPrefix);
 

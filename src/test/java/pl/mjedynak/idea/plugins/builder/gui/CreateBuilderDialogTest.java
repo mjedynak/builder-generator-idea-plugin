@@ -65,17 +65,20 @@ public class CreateBuilderDialogTest {
 
     private String className;
 
+    private String methodPrefix;
+
     @Before
     public void setUp() {
         String title = "title";
         className = "className";
+        methodPrefix = "with";
         String packageName = "packageName";
         given(targetPackage.getQualifiedName()).willReturn(packageName);
         given(referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(
                 project, packageName, CreateBuilderDialog.RECENTS_KEY)).willReturn(referenceEditorComboWithBrowseButton);
 
         createBuilderDialog = new CreateBuilderDialog(
-                project, title, sourceClass, className, targetPackage, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
+                project, title, sourceClass, className, methodPrefix, targetPackage, psiHelper, guiHelper, referenceEditorComboWithBrowseButtonFactory);
     }
 
 

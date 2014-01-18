@@ -62,11 +62,11 @@ public class DisplayChoosersRunnable implements Runnable {
         }
     }
 
-    private void writeBuilderIfNecessary(PsiDirectory targetDirectory, String className, String methodPrefix,MemberChooser<PsiElementClassMember> memberChooserDialog) {
+    private void writeBuilderIfNecessary(PsiDirectory targetDirectory, String className, String methodPrefix, MemberChooser<PsiElementClassMember> memberChooserDialog) {
         if (memberChooserDialog.isOK()) {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
-            builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor,methodPrefix);
+            builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
         }
     }
 

@@ -255,7 +255,7 @@ public class BuilderPsiClassBuilderImplTest {
         given(psiFieldForSetter.getName()).willReturn("name");
         PsiMethod method = mock(PsiMethod.class);
         given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age);"
-                + srcClassFieldName + ".name(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
+                + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
         // when
         PsiClass result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).build();
 

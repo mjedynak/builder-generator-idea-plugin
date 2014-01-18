@@ -182,9 +182,8 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             String fieldName = psiFieldsForSetter.getName();
-            //String fieldNameUppercase = StringUtils.capitalize(fieldName);
-            String fieldNameLowercase = StringUtils.lowerCase(fieldName);
-            buildMethodText.append(srcClassFieldName).append(".").append(fieldNameLowercase).append("(").append(fieldName).append(");");
+            String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
         buildMethodText.append("return ").append(srcClassFieldName).append(";}");
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
