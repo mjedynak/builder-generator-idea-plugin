@@ -58,7 +58,6 @@ public class BuilderPsiClassBuilderImplTest {
     private List<PsiField> psiFieldsForConstructor;
 
     private String builderClassName = "BuilderClassName";
-    private String methodPrefix = "with";
     private String srcClassName = "ClassName";
     private String srcClassFieldName = "className";
 
@@ -205,6 +204,7 @@ public class BuilderPsiClassBuilderImplTest {
                 .willReturn(methodForFieldForConstructor);
 
         // when
+        String methodPrefix = "with";
         psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods(methodPrefix);
 
         // then

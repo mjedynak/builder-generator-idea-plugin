@@ -38,46 +38,26 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 @RunWith(MockitoJUnitRunner.class)
 public class DisplayChoosersRunnableTest {
 
-    @InjectMocks
-    private DisplayChoosersRunnable displayChoosersRunnable;
-    @Mock
-    private PsiClass psiClassFromEditor;
-    @Mock
-    private Project project;
-    @Mock
-    private Editor editor;
-    @Mock
-    private PsiHelper psiHelper;
-    @Mock
-    private PsiManagerFactory psiManagerFactory;
-    @Mock
-    private CreateBuilderDialogFactory createBuilderDialogFactory;
-    @Mock
-    private GuiHelper guiHelper;
-    @Mock
-    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
-    @Mock
-    private PsiFieldSelector psiFieldSelector;
-    @Mock
-    private MemberChooserDialogFactory memberChooserDialogFactory;
-    @Mock
-    private BuilderWriter builderWriter;
-    @Mock
-    private PsiFile psiFile;
-    @Mock
-    private PsiDirectory psiDirectory;
-    @Mock
-    private PsiPackage psiPackage;
-    @Mock
-    private PsiManager psiManager;
-    @Mock
-    private CreateBuilderDialog createBuilderDialog;
-    @Mock
-    private MemberChooser memberChooserDialog;
-    @Mock
-    private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
-    @Mock
-    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @InjectMocks private DisplayChoosersRunnable displayChoosersRunnable;
+    @Mock private PsiClass psiClassFromEditor;
+    @Mock private Project project;
+    @Mock private Editor editor;
+    @Mock private PsiHelper psiHelper;
+    @Mock private PsiManagerFactory psiManagerFactory;
+    @Mock private CreateBuilderDialogFactory createBuilderDialogFactory;
+    @Mock private GuiHelper guiHelper;
+    @Mock private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+    @Mock private PsiFieldSelector psiFieldSelector;
+    @Mock private MemberChooserDialogFactory memberChooserDialogFactory;
+    @Mock private BuilderWriter builderWriter;
+    @Mock private PsiFile psiFile;
+    @Mock private PsiDirectory psiDirectory;
+    @Mock private PsiPackage psiPackage;
+    @Mock private PsiManager psiManager;
+    @Mock private CreateBuilderDialog createBuilderDialog;
+    @Mock private MemberChooser memberChooserDialog;
+    @Mock private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
+    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
 
     private String className = "className";
 
@@ -157,6 +137,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor,methodPrefix);
+        verify(builderWriter).writeBuilder(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix);
     }
 }

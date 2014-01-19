@@ -6,5 +6,5 @@ import com.intellij.psi.PsiDirectory;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public interface BuilderWriter {
-    void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix);
+    void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix);
 }

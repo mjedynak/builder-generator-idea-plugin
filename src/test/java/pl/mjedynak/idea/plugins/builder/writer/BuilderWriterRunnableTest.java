@@ -24,31 +24,18 @@ public class BuilderWriterRunnableTest {
 
     private BuilderWriterRunnable builderWriterRunnable;
 
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private GuiHelper guiHelper;
-
-    @Mock
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiDirectory targetDirectory;
-
-    @Mock
-    private PsiClass srcClass;
-
-    @Mock
-    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock private PsiHelper psiHelper;
+    @Mock private GuiHelper guiHelper;
+    @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
+    @Mock private Project project;
+    @Mock private PsiDirectory targetDirectory;
+    @Mock private PsiClass srcClass;
+    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
 
     @Before
     public void setUp() {
         builderWriterRunnable = new BuilderWriterRunnable(
-                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, psiHelper, guiHelper,"anyMethodPrefix");
+                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, psiHelper, guiHelper, "anyMethodPrefix");
     }
 
     @Test

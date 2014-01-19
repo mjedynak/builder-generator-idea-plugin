@@ -33,7 +33,6 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     private static final String SEMICOLON = ",";
     private static final String FINAL = "final";
 
-
     private PsiHelper psiHelper;
     private MethodNameCreator methodNameCreator = new MethodNameCreator();
 

@@ -41,13 +41,13 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
 
     @Override
     public PsiElement compute() {
-        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor,methodPrefix);
+        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
     }
 
-    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix) {
+    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
         try {
             guiHelper.includeCurrentPlaceAsChangePlace(project);
-            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor,methodPrefix);
+            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
             navigateToClassAndPositionCursor(project, targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
@@ -57,14 +57,13 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         }
     }
 
-    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,String methodPrefix) {
-        BuilderPsiClassBuilder builder =  builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder);
-        builder = builder.withFields();
-        builder = builder.withPrivateConstructor();
-        builder = builder.withInitializingMethod();
-        builder = builder.withSetMethods(methodPrefix);
-        PsiClass buildedClass = builder.build();
-        return buildedClass;
+    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder)
+                .withFields()
+                .withPrivateConstructor()
+                .withInitializingMethod()
+                .withSetMethods(methodPrefix);
+        return builder.build();
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {

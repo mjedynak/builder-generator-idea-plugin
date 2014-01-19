@@ -31,26 +31,13 @@ public class BuilderWriterComputableTest {
 
     private BuilderWriterComputable builderWriterComputable;
 
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private GuiHelper guiHelper;
-
-    @Mock
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiDirectory targetDirectory;
-
-    @Mock
-    private PsiClass srcClass;
-
-    @Mock
-    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock private PsiHelper psiHelper;
+    @Mock private GuiHelper guiHelper;
+    @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
+    @Mock private Project project;
+    @Mock private PsiDirectory targetDirectory;
+    @Mock private PsiClass srcClass;
+    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
 
     private String builderClassName = "builderClassName";
 
@@ -58,7 +45,7 @@ public class BuilderWriterComputableTest {
 
     @Before
     public void setUp() {
-        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper,builderMethodPrefix);
+        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper, builderMethodPrefix);
     }
 
     @Test

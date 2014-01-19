@@ -23,26 +23,13 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderWriterImplTest {
 
-    @InjectMocks
-    private BuilderWriterImpl builderWriter;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiDirectory targetDirectory;
-
-    @Mock
-    private PsiClass srcClass;
-
-    @Mock
-    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @InjectMocks private BuilderWriterImpl builderWriter;
+    @Mock private PsiHelper psiHelper;
+    @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
+    @Mock private Project project;
+    @Mock private PsiDirectory targetDirectory;
+    @Mock private PsiClass srcClass;
+    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
 
 
     @Test
@@ -52,7 +39,7 @@ public class BuilderWriterImplTest {
         given(psiHelper.getCommandProcessor()).willReturn(commandProcessor);
 
         // when
-        builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass,"anyMethodPrefix");
+        builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, "anyMethodPrefix");
 
         // then
         verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriterImpl.CREATE_BUILDER_STRING), eq(builderWriter));
