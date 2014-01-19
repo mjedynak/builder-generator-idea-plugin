@@ -11,15 +11,20 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <change-notes>
         <![CDATA[
+           version 1.0.9
+           <br/>
+           <ul>
+           <li>Added customizable prefix for builder method (contribution by Bjorn Monnens)</li>
+           </ul>
            version 1.0.8
            <br/>
            <ul>
            <li>Comments are no longer copied when creating builder(issue #5)</li>
            <li>Compiled for Java 6 (issue #6)</li>
-           </ul
+           </ul>
            version 1.0.7
            <br/>
            <ul>
