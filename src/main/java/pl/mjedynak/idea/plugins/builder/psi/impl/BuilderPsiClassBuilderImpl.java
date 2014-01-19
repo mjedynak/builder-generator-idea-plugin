@@ -14,6 +14,7 @@ import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.javadoc.PsiDocComment;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
+import pl.mjedynak.idea.plugins.builder.psi.MethodNameCreator;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
@@ -34,6 +35,7 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
 
 
     private PsiHelper psiHelper;
+    private MethodNameCreator methodNameCreator = new MethodNameCreator();
 
     private Project project = null;
     private PsiDirectory targetDirectory = null;
@@ -144,32 +146,22 @@ public class BuilderPsiClassBuilderImpl implements BuilderPsiClassBuilder {
     public BuilderPsiClassBuilder withSetMethods(String methodPrefix) {
         checkClassFieldsRequiredForBuilding();
         for (PsiField psiFieldForSetter : psiFieldsForSetters) {
-            createAndAddMethod(psiFieldForSetter,methodPrefix);
+            createAndAddMethod(psiFieldForSetter, methodPrefix);
         }
         for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
-            createAndAddMethod(psiFieldForConstructor,methodPrefix);
+            createAndAddMethod(psiFieldForConstructor, methodPrefix);
         }
         return this;
     }
 
-    private void createAndAddMethod(PsiField psiField,String methodPrefix) {
+    private void createAndAddMethod(PsiField psiField, String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
-        String methodName = createMethodName(methodPrefix,fieldName);
+        String methodName = methodNameCreator.createMethodName(methodPrefix, fieldName);
         PsiMethod method = elementFactory.createMethodFromText(
                 "public " + builderClassName + " " + methodName + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }",
                 psiField);
         builderClass.add(method);
-    }
-
-    private String createMethodName(String methodPrefix,String fieldName){
-        if(StringUtils.isEmpty(methodPrefix)){
-            String fieldNameLowercase = StringUtils.lowerCase(fieldName);
-            return fieldNameLowercase;
-        }else{
-            String fieldNameUppercase = StringUtils.capitalize(fieldName);
-            return methodPrefix+fieldNameUppercase;
-        }
     }
 
     @Override
