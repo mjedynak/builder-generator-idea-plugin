@@ -17,7 +17,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
-import pl.mjedynak.idea.plugins.builder.factory.impl.PackageChooserDialogFactoryImpl;
+import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -73,7 +73,7 @@ public class CreateBuilderDialog extends DialogWrapper {
 
         String targetPackageName = (targetPackage != null) ? targetPackage.getQualifiedName() : "";
         targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(project, targetPackageName, RECENTS_KEY);
-        targetPackageField.addActionListener(new ChooserDisplayerActionListener(targetPackageField, new PackageChooserDialogFactoryImpl(), project));
+        targetPackageField.addActionListener(new ChooserDisplayerActionListener(targetPackageField, new PackageChooserDialogFactory(), project));
         setTitle(title);
     }
 

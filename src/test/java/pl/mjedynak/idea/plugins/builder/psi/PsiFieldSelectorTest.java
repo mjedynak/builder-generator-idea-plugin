@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.psi.impl;
+package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.psi.PsiClass;
@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.factory.PsiElementClassMemberFactory;
+import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import java.util.List;
@@ -21,9 +22,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PsiFieldSelectorImplTest {
+public class PsiFieldSelectorTest {
 
-    @InjectMocks private PsiFieldSelectorImpl psiFieldSelector;
+    @InjectMocks private PsiFieldSelector psiFieldSelector;
     @Mock private PsiElementClassMemberFactory psiElementClassMemberFactory;
     @Mock private PsiFieldVerifier psiFieldVerifier;
     @Mock private PsiClass psiClass;

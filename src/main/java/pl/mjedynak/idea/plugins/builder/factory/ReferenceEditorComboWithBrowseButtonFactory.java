@@ -3,8 +3,9 @@ package pl.mjedynak.idea.plugins.builder.factory;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 
-public interface ReferenceEditorComboWithBrowseButtonFactory {
+public class ReferenceEditorComboWithBrowseButtonFactory {
 
-    ReferenceEditorComboWithBrowseButton getReferenceEditorComboWithBrowseButton(Project project, String packageName, String recentsKey);
-
+    public ReferenceEditorComboWithBrowseButton getReferenceEditorComboWithBrowseButton(Project project, String packageName, String recentsKey) {
+        return new ReferenceEditorComboWithBrowseButton(null, packageName, project, true, recentsKey);
+    }
 }

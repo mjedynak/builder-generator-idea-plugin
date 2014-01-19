@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.finder.impl;
+package pl.mjedynak.idea.plugins.builder.finder;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.finder.ClassFinder;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -19,25 +18,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BuilderFinderImplTest {
+public class BuilderFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
-    public static final String BUILDER_NAME = CLASS_NAME + BuilderFinderImpl.SEARCH_PATTERN;
+    private static final String BUILDER_NAME = CLASS_NAME + BuilderFinder.SEARCH_PATTERN;
 
-    @InjectMocks
-    private BuilderFinderImpl builderFinder;
-
-    @Mock
-    private ClassFinder classFinder;
-
-    @Mock
-    private PsiClass psiClass;
-
-    @Mock
-    private PsiClass builderClass;
-
-    @Mock
-    private Project project;
+    @InjectMocks private BuilderFinder builderFinder;
+    @Mock private ClassFinder classFinder;
+    @Mock private PsiClass psiClass;
+    @Mock private PsiClass builderClass;
+    @Mock private Project project;
 
     @Before
     public void setUp() {

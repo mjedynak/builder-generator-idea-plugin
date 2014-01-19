@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.components.ServiceManager;
@@ -24,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ServiceManager.class, PsiFormatUtil.class})
-public class PsiElementClassMemberFactoryImplTest {
+public class PsiElementClassMemberFactoryTest {
 
     private PsiElementClassMemberFactory psiElementClassMemberFactory;
 
@@ -33,7 +33,7 @@ public class PsiElementClassMemberFactoryImplTest {
 
     @Before
     public void setUp() {
-        psiElementClassMemberFactory = new PsiElementClassMemberFactoryImpl();
+        psiElementClassMemberFactory = new PsiElementClassMemberFactory();
     }
 
     @SuppressWarnings("unchecked")

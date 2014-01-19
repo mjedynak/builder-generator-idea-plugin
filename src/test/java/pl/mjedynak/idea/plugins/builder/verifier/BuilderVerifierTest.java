@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.verifier.impl;
+package pl.mjedynak.idea.plugins.builder.verifier;
 
 import com.intellij.psi.PsiClass;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BuilderVerifierImplTest {
+public class BuilderVerifierTest {
 
     private BuilderVerifier builderVerifier;
 
@@ -22,7 +22,7 @@ public class BuilderVerifierImplTest {
 
     @Before
     public void setUp() {
-        builderVerifier = new BuilderVerifierImpl();
+        builderVerifier = new BuilderVerifier();
     }
 
     @Test

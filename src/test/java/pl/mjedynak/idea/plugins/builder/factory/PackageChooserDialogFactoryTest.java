@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.project.Project;
@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -15,10 +16,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PackageChooserDialogFactoryImplTest {
+public class PackageChooserDialogFactoryTest {
 
     @Spy
-    private PackageChooserDialogFactoryImpl packageChooserDialogFactory;
+    private PackageChooserDialogFactory packageChooserDialogFactory;
 
     @Mock
     private Project project;

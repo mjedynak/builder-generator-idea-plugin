@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.finder.impl;
+package pl.mjedynak.idea.plugins.builder.finder;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -22,12 +22,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ClassFinderImplTest {
+public class ClassFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
 
     @InjectMocks
-    private ClassFinderImpl classFinder;
+    private ClassFinder classFinder;
 
     @Mock
     private PsiHelper psiHelper;

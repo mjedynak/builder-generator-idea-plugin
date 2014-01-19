@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.psi.PsiClass;
@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
@@ -21,10 +22,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PsiFieldsForBuilderFactoryImplTest {
+public class PsiFieldsForBuilderFactoryTest {
 
     @InjectMocks
-    private PsiFieldsForBuilderFactoryImpl factory;
+    private PsiFieldsForBuilderFactory factory;
     @Mock
     private PsiFieldVerifier psiFieldVerifier;
     @Mock

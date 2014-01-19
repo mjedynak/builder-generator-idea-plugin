@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.verifier.impl;
+package pl.mjedynak.idea.plugins.builder.verifier;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -19,9 +20,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PsiFieldVerifierImplTest {
+public class PsiFieldVerifierTest {
 
-    private PsiFieldVerifierImpl psiFieldVerifier;
+    private PsiFieldVerifier psiFieldVerifier;
     private PsiMethod[] constructors;
     private PsiMethod[] methods;
     private PsiParameter[] parameters;
@@ -48,7 +49,7 @@ public class PsiFieldVerifierImplTest {
 
     @Before
     public void setUp() {
-        psiFieldVerifier = new PsiFieldVerifierImpl();
+        psiFieldVerifier = new PsiFieldVerifier();
         constructors = new PsiMethod[1];
         constructors[0] = constructor;
         methods = new PsiMethod[1];
@@ -166,7 +167,7 @@ public class PsiFieldVerifierImplTest {
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
         given(psiField.getName()).willReturn("field");
-        given(modifierList.hasExplicitModifier(PsiFieldVerifierImpl.PRIVATE_MODIFIER)).willReturn(true);
+        given(modifierList.hasExplicitModifier(PsiFieldVerifier.PRIVATE_MODIFIER)).willReturn(true);
         given(method.getName()).willReturn("setField");
         // when
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);

@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PopupChooserBuilderFactoryImplTest {
+public class PopupChooserBuilderFactoryTest {
 
     private PopupChooserBuilderFactory popupChooserBuilderFactory;
 
@@ -23,7 +23,7 @@ public class PopupChooserBuilderFactoryImplTest {
 
     @Before
     public void setUp() {
-        popupChooserBuilderFactory = new PopupChooserBuilderFactoryImpl();
+        popupChooserBuilderFactory = new PopupChooserBuilderFactory();
     }
 
     @Test

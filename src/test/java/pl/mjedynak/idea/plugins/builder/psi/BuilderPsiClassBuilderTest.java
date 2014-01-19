@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.psi.impl;
+package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaDirectoryService;
@@ -38,9 +38,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BuilderPsiClassBuilderImplTest {
+public class BuilderPsiClassBuilderTest {
 
-    @InjectMocks private BuilderPsiClassBuilderImpl psiClassBuilder;
+    @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
     @Mock private MethodNameCreator methodNameCreator;
     @Mock private PsiHelper psiHelper;
     @Mock private Project project;
@@ -81,7 +81,7 @@ public class BuilderPsiClassBuilderImplTest {
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
 
         // then
-        assertThat((BuilderPsiClassBuilderImpl) result, is(psiClassBuilder));
+        assertThat((BuilderPsiClassBuilder) result, is(psiClassBuilder));
         assertThat((Project) ReflectionTestUtils.getField(psiClassBuilder, "project"), is(project));
         assertThat((PsiDirectory) ReflectionTestUtils.getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
         assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "srcClass"), is(srcClass));

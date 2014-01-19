@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -15,14 +16,14 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ReferenceEditorComboWithBrowseButtonFactoryImpl.class)
-public class ReferenceEditorComboWithBrowseButtonFactoryImplTest {
+@PrepareForTest(ReferenceEditorComboWithBrowseButtonFactory.class)
+public class ReferenceEditorComboWithBrowseButtonFactoryTest {
 
-    private ReferenceEditorComboWithBrowseButtonFactoryImpl factory;
+    private ReferenceEditorComboWithBrowseButtonFactory factory;
 
     @Before
     public void setUp() {
-        factory = new ReferenceEditorComboWithBrowseButtonFactoryImpl();
+        factory = new ReferenceEditorComboWithBrowseButtonFactory();
     }
 
     @Mock

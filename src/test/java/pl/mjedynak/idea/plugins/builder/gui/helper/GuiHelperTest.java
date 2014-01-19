@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.gui.helper.impl;
+package pl.mjedynak.idea.plugins.builder.gui.helper;
 
 import com.intellij.codeInsight.CodeInsightUtil;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
@@ -24,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Messages.class, IdeDocumentHistory.class, CodeInsightUtil.class})
-public class GuiHelperImplTest {
+public class GuiHelperTest {
 
     private GuiHelper guiHelper;
 
@@ -36,7 +36,7 @@ public class GuiHelperImplTest {
 
     @Before
     public void setUp() {
-        guiHelper = new GuiHelperImpl();
+        guiHelper = new GuiHelper();
     }
 
     @Test

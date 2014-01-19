@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.writer.impl;
+package pl.mjedynak.idea.plugins.builder.writer;
 
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
+import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriterRunnable;
 
 import static org.mockito.BDDMockito.given;
@@ -21,9 +22,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BuilderWriterImplTest {
+public class BuilderWriterTest {
 
-    @InjectMocks private BuilderWriterImpl builderWriter;
+    @InjectMocks private BuilderWriter builderWriter;
     @Mock private PsiHelper psiHelper;
     @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
     @Mock private Project project;
@@ -42,6 +43,6 @@ public class BuilderWriterImplTest {
         builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, "anyMethodPrefix");
 
         // then
-        verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriterImpl.CREATE_BUILDER_STRING), eq(builderWriter));
+        verify(commandProcessor).executeCommand(eq(project), any(BuilderWriterRunnable.class), eq(BuilderWriter.CREATE_BUILDER_STRING), eq(builderWriter));
     }
 }

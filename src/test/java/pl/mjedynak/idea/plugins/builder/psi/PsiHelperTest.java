@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.psi.impl;
+package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PackageUtil;
@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -39,7 +38,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest({JavaPsiFacade.class, EditSourceUtil.class, PsiUtilBase.class, PackageUtil.class,
         RefactoringMessageUtil.class, JavaDirectoryService.class, CommandProcessor.class,
         ApplicationManager.class, PsiShortNamesCache.class})
-public class PsiHelperImplTest {
+public class PsiHelperTest {
 
     private PsiHelper psiHelper;
 
@@ -49,7 +48,7 @@ public class PsiHelperImplTest {
 
     @Before
     public void setUp() {
-        psiHelper = new PsiHelperImpl();
+        psiHelper = new PsiHelper();
     }
 
     @Test

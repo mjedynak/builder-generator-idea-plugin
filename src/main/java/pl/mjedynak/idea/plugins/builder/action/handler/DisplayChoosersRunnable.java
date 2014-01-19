@@ -6,12 +6,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -27,7 +25,6 @@ public class DisplayChoosersRunnable implements Runnable {
     private Project project;
     private Editor editor;
     private PsiHelper psiHelper;
-    private PsiManagerFactory psiManagerFactory;
     private CreateBuilderDialogFactory createBuilderDialogFactory;
     private PsiFieldSelector psiFieldSelector;
     private MemberChooserDialogFactory memberChooserDialogFactory;
@@ -35,12 +32,10 @@ public class DisplayChoosersRunnable implements Runnable {
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public DisplayChoosersRunnable(PsiHelper psiHelper, PsiManagerFactory psiManagerFactory,
-                                   CreateBuilderDialogFactory createBuilderDialogFactory,
+    public DisplayChoosersRunnable(PsiHelper psiHelper, CreateBuilderDialogFactory createBuilderDialogFactory,
                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
                                    BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
         this.psiHelper = psiHelper;
-        this.psiManagerFactory = psiManagerFactory;
         this.createBuilderDialogFactory = createBuilderDialogFactory;
         this.psiFieldSelector = psiFieldSelector;
         this.memberChooserDialogFactory = memberChooserDialogFactory;
@@ -73,9 +68,7 @@ public class DisplayChoosersRunnable implements Runnable {
     private CreateBuilderDialog showDialog() {
         PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
         PsiPackage srcPackage = psiHelper.getPackage(srcDir);
-        PsiManager psiManager = psiManagerFactory.getPsiManager(project);
-        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project,
-                srcPackage, psiManager);
+        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, srcPackage);
         dialog.show();
         return dialog;
     }

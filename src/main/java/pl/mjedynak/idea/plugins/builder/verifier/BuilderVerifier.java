@@ -1,8 +1,13 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
 import com.intellij.psi.PsiClass;
+import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
-public interface BuilderVerifier {
+public class BuilderVerifier {
 
-    boolean isBuilder(PsiClass psiClass);
+    private static final String SUFFIX = "Builder";
+
+    public boolean isBuilder(PsiClass psiClass) {
+        return psiClass.getName().endsWith(SUFFIX);
+    }
 }

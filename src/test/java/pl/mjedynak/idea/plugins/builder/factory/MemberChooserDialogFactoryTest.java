@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins.builder.factory.impl;
+package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.ide.util.MemberChooser;
@@ -17,19 +17,14 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory.TITLE;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MemberChooserDialogFactoryImplTest {
+public class MemberChooserDialogFactoryTest {
 
-    @Spy
-    private MemberChooserDialogFactoryImpl memberChooserDialogFactory;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private MemberChooser memberChooser;
-
+    @Spy private MemberChooserDialogFactory memberChooserDialogFactory;
+    @Mock private Project project;
+    @Mock private MemberChooser memberChooser;
 
     @Test
     public void shouldCreateNewMemberChooserDialog() {
@@ -44,7 +39,7 @@ public class MemberChooserDialogFactoryImplTest {
         // then
         assertThat(result, is(memberChooser));
         verify(result).setCopyJavadocVisible(false);
-        verify(result).setTitle(MemberChooserDialogFactoryImpl.TITLE);
+        verify(result).setTitle(TITLE);
         verify(result).selectElements(arrayElements);
     }
 }
