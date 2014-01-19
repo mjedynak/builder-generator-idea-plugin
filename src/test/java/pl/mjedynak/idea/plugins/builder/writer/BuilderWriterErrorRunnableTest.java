@@ -18,14 +18,9 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest({Messages.class, CodeInsightBundle.class})
 public class BuilderWriterErrorRunnableTest {
 
-    @InjectMocks
-    private BuilderWriterErrorRunnable builderWriterErrorRunnable;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private String className;
+    @InjectMocks private BuilderWriterErrorRunnable builderWriterErrorRunnable;
+    @Mock private Project project;
+    @Mock private String className;
 
     @Test
     public void shouldShowErrorDialog() {

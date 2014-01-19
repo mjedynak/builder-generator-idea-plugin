@@ -28,8 +28,7 @@ public class PsiElementClassMemberFactoryTest {
 
     private PsiElementClassMemberFactory psiElementClassMemberFactory;
 
-    @Mock
-    private PsiField psiField;
+    @Mock private PsiField psiField;
 
     @Before
     public void setUp() {

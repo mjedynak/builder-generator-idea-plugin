@@ -23,11 +23,8 @@ public class ActionCellRendererTest {
 
     private ActionCellRenderer actionCellRenderer;
 
-    @Mock
-    private JList list;
-
-    @Mock
-    private GotoTargetHandler.AdditionalAction action;
+    @Mock private JList list;
+    @Mock private GotoTargetHandler.AdditionalAction action;
 
     private boolean anyBooleanValue;
     private int anyIndex;

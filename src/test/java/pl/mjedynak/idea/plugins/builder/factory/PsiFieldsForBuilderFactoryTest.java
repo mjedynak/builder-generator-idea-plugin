@@ -24,19 +24,14 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class PsiFieldsForBuilderFactoryTest {
 
-    @InjectMocks
-    private PsiFieldsForBuilderFactory factory;
-    @Mock
-    private PsiFieldVerifier psiFieldVerifier;
-    @Mock
-    private PsiClass psiClass;
-    @Mock
-    private PsiElementClassMember psiElementClassMember;
+    @InjectMocks private PsiFieldsForBuilderFactory factory;
+    @Mock private PsiFieldVerifier psiFieldVerifier;
+    @Mock private PsiClass psiClass;
+    @Mock private PsiElementClassMember psiElementClassMember;
 
     private List<PsiElementClassMember> psiElementClassMembers;
 
-    @Mock
-    private PsiField psiField;
+    @Mock private PsiField psiField;
 
     @Before
     public void setUp() {

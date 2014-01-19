@@ -36,42 +36,23 @@ public class CreateBuilderDialogTest {
 
     private CreateBuilderDialog createBuilderDialog;
 
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiPackage targetPackage;
-
-    @Mock
-    private Module targetModule;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private GuiHelper guiHelper;
-
-    @Mock
-    private PsiManager psiManager;
-
-    @Mock
-    private PsiClass sourceClass;
-
-    @Mock
-    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
-
-    @Mock
-    private ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton;
+    @Mock private Project project;
+    @Mock private PsiPackage targetPackage;
+    @Mock private Module targetModule;
+    @Mock private PsiHelper psiHelper;
+    @Mock private GuiHelper guiHelper;
+    @Mock private PsiManager psiManager;
+    @Mock private PsiClass sourceClass;
+    @Mock private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+    @Mock private ReferenceEditorComboWithBrowseButton referenceEditorComboWithBrowseButton;
 
     private String className;
-
-    private String methodPrefix;
 
     @Before
     public void setUp() {
         String title = "title";
         className = "className";
-        methodPrefix = "with";
+        String methodPrefix = "with";
         String packageName = "packageName";
         given(targetPackage.getQualifiedName()).willReturn(packageName);
         given(referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(

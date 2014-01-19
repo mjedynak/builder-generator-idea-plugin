@@ -26,20 +26,11 @@ public class ClassFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
 
-    @InjectMocks
-    private ClassFinder classFinder;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private PsiShortNamesCache psiShortNamesCache;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private GlobalSearchScope globalSearchScope;
+    @InjectMocks private ClassFinder classFinder;
+    @Mock private PsiHelper psiHelper;
+    @Mock private PsiShortNamesCache psiShortNamesCache;
+    @Mock private Project project;
+    @Mock private GlobalSearchScope globalSearchScope;
 
     @Before
     public void setUp() {

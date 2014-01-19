@@ -81,7 +81,7 @@ public class BuilderPsiClassBuilderTest {
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
 
         // then
-        assertThat((BuilderPsiClassBuilder) result, is(psiClassBuilder));
+        assertThat(result, is(psiClassBuilder));
         assertThat((Project) ReflectionTestUtils.getField(psiClassBuilder, "project"), is(project));
         assertThat((PsiDirectory) ReflectionTestUtils.getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
         assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "srcClass"), is(srcClass));

@@ -23,23 +23,12 @@ public class OKActionRunnableTest {
 
     private OKActionRunnable okActionRunnable;
 
-    @Mock
-    private CreateBuilderDialog createBuilderDialog;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private GuiHelper guiHelper;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private Module module;
-
-    @Mock
-    private PsiDirectory targetDirectory;
+    @Mock private CreateBuilderDialog createBuilderDialog;
+    @Mock private PsiHelper psiHelper;
+    @Mock private GuiHelper guiHelper;
+    @Mock private Project project;
+    @Mock private Module module;
+    @Mock private PsiDirectory targetDirectory;
 
     private String packageName;
     private String className;

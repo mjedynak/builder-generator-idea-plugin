@@ -20,11 +20,8 @@ public class PsiManagerFactoryTest {
 
     private PsiManagerFactory psiManagerFactory;
 
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiManager psiManager;
+    @Mock private Project project;
+    @Mock private PsiManager psiManager;
 
     @Before
     public void setUp() {

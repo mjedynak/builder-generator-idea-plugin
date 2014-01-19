@@ -18,8 +18,7 @@ public class PopupChooserBuilderFactoryTest {
 
     private PopupChooserBuilderFactory popupChooserBuilderFactory;
 
-    @Mock
-    private JList list;
+    @Mock private JList list;
 
     @Before
     public void setUp() {

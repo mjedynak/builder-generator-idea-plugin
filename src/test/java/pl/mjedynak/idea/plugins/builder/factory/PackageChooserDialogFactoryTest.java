@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -18,17 +17,10 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(MockitoJUnitRunner.class)
 public class PackageChooserDialogFactoryTest {
 
-    @Spy
-    private PackageChooserDialogFactory packageChooserDialogFactory;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private PsiManager psiManager;
-
-    @Mock
-    private PackageChooserDialog packageChooserDialog;
+    @Spy private PackageChooserDialogFactory packageChooserDialogFactory;
+    @Mock private Project project;
+    @Mock private PsiManager psiManager;
+    @Mock private PackageChooserDialog packageChooserDialog;
 
     @Test
     public void shouldCreatePackageChooserDialogWithPassedTitle() {

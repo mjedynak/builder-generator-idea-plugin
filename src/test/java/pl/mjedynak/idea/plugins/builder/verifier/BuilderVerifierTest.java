@@ -17,8 +17,7 @@ public class BuilderVerifierTest {
 
     private BuilderVerifier builderVerifier;
 
-    @Mock
-    private PsiClass psiClass;
+    @Mock private PsiClass psiClass;
 
     @Before
     public void setUp() {

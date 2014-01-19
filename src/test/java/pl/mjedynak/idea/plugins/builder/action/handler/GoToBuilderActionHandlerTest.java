@@ -26,44 +26,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(MockitoJUnitRunner.class)
 public class GoToBuilderActionHandlerTest {
 
-    @InjectMocks
-    private GoToBuilderActionHandler goToBuilderActionHandler;
-
-    @Mock
-    private BuilderVerifier builderVerifier;
-
-    @Mock
-    private BuilderFinder builderFinder;
-
-    @Mock
-    private PsiHelper psiHelper;
-
-    @Mock
-    private PopupListFactory popupListFactory;
-
-    @Mock
-    private PopupDisplayer popupDisplayer;
-
-    @Mock
-    private DisplayChoosersRunnable displayChoosersRunnable;
-
-    @Mock
-    private PsiClass psiClass;
-
-    @Mock
-    private PsiClass builderClass;
-
-    @Mock
-    private Editor editor;
-
-    @Mock
-    private Project project;
-
-    @Mock
-    private DataContext dataContext;
-
-    @Mock
-    private JList list;
+    @InjectMocks private GoToBuilderActionHandler goToBuilderActionHandler;
+    @Mock private BuilderVerifier builderVerifier;
+    @Mock private BuilderFinder builderFinder;
+    @Mock private PsiHelper psiHelper;
+    @Mock private PopupListFactory popupListFactory;
+    @Mock private PopupDisplayer popupDisplayer;
+    @Mock private DisplayChoosersRunnable displayChoosersRunnable;
+    @Mock private PsiClass psiClass;
+    @Mock private PsiClass builderClass;
+    @Mock private Editor editor;
+    @Mock private Project project;
+    @Mock private DataContext dataContext;
+    @Mock private JList list;
 
     @Before
     public void setUp() {

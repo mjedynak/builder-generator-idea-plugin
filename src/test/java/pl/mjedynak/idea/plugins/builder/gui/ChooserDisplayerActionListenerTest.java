@@ -22,17 +22,10 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ChooserDisplayerActionListenerTest {
 
-    @InjectMocks
-    private ChooserDisplayerActionListener chooserDisplayerActionListener;
-
-    @Mock
-    private ReferenceEditorComboWithBrowseButton comboWithBrowseButton;
-
-    @Mock
-    private PackageChooserDialogFactory packageChooserDialogFactory;
-
-    @Mock
-    private Project project;
+    @InjectMocks private ChooserDisplayerActionListener chooserDisplayerActionListener;
+    @Mock private ReferenceEditorComboWithBrowseButton comboWithBrowseButton;
+    @Mock private PackageChooserDialogFactory packageChooserDialogFactory;
+    @Mock private Project project;
 
     @Test
     public void shouldShowChooserAndSetText() {
