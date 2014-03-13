@@ -44,6 +44,8 @@ public class BuilderWriterComputableTest {
 
     private String builderClassName = "builderClassName";
 
+    private String builderMethodPrefix = "with";
+
     @Before
     public void setUp() {
         builderWriterComputable = new BuilderWriterComputable(

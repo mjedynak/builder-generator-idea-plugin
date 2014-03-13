@@ -171,6 +171,18 @@ public class BuilderPsiClassBuilder {
         return this;
     }
 
+
+    public BuilderPsiClassBuilder withCollectionMethod()
+    {
+        // Add a collection helper method.
+        StringBuilder buildCollectionMethodText = new StringBuilder();
+        buildCollectionMethodText.append("public void buildCollection(Collection <)").append(srcClassName).append("> collection) { collection.add(build());}");
+        PsiMethod buildCollectionMethod = elementFactory.createMethodFromText(buildCollectionMethodText.toString(), srcClass);
+        builderClass.add(buildCollectionMethod);
+
+        return this;
+    }
+
     private void createAndAddMethod(PsiField psiField, String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
