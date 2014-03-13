@@ -1,17 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.*;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,7 +55,6 @@ public class BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
         psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
-        butMethodCreator = new ButMethodCreator(elementFactory);
         return this;
     }
 
@@ -99,9 +92,82 @@ public class BuilderPsiClassBuilder {
         return this;
     }
 
-    public BuilderPsiClassBuilder withButMethod() {
-        PsiMethod method = butMethodCreator.butMethod(builderClassName, builderClass, srcClass);
-        builderClass.add(method);
+  import java.util.Date;
+  import java.util.List;
+
+  /**
+   * ****************************************************************************************
+   *
+   * @author <a href="ralph.hodgson@pressassociation.com">Ralph Hodgson</a>
+   * @since 22/09/2014 09:06
+   *
+   * ****************************************************************************************
+   */
+  public class ContentBean {
+    private String code;
+    private String description;
+
+    private Date created;
+    private Date updated;
+
+    private List<String> tags;
+
+    public String getCode() {
+      return code;
+    }
+
+    public void setCode(String code) {
+      this.code = code;
+    }
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
+    }
+
+    public Date getCreated() {
+      return created;
+    }
+
+    public void setCreated(Date created) {
+      this.created = created;
+    }
+
+    public Date getUpdated() {
+      return updated;
+    }
+
+    public void setUpdated(Date updated) {
+      this.updated = updated;
+    }
+
+    public List<String> getTags() {
+      return tags;
+    }
+
+    public void setTags(List<String> tags) {
+      this.tags = tags;
+    }
+  }
+
+  public BuilderPsiClassBuilder withButMethod() {
+    PsiMethod method = butMethodCreator.butMethod(builderClassName, builderClass, srcClass);
+    builderClass.add(method);
+    return this;
+  }
+  
+  public BuilderPsiClassBuilder withCollectionMethod()
+    {
+        // Add a collection helper method.
+        StringBuilder buildCollectionMethodText = new StringBuilder();
+        buildCollectionMethodText.append("public void buildCollection(Collection <)").append(srcClassName).append(
+                "> collection) { collection.add(build());}");
+        PsiMethod buildCollectionMethod = elementFactory.createMethodFromText(buildCollectionMethodText.toString(), srcClass);
+        builderClass.add(buildCollectionMethod);
+
         return this;
     }
 
@@ -133,7 +199,8 @@ public class BuilderPsiClassBuilder {
     private void appendConstructor(StringBuilder buildMethodText) {
         String constructorParameters = createConstructorParameters();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
-                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
+                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(
+                ");");
     }
 
     private void appendSetMethods(StringBuilder buildMethodText) {
