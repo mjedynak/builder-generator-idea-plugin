@@ -62,7 +62,8 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
                 .withPrivateConstructor()
                 .withInitializingMethod()
                 .withSetMethods(methodPrefix)
-                .withButMethod();
+                .withButMethod()
+                .withCollectionMethod(); // Adds in an additional method for collection loop.
         return builder.build();
     }
 

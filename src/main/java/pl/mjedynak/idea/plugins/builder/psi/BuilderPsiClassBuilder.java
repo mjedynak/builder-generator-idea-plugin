@@ -144,6 +144,10 @@ public class BuilderPsiClassBuilder {
             String fieldNameUppercase = StringUtils.capitalize(fieldNameWithoutPrefix);
             buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
+        buildMethodText.append("return ").append(srcClassFieldName).append(";}");
+        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
+        builderClass.add(buildMethod);
+        return builderClass;
     }
 
     private String createConstructorParameters() {
@@ -177,5 +181,6 @@ public class BuilderPsiClassBuilder {
         return (project == null || targetDirectory == null || srcClass == null || builderClassName == null
                 || psiFieldsForSetters == null || psiFieldsForConstructor == null);
     }
+
 
 }
