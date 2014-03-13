@@ -142,7 +142,10 @@ public class BuilderPsiClassBuilder {
     {
         // Add a collection helper method.
         StringBuilder buildCollectionMethodText = new StringBuilder();
-        buildCollectionMethodText.append("public void buildCollection(Collection <)").append(srcClassName).append("> collection) { collection.add(build());}");
+        buildCollectionMethodText.append("public void buildCollection(java.util.Collection <").append(srcClassName).append("> collection) { collection.add(build());}");
+
+        System.out.println(buildCollectionMethodText.toString());
+
         PsiMethod buildCollectionMethod = elementFactory.createMethodFromText(buildCollectionMethodText.toString(), srcClass);
         builderClass.add(buildCollectionMethod);
 
