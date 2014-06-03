@@ -28,11 +28,8 @@ public class GuiHelperTest {
 
     private GuiHelper guiHelper;
 
-    @Mock
-    private Project project;
-
-    @Mock
-    private Icon icon;
+    @Mock private Project project;
+    @Mock private Icon icon;
 
     @Before
     public void setUp() {
