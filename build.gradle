@@ -4,8 +4,8 @@ apply from: 'cobertura.gradle'
 apply from: 'idea.gradle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.0'
-ext.ideaJdk = 'IDEA IC-133.193'
+ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.1'
+ext.ideaJdk = 'IDEA IC-135.475'
 sourceCompatibility = 1.6
 // --- properties ---
 
@@ -23,4 +23,10 @@ dependencies {
     testCompile 'org.springframework:spring-test:4.0.0.RELEASE'
 }
 
-metaInf << files('/META-INF/plugin.xml')
+jar {
+    metaInf {
+        from('/META-INF') {
+            include 'plugin.xml'
+        }
+    }
+}
