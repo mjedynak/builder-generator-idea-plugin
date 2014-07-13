@@ -6,6 +6,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.apache.commons.lang.WordUtils;
 
 public class PsiFieldVerifier {
@@ -53,7 +54,13 @@ public class PsiFieldVerifier {
     }
 
     private boolean areNameAndTypeEqual(PsiField psiField, PsiParameter parameter) {
-        return parameter.getName().equals(psiField.getName()) && parameter.getType().equals(psiField.getType());
+        String parameterNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().PARAMETER_NAME_PREFIX;
+        String parameterName = parameter.getName();
+        String parameterNameWithoutPrefix = parameterName.replace(parameterNamePrefix, "");
+        String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+        String fieldName = psiField.getName();
+        String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
+        return parameterNameWithoutPrefix.equals(fieldNameWithoutPrefix) && parameter.getType().equals(psiField.getType());
     }
 
     public boolean isSetInSetterMethod(PsiField psiField, PsiClass psiClass) {
@@ -72,9 +79,10 @@ public class PsiFieldVerifier {
         return hasNoModifierList(modifierList) || modifierListHasNoPrivate(modifierList);
     }
 
-
     private boolean methodIsSetterWithProperName(PsiField psiField, PsiMethod method) {
-        return method.getName().equals(SET_PREFIX + WordUtils.capitalize(psiField.getName()));
+        String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+        String fieldNameWithoutPrefix = psiField.getName().replace(fieldNamePrefix, "");
+        return method.getName().equals(SET_PREFIX + WordUtils.capitalize(fieldNameWithoutPrefix));
     }
 
     private boolean hasNoModifierList(PsiModifierList modifierList) {

@@ -1,16 +1,9 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.PsiFieldImpl;
 import com.intellij.psi.javadoc.PsiDocComment;
 import org.junit.Before;
@@ -18,11 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
-import pl.mjedynak.idea.plugins.builder.psi.MethodNameCreator;
-import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import java.util.ArrayList;
@@ -32,12 +22,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.RETURNS_MOCKS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(CodeStyleSettingsManager.class)
 public class BuilderPsiClassBuilderTest {
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
@@ -52,9 +42,11 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiElementFactory elementFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiField srcClassNameField;
+    @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
+    @Mock private CodeStyleSettings settings;
+
 
     private List<PsiField> psiFieldsForSetters;
-
     private List<PsiField> psiFieldsForConstructor;
 
     private String builderClassName = "BuilderClassName";
@@ -72,6 +64,11 @@ public class BuilderPsiClassBuilderTest {
         given(srcClass.getName()).willReturn(srcClassName);
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
+        mockStatic(CodeStyleSettingsManager.class);
+        given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
+        given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
+        settings.FIELD_NAME_PREFIX = "m_";
+        settings.PARAMETER_NAME_PREFIX = "";
     }
 
     @SuppressWarnings("unchecked")
@@ -82,16 +79,16 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         assertThat(result, is(psiClassBuilder));
-        assertThat((Project) ReflectionTestUtils.getField(psiClassBuilder, "project"), is(project));
-        assertThat((PsiDirectory) ReflectionTestUtils.getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
-        assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "srcClass"), is(srcClass));
-        assertThat((String) ReflectionTestUtils.getField(psiClassBuilder, "builderClassName"), is(builderClassName));
-        assertThat((List<PsiField>) ReflectionTestUtils.getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
-        assertThat((List<PsiField>) ReflectionTestUtils.getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
-        assertThat((PsiClass) ReflectionTestUtils.getField(psiClassBuilder, "builderClass"), is(builderClass));
-        assertThat((PsiElementFactory) ReflectionTestUtils.getField(psiClassBuilder, "elementFactory"), is(elementFactory));
-        assertThat((String) ReflectionTestUtils.getField(psiClassBuilder, "srcClassName"), is(srcClassName));
-        assertThat((String) ReflectionTestUtils.getField(psiClassBuilder, "srcClassFieldName"), is(srcClassFieldName));
+        assertThat((Project) getField(psiClassBuilder, "project"), is(project));
+        assertThat((PsiDirectory) getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
+        assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
+        assertThat((String) getField(psiClassBuilder, "builderClassName"), is(builderClassName));
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
+        assertThat((PsiClass) getField(psiClassBuilder, "builderClass"), is(builderClass));
+        assertThat((PsiElementFactory) getField(psiClassBuilder, "elementFactory"), is(elementFactory));
+        assertThat((String) getField(psiClassBuilder, "srcClassName"), is(srcClassName));
+        assertThat((String) getField(psiClassBuilder, "srcClassFieldName"), is(srcClassFieldName));
     }
 
     @Test
@@ -202,9 +199,9 @@ public class BuilderPsiClassBuilderTest {
         given(methodNameCreator.createMethodName("with", "age")).willReturn("withAge");
         given(elementFactory.createMethodFromText("public " + builderClassName + " withAge(int age) { this.age = age; return this; }", psiFieldForConstructor))
                 .willReturn(methodForFieldForConstructor);
+        String methodPrefix = "with";
 
         // when
-        String methodPrefix = "with";
         psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods(methodPrefix);
 
         // then

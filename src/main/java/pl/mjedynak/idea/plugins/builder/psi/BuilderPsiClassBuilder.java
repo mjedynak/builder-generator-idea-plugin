@@ -11,6 +11,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.javadoc.PsiDocComment;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
@@ -149,9 +150,13 @@ public class BuilderPsiClassBuilder {
     private void createAndAddMethod(PsiField psiField, String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
-        String methodName = methodNameCreator.createMethodName(methodPrefix, fieldName);
+        String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+        String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
+        String parameterNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().PARAMETER_NAME_PREFIX;
+        String parameterName = parameterNamePrefix + fieldNameWithoutPrefix;
+        String methodName = methodNameCreator.createMethodName(methodPrefix, fieldNameWithoutPrefix);
         PsiMethod method = elementFactory.createMethodFromText(
-                "public " + builderClassName + " " + methodName + "(" + fieldType + " " + fieldName + ") { this." + fieldName + " = " + fieldName + "; return this; }",
+                "public " + builderClassName + " " + methodName + "(" + fieldType + " " + parameterName + ") { this." + fieldName + " = " + parameterName + "; return this; }",
                 psiField);
         builderClass.add(method);
     }
@@ -164,8 +169,10 @@ public class BuilderPsiClassBuilder {
                 .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
 
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
+            String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
             String fieldName = psiFieldsForSetter.getName();
-            String fieldNameUppercase = StringUtils.capitalize(fieldName);
+            String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
+            String fieldNameUppercase = StringUtils.capitalize(fieldNameWithoutPrefix);
             buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
         buildMethodText.append("return ").append(srcClassFieldName).append(";}");
@@ -205,6 +212,5 @@ public class BuilderPsiClassBuilder {
         return (project == null || targetDirectory == null || srcClass == null || builderClassName == null
                 || psiFieldsForSetters == null || psiFieldsForConstructor == null);
     }
-
 
 }

@@ -1,25 +1,23 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(CodeStyleSettingsManager.class)
 public class PsiFieldVerifierTest {
 
     private PsiFieldVerifier psiFieldVerifier;
@@ -35,7 +33,8 @@ public class PsiFieldVerifierTest {
     @Mock private PsiType psiType;
     @Mock private PsiMethod method;
     @Mock private PsiModifierList modifierList;
-
+    @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
+    @Mock private CodeStyleSettings settings;
 
     private String name;
 
@@ -49,6 +48,11 @@ public class PsiFieldVerifierTest {
         parameters = new PsiParameter[1];
         parameters[0] = parameter;
         name = "name";
+        mockStatic(CodeStyleSettingsManager.class);
+        given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
+        given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
+        settings.FIELD_NAME_PREFIX = "";
+        settings.PARAMETER_NAME_PREFIX = "";
     }
 
     @Test
@@ -124,14 +128,12 @@ public class PsiFieldVerifierTest {
         assertThat(result, is(true));
     }
 
-
     @Test
     public void shouldVerifyThatFieldIsSetInSetterMethodIfItIsNotPrivateAndHasCorrectParameter() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
         given(psiField.getName()).willReturn("field");
-//        given(modifierList.hasExplicitModifier(PsiFieldVerifierImpl.PRIVATE_MODIFIER)).willReturn(false);
         given(method.getName()).willReturn("setField");
         // when
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
@@ -181,7 +183,6 @@ public class PsiFieldVerifierTest {
         // then
         assertThat(result, is(false));
     }
-
 
     private void prepareBehaviourForReturningParameter() {
         given(psiClass.getConstructors()).willReturn(constructors);
