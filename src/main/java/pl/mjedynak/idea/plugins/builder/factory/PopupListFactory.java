@@ -7,14 +7,23 @@ import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 import javax.swing.JList;
 import java.util.Arrays;
 
+import static java.util.Arrays.asList;
+
 public class PopupListFactory {
 
-    private final ActionCellRenderer actionCellRenderer = new ActionCellRenderer();
+    private ActionCellRenderer actionCellRenderer;
 
     @SuppressWarnings("unchecked")
     public JList getPopupList() {
-        JList list = new JBList(Arrays.asList(new GoToBuilderAdditionalAction()));
-        list.setCellRenderer(actionCellRenderer);
+        JList list = new JBList(asList(new GoToBuilderAdditionalAction()));
+        list.setCellRenderer(cellRenderer());
         return list;
+    }
+
+    private ActionCellRenderer cellRenderer() {
+        if (actionCellRenderer == null) {
+            actionCellRenderer = new ActionCellRenderer();
+        }
+        return actionCellRenderer;
     }
 }
