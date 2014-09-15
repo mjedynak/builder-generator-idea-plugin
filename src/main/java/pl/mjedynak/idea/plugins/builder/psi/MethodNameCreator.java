@@ -8,7 +8,7 @@ public class MethodNameCreator {
 
     public String createMethodName(String methodPrefix, String fieldName) {
         if (isEmpty(methodPrefix)) {
-            return lowerCase(fieldName);
+            return fieldName;
         } else {
             String fieldNameUppercase = capitalize(fieldName);
             return methodPrefix + fieldNameUppercase;

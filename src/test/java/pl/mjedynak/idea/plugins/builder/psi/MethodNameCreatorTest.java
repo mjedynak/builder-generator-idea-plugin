@@ -11,12 +11,12 @@ public class MethodNameCreatorTest {
     private MethodNameCreator methodNameCreator = new MethodNameCreator();
 
     @Test
-    public void shouldCreateMethodWithLowercaseFieldNameIfPrefixIsEmpty() {
+    public void shouldCreateMethodIfPrefixIsEmpty() {
         // when
-        String result = methodNameCreator.createMethodName(EMPTY, "FIELD");
+        String result = methodNameCreator.createMethodName(EMPTY, "userName");
 
         // then
-        assertThat(result, is("field"));
+        assertThat(result, is("userName"));
     }
 
     @Test
