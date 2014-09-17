@@ -1,11 +1,18 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaDirectoryService;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.PsiFieldImpl;
-import com.intellij.psi.javadoc.PsiDocComment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,19 +27,24 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CodeStyleSettingsManager.class)
 public class BuilderPsiClassBuilderTest {
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
-    @Mock private MethodNameCreator methodNameCreator;
     @Mock private PsiHelper psiHelper;
+    @Mock private MethodNameCreator methodNameCreator;
+    @Mock private PsiFieldsModifier psiFieldsModifier;
     @Mock private Project project;
     @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass srcClass;
@@ -45,7 +57,6 @@ public class BuilderPsiClassBuilderTest {
     @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
     @Mock private CodeStyleSettings settings;
 
-
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
 
@@ -55,6 +66,8 @@ public class BuilderPsiClassBuilderTest {
 
     @Before
     public void setUp() {
+        setField(psiClassBuilder, "methodNameCreator", methodNameCreator);
+        setField(psiClassBuilder, "psiFieldsModifier", psiFieldsModifier);
         psiFieldsForConstructor = new ArrayList<PsiField>();
         psiFieldsForSetters = new ArrayList<PsiField>();
         given(psiHelper.getJavaDirectoryService()).willReturn(javaDirectoryService);
@@ -64,6 +77,10 @@ public class BuilderPsiClassBuilderTest {
         given(srcClass.getName()).willReturn(srcClassName);
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
+        mockCodeStyleManager();
+    }
+
+    private void mockCodeStyleManager() {
         mockStatic(CodeStyleSettingsManager.class);
         given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
         given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
@@ -78,7 +95,7 @@ public class BuilderPsiClassBuilderTest {
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
 
         // then
-        assertThat(result, is(psiClassBuilder));
+        assertThat(result, is(sameInstance(psiClassBuilder)));
         assertThat((Project) getField(psiClassBuilder, "project"), is(project));
         assertThat((PsiDirectory) getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
         assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
@@ -92,39 +109,13 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotationAndFinalModifierAndComments() {
-        // given
-        String finalModifier = "final";
-        PsiField psiFieldForSetters = mock(PsiField.class);
-        psiFieldsForSetters.add(psiFieldForSetters);
-        PsiField copyPsiFieldForSetter = mock(PsiField.class);
-        PsiModifierList psiModifierListForSetter = mock(PsiModifierList.class);
-        PsiAnnotation annotation = mock(PsiAnnotation.class);
-        given(psiFieldForSetters.copy()).willReturn(copyPsiFieldForSetter);
-        given(copyPsiFieldForSetter.getModifierList()).willReturn(psiModifierListForSetter);
-        PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
-        given(psiModifierListForSetter.getAnnotations()).willReturn(annotationArray);
-
-        PsiField psiFieldForConstructor = mock(PsiField.class);
-        psiFieldsForConstructor.add(psiFieldForConstructor);
-        PsiField copyPsiFieldForConstructor = mock(PsiField.class);
-        PsiModifierList psiModifierListForConstructor = mock(PsiModifierList.class, RETURNS_MOCKS);
-        given(psiModifierListForConstructor.hasExplicitModifier(finalModifier)).willReturn(true);
-        given(psiFieldForConstructor.copy()).willReturn(copyPsiFieldForConstructor);
-        given(copyPsiFieldForConstructor.getModifierList()).willReturn(psiModifierListForConstructor);
-        PsiDocComment docComment = mock(PsiDocComment.class);
-        given(copyPsiFieldForConstructor.getDocComment()).willReturn(docComment);
-
+    public void shouldDelegatePsiFieldsModification() {
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withFields();
+        BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withFields();
 
         // then
-        verify(annotation).delete();
-        verify(psiModifierListForConstructor).setModifierProperty(finalModifier, false);
-        verify(docComment).delete();
-        verify(builderClass).add(copyPsiFieldForSetter);
-        verify(builderClass).add(copyPsiFieldForConstructor);
-        verifyNoMoreInteractions(builderClass);
+        verify(psiFieldsModifier).modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        assertThat(result, is(sameInstance(psiClassBuilder)));
     }
 
     @Test
@@ -186,6 +177,7 @@ public class BuilderPsiClassBuilderTest {
         given(typeForFieldForSetter.getPresentableText()).willReturn("String");
         given(psiFieldForSetter.getType()).willReturn(typeForFieldForSetter);
         PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
+        given(methodNameCreator.createMethodName("with", "name")).willReturn("withName");
         given(elementFactory.createMethodFromText("public " + builderClassName + " withName(String name) { this.name = name; return this; }", psiFieldForSetter))
                 .willReturn(methodForFieldForSetter);
 
@@ -261,11 +253,5 @@ public class BuilderPsiClassBuilderTest {
     public void shouldThrowExceptionWhenInvokingBuildMethodIfFieldsNotSetBefore() {
         // when
         psiClassBuilder.build();
-    }
-
-    private PsiAnnotation[] createAnnotationArray(PsiAnnotation annotation) {
-        PsiAnnotation[] annotationArray = new PsiAnnotation[1];
-        annotationArray[0] = annotation;
-        return annotationArray;
     }
 }

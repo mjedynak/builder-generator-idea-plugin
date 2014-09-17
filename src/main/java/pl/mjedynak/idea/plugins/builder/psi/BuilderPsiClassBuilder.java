@@ -3,16 +3,12 @@ package pl.mjedynak.idea.plugins.builder.psi;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.javadoc.PsiDocComment;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
@@ -29,10 +25,10 @@ public class BuilderPsiClassBuilder {
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
-    private static final String FINAL = "final";
 
     private PsiHelper psiHelper;
     private MethodNameCreator methodNameCreator = new MethodNameCreator();
+    private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
 
     private Project project = null;
     private PsiDirectory targetDirectory = null;
@@ -69,54 +65,8 @@ public class BuilderPsiClassBuilder {
 
     public BuilderPsiClassBuilder withFields() {
         checkClassFieldsRequiredForBuilding();
-        for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
-            removeModifiers(psiFieldsForSetter);
-        }
-        for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
-            removeModifiers(psiFieldForConstructor);
-        }
+        psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
         return this;
-    }
-
-    private void removeModifiers(PsiField psiField) {
-        PsiElement copy = psiField.copy();
-        removeAnnotationsFromElement(copy);
-        removeFinalModifierFromElement(copy);
-        removeComments(copy);
-        builderClass.add(copy);
-    }
-
-    private void removeComments(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiDocComment docComment = ((PsiField) psiElement).getDocComment();
-            if (docComment != null) {
-                docComment.delete();
-            }
-        }
-    }
-
-    private void removeFinalModifierFromElement(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
-            if (modifierList != null && modifierList.hasExplicitModifier(FINAL)) {
-                modifierList.setModifierProperty(FINAL, false);
-            }
-        }
-    }
-
-    private void removeAnnotationsFromElement(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
-            if (modifierList != null) {
-                deleteAnnotationsFromModifierList(modifierList);
-            }
-        }
-    }
-
-    private void deleteAnnotationsFromModifierList(PsiModifierList modifierList) {
-        for (PsiAnnotation annotation : modifierList.getAnnotations()) {
-            annotation.delete();
-        }
     }
 
     public BuilderPsiClassBuilder withPrivateConstructor() {
