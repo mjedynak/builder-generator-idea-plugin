@@ -44,6 +44,7 @@ public class BuilderPsiClassBuilderTest {
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
     @Mock private PsiHelper psiHelper;
     @Mock private MethodNameCreator methodNameCreator;
+    @Mock private ButMethodCreator butMethodCreator;
     @Mock private PsiFieldsModifier psiFieldsModifier;
     @Mock private Project project;
     @Mock private PsiDirectory targetDirectory;
@@ -54,6 +55,7 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiElementFactory elementFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiField srcClassNameField;
+    @Mock private PsiMethod psiMethod;
     @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
     @Mock private CodeStyleSettings settings;
 
@@ -200,6 +202,21 @@ public class BuilderPsiClassBuilderTest {
         verify(builderClass).add(methodForFieldForSetter);
         verify(builderClass).add(methodForFieldForConstructor);
         verifyNoMoreInteractions(builderClass);
+    }
+
+    @Test
+    public void shouldAddButMethod() {
+        // given
+        given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass)).willReturn(psiMethod);
+        BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
+        setField(builder, "butMethodCreator", butMethodCreator);
+
+        // when
+        BuilderPsiClassBuilder result = builder.withButMethod();
+
+        // then
+        verify(builderClass).add(psiMethod);
+        assertThat(result, is(sameInstance(psiClassBuilder)));
     }
 
     @Test

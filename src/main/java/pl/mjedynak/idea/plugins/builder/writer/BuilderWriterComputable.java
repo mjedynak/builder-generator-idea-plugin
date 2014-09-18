@@ -36,7 +36,6 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
         this.methodPrefix = methodPrefix;
-
     }
 
     @Override
@@ -62,7 +61,8 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
-                .withSetMethods(methodPrefix);
+                .withSetMethods(methodPrefix)
+                .withButMethod();
         return builder.build();
     }
 

@@ -38,27 +38,27 @@ public class BuilderWriterComputableTest {
     @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass srcClass;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock private PsiClass builderClass;
+    @Mock private PsiFile psiFile;
+    @Mock private PsiElement psiElement;
 
     private String builderClassName = "builderClassName";
 
-    private String builderMethodPrefix = "with";
-
     @Before
     public void setUp() {
-        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper, builderMethodPrefix);
+        builderWriterComputable = new BuilderWriterComputable(
+                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper, "with");
     }
 
     @Test
     public void shouldIncludeCurrentPlaceAsChangePlaceAndCreateBuilderAndNavigateToIt() {
         // given
-        PsiClass builderClass = mock(PsiClass.class);
-        PsiFile psiFile = mock(PsiFile.class);
-        PsiElement psiElement = mock(PsiElement.class);
         given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder)).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withFields()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withPrivateConstructor()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withSetMethods("with")).willReturn(builderPsiClassBuilder);
+        given(builderPsiClassBuilder.withButMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.build()).willReturn(builderClass);
         given(builderClass.getContainingFile()).willReturn(psiFile);
         given(builderClass.getLBrace()).willReturn(psiElement);

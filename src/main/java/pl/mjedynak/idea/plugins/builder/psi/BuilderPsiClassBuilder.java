@@ -29,6 +29,7 @@ public class BuilderPsiClassBuilder {
     private PsiHelper psiHelper;
     private MethodNameCreator methodNameCreator = new MethodNameCreator();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
+    private ButMethodCreator butMethodCreator;
 
     private Project project = null;
     private PsiDirectory targetDirectory = null;
@@ -60,6 +61,7 @@ public class BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
         psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
+        butMethodCreator = new ButMethodCreator(elementFactory);
         return this;
     }
 
@@ -94,6 +96,12 @@ public class BuilderPsiClassBuilder {
         for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
             createAndAddMethod(psiFieldForConstructor, methodPrefix);
         }
+        return this;
+    }
+
+    public BuilderPsiClassBuilder withButMethod() {
+        PsiMethod method = butMethodCreator.butMethod(builderClassName, builderClass, srcClass);
+        builderClass.add(method);
         return this;
     }
 

@@ -17,6 +17,7 @@
            version 1.0.11
            <br/>
            <ul>
+           <li>Added 'but' method generation (issue #10)</li>
            <li>Fix for deadlock on startup (issue #12)</li>
            <li>Fix for method name generation (issue #14)</li>
            </ul>
