@@ -122,10 +122,21 @@ public class BuilderPsiClassBuilder {
     public PsiClass build() {
         checkBuilderField();
         StringBuilder buildMethodText = new StringBuilder();
+        appendConstructor(buildMethodText);
+        appendSetMethods(buildMethodText);
+        buildMethodText.append("return ").append(srcClassFieldName).append(";}");
+        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
+        builderClass.add(buildMethod);
+        return builderClass;
+    }
+
+    private void appendConstructor(StringBuilder buildMethodText) {
         String constructorParameters = createConstructorParameters();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
                 .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
+    }
 
+    private void appendSetMethods(StringBuilder buildMethodText) {
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
             String fieldName = psiFieldsForSetter.getName();
@@ -133,10 +144,6 @@ public class BuilderPsiClassBuilder {
             String fieldNameUppercase = StringUtils.capitalize(fieldNameWithoutPrefix);
             buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
         }
-        buildMethodText.append("return ").append(srcClassFieldName).append(";}");
-        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
-        builderClass.add(buildMethod);
-        return builderClass;
     }
 
     private String createConstructorParameters() {
