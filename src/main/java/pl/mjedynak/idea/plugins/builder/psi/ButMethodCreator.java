@@ -23,29 +23,24 @@ public class ButMethodCreator {
                 appendMethod(text, method, parameterList);
             }
         }
-        deleteLastDot(text);
         text.append(";}");
         return elementFactory.createMethodFromText(text.toString(), srcClass);
     }
 
     private void appendMethod(StringBuilder text, PsiMethod method, PsiParameterList parameterList) {
         if (isInitializingMethod(parameterList)) {
-            text.append(method.getName()).append("().");
+            text.append(method.getName()).append("()");
         } else {
             String parameterName = parameterList.getParameters()[0].getName();
             String parameterNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().PARAMETER_NAME_PREFIX;
             String parameterNameWithoutPrefix = parameterName.replaceFirst(parameterNamePrefix, "");
             String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
-            text.append(method.getName()).append("(").append(fieldNamePrefix).append(parameterNameWithoutPrefix).append(").");
+            text.append("\n.").append(method.getName()).append("(").append(fieldNamePrefix).append(parameterNameWithoutPrefix).append(")");
         }
     }
 
     private boolean isInitializingMethod(PsiParameterList parameterList) {
         return parameterList.getParametersCount() <= 0;
-    }
-
-    private void deleteLastDot(StringBuilder text) {
-        text.deleteCharAt(text.length() - 1);
     }
 
     private boolean methodIsNotConstructor(String builderClassName, PsiMethod method) {

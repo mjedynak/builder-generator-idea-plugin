@@ -55,6 +55,7 @@ public class BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
         psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
+        butMethodCreator = new ButMethodCreator(elementFactory);
         return this;
     }
 
