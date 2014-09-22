@@ -62,7 +62,7 @@ public class ButMethodCreatorTest {
         given(parameterList2.getParameters()).willReturn((PsiParameter[]) asList(parameter).toArray());
         given(parameter.getName()).willReturn("age");
 
-        given(psiElementFactory.createMethodFromText("public Builder but() { return aBuilder().withAge(m_age);}", srcClass)).willReturn(createdMethod);
+        given(psiElementFactory.createMethodFromText("public Builder but() { return aBuilder()\n.withAge(m_age);}", srcClass)).willReturn(createdMethod);
 
         // when
         PsiMethod result = butMethodCreator.butMethod("Builder", builderClass, srcClass);

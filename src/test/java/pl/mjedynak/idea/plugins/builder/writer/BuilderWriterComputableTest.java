@@ -44,6 +44,8 @@ public class BuilderWriterComputableTest {
 
     private String builderClassName = "builderClassName";
 
+    private String builderMethodPrefix = "with";
+
     @Before
     public void setUp() {
         builderWriterComputable = new BuilderWriterComputable(
@@ -59,6 +61,7 @@ public class BuilderWriterComputableTest {
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withSetMethods("with")).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withButMethod()).willReturn(builderPsiClassBuilder);
+        given(builderPsiClassBuilder.withCollectionMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.build()).willReturn(builderClass);
         given(builderClass.getContainingFile()).willReturn(psiFile);
         given(builderClass.getLBrace()).willReturn(psiElement);

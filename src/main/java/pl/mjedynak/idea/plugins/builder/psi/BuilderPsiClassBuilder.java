@@ -1,13 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
@@ -105,6 +99,21 @@ public class BuilderPsiClassBuilder {
         return this;
     }
 
+
+    public BuilderPsiClassBuilder withCollectionMethod()
+    {
+        // Add a collection helper method.
+        StringBuilder buildCollectionMethodText = new StringBuilder();
+        buildCollectionMethodText.append("public void buildCollection(java.util.Collection <").append(srcClassName).append("> collection) {\n collection.add(build());\n}");
+
+        System.out.println(buildCollectionMethodText.toString());
+
+        PsiMethod buildCollectionMethod = elementFactory.createMethodFromText(buildCollectionMethodText.toString(), srcClass);
+        builderClass.add(buildCollectionMethod);
+
+        return this;
+    }
+
     private void createAndAddMethod(PsiField psiField, String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
@@ -133,7 +142,8 @@ public class BuilderPsiClassBuilder {
     private void appendConstructor(StringBuilder buildMethodText) {
         String constructorParameters = createConstructorParameters();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ").append(srcClassName).append(SPACE)
-                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
+                .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(
+                ");");
     }
 
     private void appendSetMethods(StringBuilder buildMethodText) {
@@ -177,5 +187,6 @@ public class BuilderPsiClassBuilder {
         return (project == null || targetDirectory == null || srcClass == null || builderClassName == null
                 || psiFieldsForSetters == null || psiFieldsForConstructor == null);
     }
+
 
 }
