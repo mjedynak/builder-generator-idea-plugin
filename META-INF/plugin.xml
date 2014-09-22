@@ -26,6 +26,11 @@
            <ul>
            <li>Support for Code Style field and parameter prefixes (issue #9)</li>
            </ul>
+           version 1.0.9-rh
+           <br/>
+           <ul>
+           <li>Added collection method. (contribution by Ralph Hodgson)</li>
+           </ul>
            version 1.0.9
            <br/>
            <ul>

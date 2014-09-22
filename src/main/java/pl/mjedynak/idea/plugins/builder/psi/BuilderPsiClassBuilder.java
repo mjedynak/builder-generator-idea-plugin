@@ -176,7 +176,7 @@ public class BuilderPsiClassBuilder {
     {
         // Add a collection helper method.
         StringBuilder buildCollectionMethodText = new StringBuilder();
-        buildCollectionMethodText.append("public void buildCollection(java.util.Collection <").append(srcClassName).append("> collection) { collection.add(build());}");
+        buildCollectionMethodText.append("public void buildCollection(java.util.Collection <").append(srcClassName).append("> collection) {\n collection.add(build());\n}");
 
         System.out.println(buildCollectionMethodText.toString());
 
