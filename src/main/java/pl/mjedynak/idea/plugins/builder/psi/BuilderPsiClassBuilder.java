@@ -8,9 +8,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
+import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +29,7 @@ public class BuilderPsiClassBuilder {
     private PsiHelper psiHelper;
     private MethodNameCreator methodNameCreator = new MethodNameCreator();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
+    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
 
     private Project project = null;
@@ -108,9 +109,9 @@ public class BuilderPsiClassBuilder {
     private void createAndAddMethod(PsiField psiField, String methodPrefix) {
         String fieldName = psiField.getName();
         String fieldType = psiField.getType().getPresentableText();
-        String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+        String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
         String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
-        String parameterNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().PARAMETER_NAME_PREFIX;
+        String parameterNamePrefix = codeStyleSettings.getParameterNamePrefix();
         String parameterName = parameterNamePrefix + fieldNameWithoutPrefix;
         String methodName = methodNameCreator.createMethodName(methodPrefix, fieldNameWithoutPrefix);
         PsiMethod method = elementFactory.createMethodFromText(
@@ -138,7 +139,7 @@ public class BuilderPsiClassBuilder {
 
     private void appendSetMethods(StringBuilder buildMethodText) {
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
-            String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+            String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
             String fieldName = psiFieldsForSetter.getName();
             String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
             String fieldNameUppercase = StringUtils.capitalize(fieldNameWithoutPrefix);

@@ -10,21 +10,20 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
+import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -33,15 +32,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CodeStyleSettingsManager.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderTest {
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
+    @Mock private CodeStyleSettings settings;
     @Mock private PsiHelper psiHelper;
     @Mock private MethodNameCreator methodNameCreator;
     @Mock private ButMethodCreator butMethodCreator;
@@ -56,8 +54,6 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiField srcClassNameField;
     @Mock private PsiMethod psiMethod;
-    @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
-    @Mock private CodeStyleSettings settings;
 
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
@@ -83,11 +79,9 @@ public class BuilderPsiClassBuilderTest {
     }
 
     private void mockCodeStyleManager() {
-        mockStatic(CodeStyleSettingsManager.class);
-        given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
-        given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
-        settings.FIELD_NAME_PREFIX = "m_";
-        settings.PARAMETER_NAME_PREFIX = "";
+        setField(psiClassBuilder, "codeStyleSettings", settings);
+        given(settings.getFieldNamePrefix()).willReturn("m_");
+        given(settings.getParameterNamePrefix()).willReturn(EMPTY);
     }
 
     @SuppressWarnings("unchecked")

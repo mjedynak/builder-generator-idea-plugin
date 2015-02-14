@@ -9,9 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.factory.PopupChooserBuilderFactory;
-import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 
-import javax.swing.JList;
+import javax.swing.*;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;

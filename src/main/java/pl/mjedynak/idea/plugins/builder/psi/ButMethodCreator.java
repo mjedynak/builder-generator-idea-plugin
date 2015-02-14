@@ -4,10 +4,11 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 public class ButMethodCreator {
 
+    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private PsiElementFactory elementFactory;
 
     public ButMethodCreator(PsiElementFactory elementFactory) {
@@ -33,9 +34,9 @@ public class ButMethodCreator {
             text.append(method.getName()).append("().");
         } else {
             String parameterName = parameterList.getParameters()[0].getName();
-            String parameterNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().PARAMETER_NAME_PREFIX;
+            String parameterNamePrefix = codeStyleSettings.getParameterNamePrefix();
             String parameterNameWithoutPrefix = parameterName.replaceFirst(parameterNamePrefix, "");
-            String fieldNamePrefix = CodeStyleSettingsManager.getInstance().getCurrentSettings().FIELD_NAME_PREFIX;
+            String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
             text.append(method.getName()).append("(").append(fieldNamePrefix).append(parameterNameWithoutPrefix).append(").");
         }
     }

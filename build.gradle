@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
 
@@ -8,6 +8,9 @@ ext.ideaJdk = 'IDEA IC-139.1117.1'
 sourceCompatibility = 1.6
 // --- properties ---
 
+// workaround for http://issues.gradle.org/browse/GRADLE-2538
+sourceSets.main.java.srcDirs = []
+sourceSets.main.groovy.srcDir 'src/main/java'
 
 repositories {
     mavenCentral()
@@ -17,8 +20,6 @@ repositories {
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
     testCompile 'org.mockito:mockito-core:1.9.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.5.2'
-    testCompile 'org.powermock:powermock-api-mockito:1.5.2'
     testCompile 'org.springframework:spring-test:4.0.0.RELEASE'
 }
 

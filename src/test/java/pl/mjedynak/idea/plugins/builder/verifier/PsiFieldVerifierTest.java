@@ -1,23 +1,27 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
-import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CodeStyleSettingsManager.class)
+@RunWith(MockitoJUnitRunner.class)
 public class PsiFieldVerifierTest {
 
     private PsiFieldVerifier psiFieldVerifier;
@@ -33,7 +37,6 @@ public class PsiFieldVerifierTest {
     @Mock private PsiType psiType;
     @Mock private PsiMethod method;
     @Mock private PsiModifierList modifierList;
-    @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
     @Mock private CodeStyleSettings settings;
 
     private String name;
@@ -41,6 +44,9 @@ public class PsiFieldVerifierTest {
     @Before
     public void setUp() {
         psiFieldVerifier = new PsiFieldVerifier();
+        setField(psiFieldVerifier, "codeStyleSettings", settings);
+        given(settings.getParameterNamePrefix()).willReturn(EMPTY);
+        given(settings.getFieldNamePrefix()).willReturn(EMPTY);
         constructors = new PsiMethod[1];
         constructors[0] = constructor;
         methods = new PsiMethod[1];
@@ -48,29 +54,12 @@ public class PsiFieldVerifierTest {
         parameters = new PsiParameter[1];
         parameters[0] = parameter;
         name = "name";
-        mockStatic(CodeStyleSettingsManager.class);
-        given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
-        given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
-        settings.FIELD_NAME_PREFIX = "";
-        settings.PARAMETER_NAME_PREFIX = "";
     }
 
     @Test
     public void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorDoesNotExist() {
         // given
         given(psiClass.getConstructors()).willReturn(new PsiMethod[0]);
-
-        // when
-        boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
-
-        // then
-        assertThat(result, is(false));
-    }
-
-    @Test
-    public void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorHasNoParameters() {
-        // given
-        given(psiClass.getConstructors()).willReturn(constructors);
 
         // when
         boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
@@ -133,19 +122,6 @@ public class PsiFieldVerifierTest {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
-        given(psiField.getName()).willReturn("field");
-        given(method.getName()).willReturn("setField");
-        // when
-        boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
-
-        // then
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void shouldVerifyThatFieldIsSetInSetterMethodIfItHasNoModifierListAndHasCorrectParameter() {
-        // given
-        given(psiClass.getAllMethods()).willReturn(methods);
         given(psiField.getName()).willReturn("field");
         given(method.getName()).willReturn("setField");
         // when

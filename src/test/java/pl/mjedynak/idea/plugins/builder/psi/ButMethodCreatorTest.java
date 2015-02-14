@@ -5,29 +5,25 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
+import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CodeStyleSettingsManager.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ButMethodCreatorTest {
 
     @InjectMocks private ButMethodCreator butMethodCreator;
     @Mock private PsiElementFactory psiElementFactory;
-    @Mock private CodeStyleSettingsManager codeStyleSettingsManager;
     @Mock private CodeStyleSettings settings;
     @Mock private PsiClass builderClass;
     @Mock private PsiClass srcClass;
@@ -41,11 +37,9 @@ public class ButMethodCreatorTest {
 
     @Before
     public void mockCodeStyleManager() {
-        mockStatic(CodeStyleSettingsManager.class);
-        given(CodeStyleSettingsManager.getInstance()).willReturn(codeStyleSettingsManager);
-        given(codeStyleSettingsManager.getCurrentSettings()).willReturn(settings);
-        settings.FIELD_NAME_PREFIX = "m_";
-        settings.PARAMETER_NAME_PREFIX = "p_";
+        given(settings.getFieldNamePrefix()).willReturn("m_");
+        given(settings.getParameterNamePrefix()).willReturn("p_");
+        setField(butMethodCreator, "codeStyleSettings", settings);
     }
 
     @Test
