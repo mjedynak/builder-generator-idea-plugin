@@ -6,9 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 public class GuiHelper {
 

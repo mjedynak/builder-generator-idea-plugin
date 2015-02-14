@@ -1,11 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-apply from: 'cobertura.gradle'
 apply from: 'idea.gradle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.1'
-ext.ideaJdk = 'IDEA IC-135.475'
+ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 14.0'
+ext.ideaJdk = 'IDEA IC-139.1117.1'
 sourceCompatibility = 1.6
 // --- properties ---
 

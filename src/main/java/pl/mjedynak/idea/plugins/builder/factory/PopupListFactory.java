@@ -4,8 +4,7 @@ import com.intellij.ui.components.JBList;
 import pl.mjedynak.idea.plugins.builder.action.GoToBuilderAdditionalAction;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
-import javax.swing.JList;
-import java.util.Arrays;
+import javax.swing.*;
 
 import static java.util.Arrays.asList;
 
