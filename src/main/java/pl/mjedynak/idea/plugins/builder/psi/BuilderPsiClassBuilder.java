@@ -27,10 +27,10 @@ public class BuilderPsiClassBuilder {
     private static final String SEMICOLON = ",";
 
     private PsiHelper psiHelper;
-    private MethodNameCreator methodNameCreator = new MethodNameCreator();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
     private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
+    private MethodCreator methodCreator;
 
     private Project project = null;
     private PsiDirectory targetDirectory = null;
@@ -62,6 +62,7 @@ public class BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
         psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
+        methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
         return this;
     }
@@ -107,17 +108,7 @@ public class BuilderPsiClassBuilder {
     }
 
     private void createAndAddMethod(PsiField psiField, String methodPrefix) {
-        String fieldName = psiField.getName();
-        String fieldType = psiField.getType().getPresentableText();
-        String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
-        String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
-        String parameterNamePrefix = codeStyleSettings.getParameterNamePrefix();
-        String parameterName = parameterNamePrefix + fieldNameWithoutPrefix;
-        String methodName = methodNameCreator.createMethodName(methodPrefix, fieldNameWithoutPrefix);
-        PsiMethod method = elementFactory.createMethodFromText(
-                "public " + builderClassName + " " + methodName + "(" + fieldType + " " + parameterName + ") { this." + fieldName + " = " + parameterName + "; return this; }",
-                psiField);
-        builderClass.add(method);
+        builderClass.add(methodCreator.createMethod(psiField, methodPrefix));
     }
 
     public PsiClass build() {

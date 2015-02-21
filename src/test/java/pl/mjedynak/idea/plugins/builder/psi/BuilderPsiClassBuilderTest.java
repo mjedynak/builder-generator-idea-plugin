@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +40,8 @@ public class BuilderPsiClassBuilderTest {
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
     @Mock private CodeStyleSettings settings;
     @Mock private PsiHelper psiHelper;
-    @Mock private MethodNameCreator methodNameCreator;
     @Mock private ButMethodCreator butMethodCreator;
+    @Mock private MethodCreator methodCreator;
     @Mock private PsiFieldsModifier psiFieldsModifier;
     @Mock private Project project;
     @Mock private PsiDirectory targetDirectory;
@@ -64,7 +63,6 @@ public class BuilderPsiClassBuilderTest {
 
     @Before
     public void setUp() {
-        setField(psiClassBuilder, "methodNameCreator", methodNameCreator);
         setField(psiClassBuilder, "psiFieldsModifier", psiFieldsModifier);
         psiFieldsForConstructor = new ArrayList<PsiField>();
         psiFieldsForSetters = new ArrayList<PsiField>();
@@ -168,29 +166,18 @@ public class BuilderPsiClassBuilderTest {
         // given
         PsiFieldImpl psiFieldForSetter = mock(PsiFieldImpl.class);
         psiFieldsForSetters.add(psiFieldForSetter);
-        given(psiFieldForSetter.getName()).willReturn("name");
-        PsiType typeForFieldForSetter = mock(PsiType.class);
-        given(typeForFieldForSetter.getPresentableText()).willReturn("String");
-        given(psiFieldForSetter.getType()).willReturn(typeForFieldForSetter);
-        PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
-        given(methodNameCreator.createMethodName("with", "name")).willReturn("withName");
-        given(elementFactory.createMethodFromText("public " + builderClassName + " withName(String name) { this.name = name; return this; }", psiFieldForSetter))
-                .willReturn(methodForFieldForSetter);
-
         PsiFieldImpl psiFieldForConstructor = mock(PsiFieldImpl.class);
         psiFieldsForConstructor.add(psiFieldForConstructor);
-        given(psiFieldForConstructor.getName()).willReturn("age");
-        PsiType typeForFieldForConstructor = mock(PsiType.class);
-        given(typeForFieldForConstructor.getPresentableText()).willReturn("int");
-        given(psiFieldForConstructor.getType()).willReturn(typeForFieldForConstructor);
-        PsiMethod methodForFieldForConstructor = mock(PsiMethod.class);
-        given(methodNameCreator.createMethodName("with", "age")).willReturn("withAge");
-        given(elementFactory.createMethodFromText("public " + builderClassName + " withAge(int age) { this.age = age; return this; }", psiFieldForConstructor))
-                .willReturn(methodForFieldForConstructor);
         String methodPrefix = "with";
+        PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
+        PsiMethod methodForFieldForConstructor = mock(PsiMethod.class);
+        given(methodCreator.createMethod(psiFieldForSetter, methodPrefix)).willReturn(methodForFieldForSetter);
+        given(methodCreator.createMethod(psiFieldForConstructor, methodPrefix)).willReturn(methodForFieldForConstructor);
+        BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder);
+        setField(builder, "methodCreator", methodCreator);
 
         // when
-        psiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder).withSetMethods(methodPrefix);
+        builder.withSetMethods(methodPrefix);
 
         // then
         verify(builderClass).add(methodForFieldForSetter);
