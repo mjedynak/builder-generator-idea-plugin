@@ -223,33 +223,4 @@ public class BuilderPsiClassBuilderTest {
         assertThat(result, is(notNullValue()));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingWithPrivateConstructorIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.withPrivateConstructor();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingWithInitializingMethodIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.withInitializingMethod();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingWithSetMethodsIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.withSetMethods("with");
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingWithFieldsMethodIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.withFields();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowExceptionWhenInvokingBuildMethodIfFieldsNotSetBefore() {
-        // when
-        psiClassBuilder.build();
-    }
 }

@@ -17,7 +17,6 @@ import java.util.Locale;
 
 import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
-@SuppressWarnings("PMD.TooManyMethods")
 public class BuilderPsiClassBuilder {
 
     private static final String PRIVATE_STRING = "private";
@@ -32,8 +31,6 @@ public class BuilderPsiClassBuilder {
     private ButMethodCreator butMethodCreator;
     private MethodCreator methodCreator;
 
-    private Project project = null;
-    private PsiDirectory targetDirectory = null;
     private PsiClass srcClass = null;
     private String builderClassName = null;
 
@@ -50,8 +47,6 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, PsiFieldsForBuilder psiFieldsForBuilder) {
-        this.project = project;
-        this.targetDirectory = targetDirectory;
         this.srcClass = psiClass;
         this.builderClassName = builderClassName;
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
@@ -68,13 +63,11 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withFields() {
-        checkClassFieldsRequiredForBuilding();
         psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
         return this;
     }
 
     public BuilderPsiClassBuilder withPrivateConstructor() {
-        checkClassFieldsRequiredForBuilding();
         PsiMethod constructor = elementFactory.createConstructor();
         constructor.getModifierList().setModifierProperty(PRIVATE_STRING, true);
         builderClass.add(constructor);
@@ -82,7 +75,6 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withInitializingMethod() {
-        checkClassFieldsRequiredForBuilding();
         String prefix = isVowel(srcClassName.toLowerCase(Locale.ENGLISH).charAt(0)) ? AN_PREFIX : A_PREFIX;
         PsiMethod staticMethod = elementFactory.createMethodFromText(
                 "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "();}", srcClass);
@@ -91,7 +83,6 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withSetMethods(String methodPrefix) {
-        checkClassFieldsRequiredForBuilding();
         for (PsiField psiFieldForSetter : psiFieldsForSetters) {
             createAndAddMethod(psiFieldForSetter, methodPrefix);
         }
@@ -112,7 +103,6 @@ public class BuilderPsiClassBuilder {
     }
 
     public PsiClass build() {
-        checkBuilderField();
         StringBuilder buildMethodText = new StringBuilder();
         appendConstructor(buildMethodText);
         appendSetMethods(buildMethodText);
@@ -152,22 +142,4 @@ public class BuilderPsiClassBuilder {
             sb.deleteCharAt(sb.length() - 1);
         }
     }
-
-    private void checkBuilderField() {
-        if (builderClass == null) {
-            throw new IllegalStateException("Builder field not created. Invoke at least aBuilder() method before.");
-        }
-    }
-
-    private void checkClassFieldsRequiredForBuilding() {
-        if (anyFieldIsNull()) {
-            throw new IllegalStateException("Fields not set. Invoke aBuilder() method before.");
-        }
-    }
-
-    private boolean anyFieldIsNull() {
-        return (project == null || targetDirectory == null || srcClass == null || builderClassName == null
-                || psiFieldsForSetters == null || psiFieldsForConstructor == null);
-    }
-
 }
