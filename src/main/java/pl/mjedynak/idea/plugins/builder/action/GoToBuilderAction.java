@@ -25,7 +25,6 @@ import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 
-@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class GoToBuilderAction extends EditorAction {
 
     private static GoToBuilderActionHandler goToBuilderActionHandler;

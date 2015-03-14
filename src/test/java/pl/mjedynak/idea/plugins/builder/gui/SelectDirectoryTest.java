@@ -19,9 +19,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OKActionRunnableTest {
+public class SelectDirectoryTest {
 
-    private OKActionRunnable okActionRunnable;
+    private SelectDirectory selectDirectory;
 
     @Mock private CreateBuilderDialog createBuilderDialog;
     @Mock private PsiHelper psiHelper;
@@ -40,7 +40,7 @@ public class OKActionRunnableTest {
         className = "className";
         errorMessage = "errorMessage";
 
-        okActionRunnable = new OKActionRunnable(createBuilderDialog, psiHelper, guiHelper, project, module, packageName, className);
+        selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, guiHelper, project, module, packageName, className);
 
         given(psiHelper.getDirectoryFromModuleAndPackageName(module, packageName)).willReturn(targetDirectory);
     }
@@ -51,7 +51,7 @@ public class OKActionRunnableTest {
         given(psiHelper.getDirectoryFromModuleAndPackageName(module, packageName)).willReturn(null);
 
         // when
-        okActionRunnable.run();
+        selectDirectory.run();
 
         // then
         verifyZeroInteractions(createBuilderDialog);
@@ -63,7 +63,7 @@ public class OKActionRunnableTest {
         given(psiHelper.checkIfClassCanBeCreated(targetDirectory, className)).willReturn(null);
 
         // when
-        okActionRunnable.run();
+        selectDirectory.run();
 
         // then
         verify(createBuilderDialog).setTargetDirectory(targetDirectory);
@@ -75,7 +75,7 @@ public class OKActionRunnableTest {
         given(psiHelper.checkIfClassCanBeCreated(targetDirectory, className)).willReturn(errorMessage);
 
         // when
-        okActionRunnable.run();
+        selectDirectory.run();
 
         // then
         verify(guiHelper).showMessageDialog(project, errorMessage, CommonBundle.getErrorTitle(), Messages.getErrorIcon());
@@ -88,7 +88,7 @@ public class OKActionRunnableTest {
         given(psiHelper.checkIfClassCanBeCreated(targetDirectory, className)).willThrow(exception);
 
         // when
-        okActionRunnable.run();
+        selectDirectory.run();
 
         // then
         verify(guiHelper).showMessageDialog(project, errorMessage, CommonBundle.getErrorTitle(), Messages.getErrorIcon());

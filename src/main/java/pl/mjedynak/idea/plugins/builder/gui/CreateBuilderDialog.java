@@ -37,7 +37,6 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.TooManyMethods"})
 public class CreateBuilderDialog extends DialogWrapper {
 
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
@@ -178,8 +177,8 @@ public class CreateBuilderDialog extends DialogWrapper {
         if (module == null) {
             throw new IllegalStateException("Cannot find module for class " + sourceClass.getName());
         }
-        OKActionRunnable okActionRunnable = new OKActionRunnable(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
-        executeCommand(okActionRunnable);
+        SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
+        executeCommand(selectDirectory);
         callSuper();
     }
 
@@ -191,8 +190,8 @@ public class CreateBuilderDialog extends DialogWrapper {
         super.doOKAction();
     }
 
-    void executeCommand(OKActionRunnable okActionRunnable) {
-        CommandProcessor.getInstance().executeCommand(project, okActionRunnable, CodeInsightBundle.message("create.directory.command"), null);
+    void executeCommand(SelectDirectory selectDirectory) {
+        CommandProcessor.getInstance().executeCommand(project, selectDirectory, CodeInsightBundle.message("create.directory.command"), null);
     }
 
     private String getPackageName() {

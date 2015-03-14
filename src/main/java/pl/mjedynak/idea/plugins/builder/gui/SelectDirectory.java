@@ -9,7 +9,7 @@ import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-public class OKActionRunnable implements Runnable {
+public class SelectDirectory implements Runnable {
 
     private CreateBuilderDialog createBuilderDialog;
     private PsiHelper psiHelper;
@@ -19,7 +19,7 @@ public class OKActionRunnable implements Runnable {
     private String packageName;
     private String className;
 
-    public OKActionRunnable(CreateBuilderDialog createBuilderDialog, PsiHelper psiHelper, GuiHelper guiHelper, Project project, Module module, String packageName, String className) {
+    public SelectDirectory(CreateBuilderDialog createBuilderDialog, PsiHelper psiHelper, GuiHelper guiHelper, Project project, Module module, String packageName, String className) {
         this.createBuilderDialog = createBuilderDialog;
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;

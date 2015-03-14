@@ -123,7 +123,7 @@ public class CreateBuilderDialogTest {
         given(referenceEditorComboWithBrowseButton.getText()).willReturn(text);
         given(psiHelper.findModuleForPsiClass(sourceClass, project)).willReturn(mock(Module.class));
         doNothing().when(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
-        doNothing().when(dialog).executeCommand(any(OKActionRunnable.class));
+        doNothing().when(dialog).executeCommand(any(SelectDirectory.class));
         doNothing().when(dialog).callSuper();
 
         // when
@@ -131,7 +131,7 @@ public class CreateBuilderDialogTest {
 
         // then
         verify(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
-        verify(dialog).executeCommand(any(OKActionRunnable.class));
+        verify(dialog).executeCommand(any(SelectDirectory.class));
         verify(dialog).callSuper();
     }
 
