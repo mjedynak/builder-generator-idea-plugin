@@ -30,7 +30,6 @@ public class DisplayChoosersRunnable implements Runnable {
     private BuilderWriter builderWriter;
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
-    @SuppressWarnings("PMD.ExcessiveParameterList")
     public DisplayChoosersRunnable(PsiHelper psiHelper, CreateBuilderDialogFactory createBuilderDialogFactory,
                                    PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
                                    BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {

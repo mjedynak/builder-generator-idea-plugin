@@ -14,27 +14,24 @@ import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public class BuilderWriterComputable implements Computable<PsiElement> {
 
+    private GuiHelper guiHelper = new GuiHelper();
+    private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private Project project;
     private PsiFieldsForBuilder psiFieldsForBuilder;
     private PsiDirectory targetDirectory;
     private String className;
     private PsiClass psiClassFromEditor;
-    private GuiHelper guiHelper;
-    private PsiHelper psiHelper;
     private String methodPrefix;
 
     public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper,
-                                   String methodPrefix) {
+                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
         this.targetDirectory = targetDirectory;
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
-        this.psiHelper = psiHelper;
-        this.guiHelper = guiHelper;
         this.methodPrefix = methodPrefix;
     }
 

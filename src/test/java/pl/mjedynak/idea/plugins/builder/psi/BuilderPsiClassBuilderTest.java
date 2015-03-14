@@ -90,8 +90,6 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         assertThat(result, is(sameInstance(psiClassBuilder)));
-        assertThat((Project) getField(psiClassBuilder, "project"), is(project));
-        assertThat((PsiDirectory) getField(psiClassBuilder, "targetDirectory"), is(targetDirectory));
         assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
         assertThat((String) getField(psiClassBuilder, "builderClassName"), is(builderClassName));
         assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));

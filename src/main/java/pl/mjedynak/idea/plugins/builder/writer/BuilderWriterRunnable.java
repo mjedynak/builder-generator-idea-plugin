@@ -11,14 +11,13 @@ import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public class BuilderWriterRunnable implements Runnable {
 
+    private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private Project project;
     private PsiFieldsForBuilder psiFieldsForBuilder;
     private PsiDirectory targetDirectory;
     private String className;
     private PsiClass psiClassFromEditor;
-    private PsiHelper psiHelper;
-    private GuiHelper guiHelper;
     private String methodPrefix;
 
     public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
@@ -29,14 +28,12 @@ public class BuilderWriterRunnable implements Runnable {
         this.targetDirectory = targetDirectory;
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
-        this.psiHelper = psiHelper;
-        this.guiHelper = guiHelper;
         this.methodPrefix = methodPrefix;
     }
 
     @Override
     public void run() {
         Application application = psiHelper.getApplication();
-        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper, methodPrefix));
+        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix));
     }
 }

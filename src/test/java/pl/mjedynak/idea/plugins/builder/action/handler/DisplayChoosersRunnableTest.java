@@ -60,9 +60,7 @@ public class DisplayChoosersRunnableTest {
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
 
     private String className = "className";
-
     private PsiField[] allFields = {};
-
     private List<PsiElementClassMember> selectedFields = new ArrayList<PsiElementClassMember>();
 
     @Before

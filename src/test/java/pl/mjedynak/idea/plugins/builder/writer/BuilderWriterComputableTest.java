@@ -10,8 +10,10 @@ import com.intellij.util.IncorrectOperationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -24,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,7 +50,9 @@ public class BuilderWriterComputableTest {
     @Before
     public void setUp() {
         builderWriterComputable = new BuilderWriterComputable(
-                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, psiHelper, guiHelper, "with");
+                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "with");
+        setField(builderWriterComputable, "psiHelper", psiHelper);
+        setField(builderWriterComputable, "guiHelper", guiHelper);
     }
 
     @Test
