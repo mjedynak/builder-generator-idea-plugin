@@ -17,48 +17,38 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     private GuiHelper guiHelper = new GuiHelper();
     private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
-    private Project project;
-    private PsiFieldsForBuilder psiFieldsForBuilder;
-    private PsiDirectory targetDirectory;
-    private String className;
-    private PsiClass psiClassFromEditor;
-    private String methodPrefix;
+    private BuilderContext context;
 
-    public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                   PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
+    public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
-        this.project = project;
-        this.psiFieldsForBuilder = psiFieldsForBuilder;
-        this.targetDirectory = targetDirectory;
-        this.className = className;
-        this.psiClassFromEditor = psiClassFromEditor;
-        this.methodPrefix = methodPrefix;
+        this.context = context;
     }
 
     @Override
     public PsiElement compute() {
-        return createBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
+        return createBuilder(context);
     }
 
-    private PsiElement createBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
+    private PsiElement createBuilder(BuilderContext context) {
         try {
-            guiHelper.includeCurrentPlaceAsChangePlace(project);
-            PsiClass targetClass = getBuilderPsiClass(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
-            navigateToClassAndPositionCursor(project, targetClass);
+            guiHelper.includeCurrentPlaceAsChangePlace(context.getProject());
+            PsiClass targetClass = getBuilderPsiClass(context);
+            navigateToClassAndPositionCursor(context.getProject(), targetClass);
             return targetClass;
         } catch (IncorrectOperationException e) {
-            showErrorMessage(project, className);
+            showErrorMessage(context.getProject(), context.getClassName());
             e.printStackTrace();
             return null;
         }
     }
 
-    private PsiClass getBuilderPsiClass(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
-        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(project, targetDirectory, psiClassFromEditor, className, psiFieldsForBuilder)
+    private PsiClass getBuilderPsiClass(BuilderContext context) {
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(
+                    context.getProject(), context.getTargetDirectory(), context.getPsiClassFromEditor(), context.getClassName(), context.getPsiFieldsForBuilder())
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
-                .withSetMethods(methodPrefix)
+                .withSetMethods(context.getMethodPrefix())
                 .withButMethod();
         return builder.build();
     }

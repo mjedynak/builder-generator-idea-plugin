@@ -13,27 +13,16 @@ public class BuilderWriterRunnable implements Runnable {
 
     private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
-    private Project project;
-    private PsiFieldsForBuilder psiFieldsForBuilder;
-    private PsiDirectory targetDirectory;
-    private String className;
-    private PsiClass psiClassFromEditor;
-    private String methodPrefix;
+    private BuilderContext context;
 
-    public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
+    public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
-        this.project = project;
-        this.psiFieldsForBuilder = psiFieldsForBuilder;
-        this.targetDirectory = targetDirectory;
-        this.className = className;
-        this.psiClassFromEditor = psiClassFromEditor;
-        this.methodPrefix = methodPrefix;
+        this.context = context;
     }
 
     @Override
     public void run() {
         Application application = psiHelper.getApplication();
-        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix));
+        application.runWriteAction(new BuilderWriterComputable(builderPsiClassBuilder, context));
     }
 }

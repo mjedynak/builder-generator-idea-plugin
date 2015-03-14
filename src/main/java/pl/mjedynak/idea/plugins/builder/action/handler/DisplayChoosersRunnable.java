@@ -14,6 +14,7 @@ import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
+import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.List;
@@ -59,7 +60,8 @@ public class DisplayChoosersRunnable implements Runnable {
         if (memberChooserDialog.isOK()) {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
-            builderWriter.writeBuilder(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
+            BuilderContext context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
+            builderWriter.writeBuilder(context);
         }
     }
 

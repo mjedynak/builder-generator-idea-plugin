@@ -1,19 +1,13 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -28,15 +22,11 @@ public class BuilderWriterRunnableTest {
 
     @Mock private PsiHelper psiHelper;
     @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
-    @Mock private Project project;
-    @Mock private PsiDirectory targetDirectory;
-    @Mock private PsiClass srcClass;
-    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock private BuilderContext context;
 
     @Before
     public void setUp() {
-        builderWriterRunnable = new BuilderWriterRunnable(
-                builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, "anyBuilderClassName", srcClass, "anyMethodPrefix");
+        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, context);
         setField(builderWriterRunnable, "psiHelper", psiHelper);
     }
 
