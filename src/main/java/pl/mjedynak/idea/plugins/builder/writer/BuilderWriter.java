@@ -14,18 +14,16 @@ public class BuilderWriter {
     static final String CREATE_BUILDER_STRING = "Create Builder";
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private PsiHelper psiHelper;
-    private GuiHelper guiHelper;
 
-    public BuilderWriter(BuilderPsiClassBuilder builderPsiClassBuilder, PsiHelper psiHelper, GuiHelper guiHelper) {
+    public BuilderWriter(BuilderPsiClassBuilder builderPsiClassBuilder, PsiHelper psiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.psiHelper = psiHelper;
-        this.guiHelper = guiHelper;
     }
 
     public void writeBuilder(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
         commandProcessor.executeCommand(project,
-                new BuilderWriterRunnable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, psiHelper, guiHelper, methodPrefix),
+                new BuilderWriterRunnable(builderPsiClassBuilder, project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix),
                 CREATE_BUILDER_STRING, this);
     }
 }

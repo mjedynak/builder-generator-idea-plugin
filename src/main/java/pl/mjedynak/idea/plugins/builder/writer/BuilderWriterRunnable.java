@@ -21,7 +21,7 @@ public class BuilderWriterRunnable implements Runnable {
     private String methodPrefix;
 
     public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, PsiHelper psiHelper, GuiHelper guiHelper, String methodPrefix) {
+                                 PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
