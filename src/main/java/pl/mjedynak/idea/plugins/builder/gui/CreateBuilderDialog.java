@@ -21,12 +21,7 @@ import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -49,6 +44,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private PsiClass sourceClass;
     private JTextField targetClassNameField;
     private JTextField targetMethodPrefix;
+    private JCheckBox innerBuilder;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
@@ -99,6 +95,7 @@ public class CreateBuilderDialog extends DialogWrapper {
 
         panel.setBorder(IdeBorderFactory.createBorder());
 
+        // Class name
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
         gbConstraints.weightx = 0;
@@ -114,7 +111,14 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
         panel.add(targetClassNameField, gbConstraints);
+        targetClassNameField.getDocument().addDocumentListener(new DocumentAdapter() {
+            protected void textChanged(DocumentEvent e) {
+                getOKAction().setEnabled(JavaPsiFacade.getInstance(project).getNameHelper().isIdentifier(getClassName()));
+            }
+        });
+        // Class name
 
+        // Method prefix
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
         gbConstraints.gridy = 2;
@@ -131,13 +135,9 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
         panel.add(targetMethodPrefix, gbConstraints);
+        // Method prefix
 
-        targetClassNameField.getDocument().addDocumentListener(new DocumentAdapter() {
-            protected void textChanged(DocumentEvent e) {
-                getOKAction().setEnabled(JavaPsiFacade.getInstance(project).getNameHelper().isIdentifier(getClassName()));
-            }
-        });
-
+        // Destination package
         gbConstraints.gridx = 0;
         gbConstraints.gridy = 3;
         gbConstraints.weightx = 0;
@@ -155,17 +155,38 @@ public class CreateBuilderDialog extends DialogWrapper {
         clickAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
                 targetPackageField.getChildComponent());
 
-        addInnerPanel(panel, gbConstraints);
+        addInnerPanelForDestinationPackageField(panel, gbConstraints);
+        // Destination package
+
+        // Builder type
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 4;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Builder type"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+
+        innerBuilder = new JCheckBox("inner");
+        panel.add(innerBuilder, gbConstraints);
+        // Builder type
 
         return panel;
     }
 
-    private void addInnerPanel(JPanel panel, GridBagConstraints gbConstraints) {
-        JPanel innerPanel = createInnerPanel();
+    private void addInnerPanelForDestinationPackageField(JPanel panel, GridBagConstraints gbConstraints) {
+        JPanel innerPanel = createInnerPanelForDestinationPackageField();
         panel.add(innerPanel, gbConstraints);
     }
 
-    private JPanel createInnerPanel() {
+    private JPanel createInnerPanelForDestinationPackageField() {
         JPanel innerPanel = new JPanel(new BorderLayout());
         innerPanel.add(targetPackageField, BorderLayout.CENTER);
         return innerPanel;
@@ -177,8 +198,10 @@ public class CreateBuilderDialog extends DialogWrapper {
         if (module == null) {
             throw new IllegalStateException("Cannot find module for class " + sourceClass.getName());
         }
-        SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
-        executeCommand(selectDirectory);
+        if (!isInnerBuilder()) {
+            SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
+            executeCommand(selectDirectory);
+        }
         callSuper();
     }
 
@@ -209,6 +232,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public String getMethodPrefix() {
         return targetMethodPrefix.getText();
+    }
+
+    public boolean isInnerBuilder() {
+        return innerBuilder.isSelected();
     }
 
     public PsiDirectory getTargetDirectory() {

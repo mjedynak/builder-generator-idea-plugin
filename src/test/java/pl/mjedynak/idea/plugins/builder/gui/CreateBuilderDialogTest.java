@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -122,6 +123,7 @@ public class CreateBuilderDialogTest {
         String text = "text";
         given(referenceEditorComboWithBrowseButton.getText()).willReturn(text);
         given(psiHelper.findModuleForPsiClass(sourceClass, project)).willReturn(mock(Module.class));
+        doReturn(false).when(dialog).isInnerBuilder();
         doNothing().when(dialog).registerEntry(CreateBuilderDialog.RECENTS_KEY, text);
         doNothing().when(dialog).executeCommand(any(SelectDirectory.class));
         doNothing().when(dialog).callSuper();

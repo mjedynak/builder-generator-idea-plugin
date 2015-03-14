@@ -14,14 +14,18 @@ public class BuilderContext {
     private final String className;
     private final PsiClass psiClassFromEditor;
     private final String methodPrefix;
+    private final boolean isInner;
 
-    public BuilderContext(Project project, PsiFieldsForBuilder psiFieldsForBuilder, PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor, String methodPrefix) {
+    public BuilderContext(Project project, PsiFieldsForBuilder psiFieldsForBuilder,
+                          PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,
+                          String methodPrefix, boolean isInner) {
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
         this.targetDirectory = targetDirectory;
         this.className = className;
         this.psiClassFromEditor = psiClassFromEditor;
         this.methodPrefix = methodPrefix;
+        this.isInner = isInner;
     }
 
     public Project getProject() {
@@ -46,6 +50,10 @@ public class BuilderContext {
 
     public String getMethodPrefix() {
         return methodPrefix;
+    }
+
+    public boolean isInner() {
+        return isInner;
     }
 
     @Override

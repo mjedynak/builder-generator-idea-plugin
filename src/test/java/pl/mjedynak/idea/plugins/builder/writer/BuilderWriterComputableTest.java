@@ -46,7 +46,7 @@ public class BuilderWriterComputableTest {
 
     @Before
     public void setUp() {
-        context = new BuilderContext(project, psiFieldsForBuilder, mock(PsiDirectory.class), "anyName", mock(PsiClass.class), methodPrefix);
+        context = new BuilderContext(project, psiFieldsForBuilder, mock(PsiDirectory.class), "anyName", mock(PsiClass.class), methodPrefix, false);
         builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, context);
         setField(builderWriterComputable, "psiHelper", psiHelper);
         setField(builderWriterComputable, "guiHelper", guiHelper);

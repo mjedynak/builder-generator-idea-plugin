@@ -76,7 +76,7 @@ public class BuilderPsiClassBuilderTest {
         given(srcClass.getName()).willReturn(srcClassName);
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
-        context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix");
+        context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false);
         mockCodeStyleManager();
     }
 
