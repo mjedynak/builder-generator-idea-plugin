@@ -18,15 +18,10 @@ import javax.swing.JList;
 public class GoToBuilderActionHandler extends EditorActionHandler {
 
     private PsiHelper psiHelper;
-
     private BuilderVerifier builderVerifier;
-
     private BuilderFinder builderFinder;
-
     private PopupDisplayer popupDisplayer;
-
     private PopupListFactory popupListFactory;
-
     private DisplayChoosersRunnable displayChoosersRunnable;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -59,7 +54,7 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
         }
     }
 
-    private void displayPopup(final Editor editor, final PsiClass psiClassFromEditor, final DataContext dataContext) {
+    private void displayPopup(Editor editor, PsiClass psiClassFromEditor, DataContext dataContext) {
         JList popupList = popupListFactory.getPopupList();
         Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
         displayChoosersRunnable.setEditor(editor);
