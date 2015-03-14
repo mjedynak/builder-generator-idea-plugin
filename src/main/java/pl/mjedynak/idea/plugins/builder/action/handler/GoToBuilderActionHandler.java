@@ -24,7 +24,6 @@ public class GoToBuilderActionHandler extends EditorActionHandler {
     private PopupListFactory popupListFactory;
     private DisplayChoosersRunnable displayChoosersRunnable;
 
-    @SuppressWarnings("PMD.ExcessiveParameterList")
     public GoToBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, PopupDisplayer popupDisplayer,
                                     PopupListFactory popupListFactory, DisplayChoosersRunnable displayChoosersRunnable) {
         this.psiHelper = psiHelper;
