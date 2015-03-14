@@ -20,7 +20,6 @@ import java.util.List;
 
 public class DisplayChoosersRunnable implements Runnable {
 
-
     private PsiClass psiClassFromEditor;
     private Project project;
     private Editor editor;

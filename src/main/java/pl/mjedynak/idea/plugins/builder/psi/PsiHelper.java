@@ -19,7 +19,6 @@ import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RefactoringMessageUtil;
-import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
 
