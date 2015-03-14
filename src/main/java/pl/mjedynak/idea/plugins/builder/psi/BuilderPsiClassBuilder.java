@@ -25,7 +25,7 @@ public class BuilderPsiClassBuilder {
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
 
-    private PsiHelper psiHelper;
+    private PsiHelper psiHelper = new PsiHelper();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
     private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
@@ -41,10 +41,6 @@ public class BuilderPsiClassBuilder {
     private PsiElementFactory elementFactory = null;
     private String srcClassName = null;
     private String srcClassFieldName = null;
-
-    public BuilderPsiClassBuilder(PsiHelper psiHelper) {
-        this.psiHelper = psiHelper;
-    }
 
     public BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, PsiFieldsForBuilder psiFieldsForBuilder) {
         this.srcClass = psiClass;

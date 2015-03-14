@@ -64,6 +64,7 @@ public class BuilderPsiClassBuilderTest {
     @Before
     public void setUp() {
         setField(psiClassBuilder, "psiFieldsModifier", psiFieldsModifier);
+        setField(psiClassBuilder, "psiHelper", psiHelper);
         psiFieldsForConstructor = new ArrayList<PsiField>();
         psiFieldsForSetters = new ArrayList<PsiField>();
         given(psiHelper.getJavaDirectoryService()).willReturn(javaDirectoryService);
