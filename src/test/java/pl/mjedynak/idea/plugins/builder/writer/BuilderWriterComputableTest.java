@@ -10,10 +10,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -38,19 +36,17 @@ public class BuilderWriterComputableTest {
     @Mock private GuiHelper guiHelper;
     @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
     @Mock private Project project;
-    @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass srcClass;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiClass builderClass;
     @Mock private PsiFile psiFile;
     @Mock private PsiElement psiElement;
     private BuilderContext context;
-    private String builderClassName = "builderClassName";
     private String methodPrefix = "with";
 
     @Before
     public void setUp() {
-        context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, methodPrefix);
+        context = new BuilderContext(project, psiFieldsForBuilder, mock(PsiDirectory.class), "anyName", mock(PsiClass.class), methodPrefix);
         builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, context);
         setField(builderWriterComputable, "psiHelper", psiHelper);
         setField(builderWriterComputable, "guiHelper", guiHelper);
@@ -59,7 +55,7 @@ public class BuilderWriterComputableTest {
     @Test
     public void shouldIncludeCurrentPlaceAsChangePlaceAndCreateBuilderAndNavigateToIt() {
         // given
-        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder)).willReturn(builderPsiClassBuilder);
+        given(builderPsiClassBuilder.aBuilder(context)).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withFields()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withPrivateConstructor()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
@@ -83,7 +79,7 @@ public class BuilderWriterComputableTest {
     @Test
     public void shouldInvokeBuilderWriterErrorRunnableWhenExceptionOccurs() {
         // given
-        given(builderPsiClassBuilder.aBuilder(project, targetDirectory, srcClass, builderClassName, psiFieldsForBuilder)).willThrow(IncorrectOperationException.class);
+        given(builderPsiClassBuilder.aBuilder(context)).willThrow(IncorrectOperationException.class);
         Application application = mock(Application.class);
         given(psiHelper.getApplication()).willReturn(application);
 

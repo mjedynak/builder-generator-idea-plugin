@@ -3,7 +3,6 @@ package pl.mjedynak.idea.plugins.builder.gui.displayer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import pl.mjedynak.idea.plugins.builder.factory.PopupChooserBuilderFactory;
-import pl.mjedynak.idea.plugins.builder.gui.displayer.PopupDisplayer;
 
 import javax.swing.JList;
 

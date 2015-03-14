@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
-import pl.mjedynak.idea.plugins.builder.finder.ClassFinder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class ClassFinder {

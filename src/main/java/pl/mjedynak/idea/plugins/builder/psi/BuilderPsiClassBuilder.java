@@ -1,16 +1,14 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import org.apache.commons.lang.StringUtils;
-import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
+import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 
 import java.util.List;
 import java.util.Locale;
@@ -42,17 +40,17 @@ public class BuilderPsiClassBuilder {
     private String srcClassName = null;
     private String srcClassFieldName = null;
 
-    public BuilderPsiClassBuilder aBuilder(Project project, PsiDirectory targetDirectory, PsiClass psiClass, String builderClassName, PsiFieldsForBuilder psiFieldsForBuilder) {
-        this.srcClass = psiClass;
-        this.builderClassName = builderClassName;
+    public BuilderPsiClassBuilder aBuilder(BuilderContext context) {
+        this.srcClass = context.getPsiClassFromEditor();
+        this.builderClassName = context.getClassName();
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
-        builderClass = javaDirectoryService.createClass(targetDirectory, builderClassName);
-        JavaPsiFacade javaPsiFacade = psiHelper.getJavaPsiFacade(project);
+        builderClass = javaDirectoryService.createClass(context.getTargetDirectory(), builderClassName);
+        JavaPsiFacade javaPsiFacade = psiHelper.getJavaPsiFacade(context.getProject());
         elementFactory = javaPsiFacade.getElementFactory();
-        srcClassName = psiClass.getName();
+        srcClassName = context.getPsiClassFromEditor().getName();
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
-        psiFieldsForSetters = psiFieldsForBuilder.getFieldsForSetters();
-        psiFieldsForConstructor = psiFieldsForBuilder.getFieldsForConstructor();
+        psiFieldsForSetters = context.getPsiFieldsForBuilder().getFieldsForSetters();
+        psiFieldsForConstructor = context.getPsiFieldsForBuilder().getFieldsForConstructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
         return this;

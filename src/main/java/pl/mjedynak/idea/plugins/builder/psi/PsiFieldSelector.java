@@ -5,7 +5,6 @@ import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import pl.mjedynak.idea.plugins.builder.factory.PsiElementClassMemberFactory;
-import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import java.util.ArrayList;

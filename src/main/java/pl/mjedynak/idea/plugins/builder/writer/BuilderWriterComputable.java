@@ -4,13 +4,11 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
 public class BuilderWriterComputable implements Computable<PsiElement> {
 
@@ -43,8 +41,7 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private PsiClass getBuilderPsiClass(BuilderContext context) {
-        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(
-                    context.getProject(), context.getTargetDirectory(), context.getPsiClassFromEditor(), context.getClassName(), context.getPsiFieldsForBuilder())
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(context)
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
