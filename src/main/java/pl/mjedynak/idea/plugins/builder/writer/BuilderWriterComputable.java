@@ -30,14 +30,30 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiElement createBuilder(BuilderContext context) {
         try {
             guiHelper.includeCurrentPlaceAsChangePlace(context.getProject());
-            PsiClass targetClass = getBuilderPsiClass(context);
-            navigateToClassAndPositionCursor(context.getProject(), targetClass);
+            PsiClass targetClass;
+            if (context.isInner()) {
+                targetClass = getInnerBuilderPsiClass(context);
+                context.getPsiClassFromEditor().add(targetClass);
+            } else {
+                targetClass = getBuilderPsiClass(context);
+                navigateToClassAndPositionCursor(context.getProject(), targetClass);
+            }
             return targetClass;
         } catch (IncorrectOperationException e) {
             showErrorMessage(context.getProject(), context.getClassName());
             e.printStackTrace();
             return null;
         }
+    }
+
+    private PsiClass getInnerBuilderPsiClass(BuilderContext context) {
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder.anInnerBuilder(context)
+                .withFields()
+                .withPrivateConstructor()
+                .withInitializingMethod()
+                .withSetMethods(context.getMethodPrefix())
+                .withButMethod();
+        return builder.build();
     }
 
     private PsiClass getBuilderPsiClass(BuilderContext context) {

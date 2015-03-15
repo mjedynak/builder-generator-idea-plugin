@@ -34,6 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.STATIC_MODIFIER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderTest {
@@ -56,8 +57,8 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiMethod psiMethod;
 
     private BuilderContext context;
-    private List<PsiField> psiFieldsForSetters;
-    private List<PsiField> psiFieldsForConstructor;
+    private List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();
+    private List<PsiField> psiFieldsForConstructor = new ArrayList<PsiField>();
 
     private String builderClassName = "BuilderClassName";
     private String srcClassName = "ClassName";
@@ -67,8 +68,6 @@ public class BuilderPsiClassBuilderTest {
     public void setUp() {
         setField(psiClassBuilder, "psiFieldsModifier", psiFieldsModifier);
         setField(psiClassBuilder, "psiHelper", psiHelper);
-        psiFieldsForConstructor = new ArrayList<PsiField>();
-        psiFieldsForSetters = new ArrayList<PsiField>();
         given(psiHelper.getJavaDirectoryService()).willReturn(javaDirectoryService);
         given(javaDirectoryService.createClass(targetDirectory, builderClassName)).willReturn(builderClass);
         given(psiHelper.getJavaPsiFacade(project)).willReturn(javaPsiFacade);
@@ -86,22 +85,29 @@ public class BuilderPsiClassBuilderTest {
         given(settings.getParameterNamePrefix()).willReturn(EMPTY);
     }
 
-    @SuppressWarnings("unchecked")
+
     @Test
     public void shouldSetPassedFieldsAndCreateRequiredOnes() {
         // when
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(context);
 
         // then
-        assertThat(result, is(sameInstance(psiClassBuilder)));
-        assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
-        assertThat((String) getField(psiClassBuilder, "builderClassName"), is(builderClassName));
-        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
-        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
-        assertThat((PsiClass) getField(psiClassBuilder, "builderClass"), is(builderClass));
-        assertThat((PsiElementFactory) getField(psiClassBuilder, "elementFactory"), is(elementFactory));
-        assertThat((String) getField(psiClassBuilder, "srcClassName"), is(srcClassName));
-        assertThat((String) getField(psiClassBuilder, "srcClassFieldName"), is(srcClassFieldName));
+        assertFieldsAreSet(result);
+    }
+
+    @Test
+    public void shouldSetPassedFieldsAndCreateRequiredOnesForInnerBuilder() {
+        // given
+        PsiModifierList psiModifierList = mock(PsiModifierList.class);
+        given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
+        given(builderClass.getModifierList()).willReturn(psiModifierList);
+
+        // when
+        BuilderPsiClassBuilder result = psiClassBuilder.anInnerBuilder(context);
+
+        // then
+        assertFieldsAreSet(result);
+        verify(psiModifierList).setModifierProperty(STATIC_MODIFIER, true);
     }
 
     @Test
@@ -223,6 +229,19 @@ public class BuilderPsiClassBuilderTest {
         verify(builderClass).add(method);
         verifyNoMoreInteractions(builderClass);
         assertThat(result, is(notNullValue()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertFieldsAreSet(BuilderPsiClassBuilder result) {
+        assertThat(result, is(sameInstance(psiClassBuilder)));
+        assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
+        assertThat((String) getField(psiClassBuilder, "builderClassName"), is(builderClassName));
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
+        assertThat((PsiClass) getField(psiClassBuilder, "builderClass"), is(builderClass));
+        assertThat((PsiElementFactory) getField(psiClassBuilder, "elementFactory"), is(elementFactory));
+        assertThat((String) getField(psiClassBuilder, "srcClassName"), is(srcClassName));
+        assertThat((String) getField(psiClassBuilder, "srcClassFieldName"), is(srcClassFieldName));
     }
 
 }

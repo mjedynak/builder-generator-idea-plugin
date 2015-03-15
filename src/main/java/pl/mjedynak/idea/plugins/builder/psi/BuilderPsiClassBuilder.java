@@ -22,6 +22,7 @@ public class BuilderPsiClassBuilder {
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
+    static final String STATIC_MODIFIER = "static";
 
     private PsiHelper psiHelper = new PsiHelper();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
@@ -41,19 +42,30 @@ public class BuilderPsiClassBuilder {
     private String srcClassFieldName = null;
 
     public BuilderPsiClassBuilder aBuilder(BuilderContext context) {
-        this.srcClass = context.getPsiClassFromEditor();
-        this.builderClassName = context.getClassName();
+        initializeFields(context);
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
         builderClass = javaDirectoryService.createClass(context.getTargetDirectory(), builderClassName);
+        return this;
+    }
+
+    public BuilderPsiClassBuilder anInnerBuilder(BuilderContext context) {
+        initializeFields(context);
+        builderClass = elementFactory.createClass(builderClassName);
+        builderClass.getModifierList().setModifierProperty(STATIC_MODIFIER, true);
+        return this;
+    }
+
+    private void initializeFields(BuilderContext context) {
         JavaPsiFacade javaPsiFacade = psiHelper.getJavaPsiFacade(context.getProject());
         elementFactory = javaPsiFacade.getElementFactory();
+        srcClass = context.getPsiClassFromEditor();
+        builderClassName = context.getClassName();
         srcClassName = context.getPsiClassFromEditor().getName();
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = context.getPsiFieldsForBuilder().getFieldsForSetters();
         psiFieldsForConstructor = context.getPsiFieldsForBuilder().getFieldsForConstructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
-        return this;
     }
 
     public BuilderPsiClassBuilder withFields() {
