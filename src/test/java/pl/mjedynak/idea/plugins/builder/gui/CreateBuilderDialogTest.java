@@ -84,7 +84,7 @@ public class CreateBuilderDialogTest {
     }
 
     @Test
-    public void shouldReturnTargetDirectoryAsNullWhenOkActionWasntClicked() {
+    public void shouldReturnTargetDirectoryAsNullWhenOkActionWasNotClicked() {
         // when
         PsiDirectory result = createBuilderDialog.getTargetDirectory();
 
