@@ -10,13 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.factory.PsiElementClassMemberFactory;
-import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -47,7 +45,7 @@ public class PsiFieldSelectorTest {
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
 
         // then
-        assertThat(result.size(), is(1));
+        assertThat(result).hasSize(1);
     }
 
     @Test
@@ -59,7 +57,7 @@ public class PsiFieldSelectorTest {
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
 
         // then
-        assertThat(result.size(), is(1));
+        assertThat(result).hasSize(1);
     }
 
     @Test
@@ -72,7 +70,7 @@ public class PsiFieldSelectorTest {
         List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
 
         // then
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
 }

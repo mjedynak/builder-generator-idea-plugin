@@ -9,10 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -50,7 +47,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -62,7 +59,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -74,7 +71,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -86,7 +83,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -102,8 +99,8 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findBuilderForClass(psiClass);
 
         // then
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getName(), is(BUILDER_NAME));
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo(BUILDER_NAME);
     }
 
     @Test
@@ -115,7 +112,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -127,7 +124,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -139,7 +136,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -151,7 +148,7 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findClassForBuilder(builderClass);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
         verify(classFinder).findClass(CLASS_NAME, project);
     }
 
@@ -164,8 +161,8 @@ public class BuilderFinderTest {
         PsiClass result = builderFinder.findClassForBuilder(psiClass);
 
         // then
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getName(), is(CLASS_NAME));
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo(CLASS_NAME);
     }
 
 }

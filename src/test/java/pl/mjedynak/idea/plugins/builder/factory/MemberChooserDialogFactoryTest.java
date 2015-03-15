@@ -12,8 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -37,7 +36,7 @@ public class MemberChooserDialogFactoryTest {
         MemberChooser<PsiElementClassMember> result = memberChooserDialogFactory.getMemberChooserDialog(elements, project);
 
         // then
-        assertThat(result, is(memberChooser));
+        assertThat(result).isEqualTo(memberChooser);
         verify(result).setCopyJavadocVisible(false);
         verify(result).setTitle(TITLE);
         verify(result).selectElements(arrayElements);

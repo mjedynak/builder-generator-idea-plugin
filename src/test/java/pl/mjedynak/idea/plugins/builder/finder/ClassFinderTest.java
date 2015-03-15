@@ -14,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -48,7 +45,7 @@ public class ClassFinderTest {
         PsiClass result = classFinder.findClass(CLASS_NAME, project);
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -68,7 +65,7 @@ public class ClassFinderTest {
     }
 
     private void verifyClassIsFound(String name, PsiClass result) {
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getName(), is(name));
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo(name);
     }
 }

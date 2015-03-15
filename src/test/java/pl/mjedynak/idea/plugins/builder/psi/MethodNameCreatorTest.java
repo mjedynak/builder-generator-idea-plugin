@@ -3,8 +3,7 @@ package pl.mjedynak.idea.plugins.builder.psi;
 import org.junit.Test;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MethodNameCreatorTest {
 
@@ -16,7 +15,7 @@ public class MethodNameCreatorTest {
         String result = methodNameCreator.createMethodName(EMPTY, "userName");
 
         // then
-        assertThat(result, is("userName"));
+        assertThat(result).isEqualTo("userName");
     }
 
     @Test
@@ -25,6 +24,6 @@ public class MethodNameCreatorTest {
         String result = methodNameCreator.createMethodName("with", "field");
 
         // then
-        assertThat(result, is("withField"));
+        assertThat(result).isEqualTo("withField");
     }
 }

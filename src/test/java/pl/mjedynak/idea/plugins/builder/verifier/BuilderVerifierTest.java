@@ -6,10 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,7 +31,7 @@ public class BuilderVerifierTest {
         boolean result = builderVerifier.isBuilder(psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -45,6 +43,6 @@ public class BuilderVerifierTest {
         boolean result = builderVerifier.isBuilder(psiClass);
 
         // then
-        assertThat(result, is(true));
+        assertThat(result).isTrue();
     }
 }

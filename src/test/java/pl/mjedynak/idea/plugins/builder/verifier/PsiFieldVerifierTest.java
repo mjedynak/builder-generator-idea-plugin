@@ -15,8 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -65,7 +64,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -81,7 +80,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -98,7 +97,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -114,7 +113,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInConstructor(psiField, psiClass);
 
         // then
-        assertThat(result, is(true));
+        assertThat(result).isTrue();
     }
 
     @Test
@@ -124,11 +123,12 @@ public class PsiFieldVerifierTest {
         given(method.getModifierList()).willReturn(modifierList);
         given(psiField.getName()).willReturn("field");
         given(method.getName()).willReturn("setField");
+
         // when
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
 
         // then
-        assertThat(result, is(true));
+        assertThat(result).isTrue();
     }
 
     @Test
@@ -143,7 +143,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -157,7 +157,7 @@ public class PsiFieldVerifierTest {
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
 
         // then
-        assertThat(result, is(false));
+        assertThat(result).isFalse();
     }
 
     private void prepareBehaviourForReturningParameter() {

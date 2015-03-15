@@ -14,8 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
@@ -62,7 +61,7 @@ public class ButMethodCreatorTest {
         PsiMethod result = butMethodCreator.butMethod("Builder", builderClass, srcClass);
 
         // then
-        assertThat(result, is(createdMethod));
+        assertThat(result).isEqualTo(createdMethod);
     }
 
 }

@@ -6,12 +6,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.PopupChooserBuilderFactory;
 
-import javax.swing.JList;
+import javax.swing.*;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class PopupChooserBuilderFactoryTest {
@@ -31,6 +30,6 @@ public class PopupChooserBuilderFactoryTest {
         PopupChooserBuilder popupChooserBuilder = popupChooserBuilderFactory.getPopupChooserBuilder(list);
 
         // then
-        assertThat(popupChooserBuilder, instanceOf(PopupChooserBuilder.class));
+        assertThat(popupChooserBuilder).isInstanceOf(PopupChooserBuilder.class);
     }
 }

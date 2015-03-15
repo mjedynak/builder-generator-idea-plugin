@@ -20,10 +20,7 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -70,7 +67,7 @@ public class CreateBuilderDialogTest {
         String result = createBuilderDialog.getClassName();
 
         // then
-        assertThat(result, is(className));
+        assertThat(result).isEqualTo(className);
     }
 
     @Test
@@ -79,8 +76,8 @@ public class CreateBuilderDialogTest {
         JComponent result = createBuilderDialog.getPreferredFocusedComponent();
 
         // then
-        assertThat(result, is(instanceOf(JTextField.class)));
-        assertThat(((JTextField) result).getText(), is(className));
+        assertThat(result).isInstanceOf(JTextField.class);
+        assertThat(((JTextField) result).getText()).isEqualTo(className);
     }
 
     @Test
@@ -89,7 +86,7 @@ public class CreateBuilderDialogTest {
         PsiDirectory result = createBuilderDialog.getTargetDirectory();
 
         // then
-        assertThat(result, is(nullValue()));
+        assertThat(result).isNull();
     }
 
     @Test
@@ -101,19 +98,19 @@ public class CreateBuilderDialogTest {
         createBuilderDialog.setTargetDirectory(targetDirectory);
 
         // then
-        assertThat(createBuilderDialog.getTargetDirectory(), is(targetDirectory));
+        assertThat(createBuilderDialog.getTargetDirectory()).isEqualTo(targetDirectory);
     }
 
     @Test
     public void shouldCreateThreeActions() {
         // given
-        final int actionsCount = 3;
+        int actionsCount = 3;
 
         // when
         Action[] actions = createBuilderDialog.createActions();
 
         // then
-        assertThat(actions.length, is(actionsCount));
+        assertThat(actions).hasSize(actionsCount);
     }
 
     @Test

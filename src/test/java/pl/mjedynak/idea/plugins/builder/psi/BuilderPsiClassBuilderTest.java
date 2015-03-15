@@ -24,10 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -117,7 +114,7 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         verify(psiFieldsModifier).modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
-        assertThat(result, is(sameInstance(psiClassBuilder)));
+        assertThat(result).isSameAs(psiClassBuilder);
     }
 
     @Test
@@ -205,7 +202,7 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         verify(builderClass).add(psiMethod);
-        assertThat(result, is(sameInstance(psiClassBuilder)));
+        assertThat(result).isSameAs(psiClassBuilder);
     }
 
     @Test
@@ -228,20 +225,20 @@ public class BuilderPsiClassBuilderTest {
         // then
         verify(builderClass).add(method);
         verifyNoMoreInteractions(builderClass);
-        assertThat(result, is(notNullValue()));
+        assertThat(result).isNotNull();
     }
 
     @SuppressWarnings("unchecked")
     private void assertFieldsAreSet(BuilderPsiClassBuilder result) {
-        assertThat(result, is(sameInstance(psiClassBuilder)));
-        assertThat((PsiClass) getField(psiClassBuilder, "srcClass"), is(srcClass));
-        assertThat((String) getField(psiClassBuilder, "builderClassName"), is(builderClassName));
-        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters"), is(psiFieldsForSetters));
-        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForConstructor"), is(psiFieldsForConstructor));
-        assertThat((PsiClass) getField(psiClassBuilder, "builderClass"), is(builderClass));
-        assertThat((PsiElementFactory) getField(psiClassBuilder, "elementFactory"), is(elementFactory));
-        assertThat((String) getField(psiClassBuilder, "srcClassName"), is(srcClassName));
-        assertThat((String) getField(psiClassBuilder, "srcClassFieldName"), is(srcClassFieldName));
+        assertThat(result).isSameAs(psiClassBuilder);
+        assertThat((PsiClass) getField(psiClassBuilder, "srcClass")).isEqualTo(srcClass);
+        assertThat((String) getField(psiClassBuilder, "builderClassName")).isEqualTo(builderClassName);
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForSetters")).isEqualTo(psiFieldsForSetters);
+        assertThat((List<PsiField>) getField(psiClassBuilder, "psiFieldsForConstructor")).isEqualTo(psiFieldsForConstructor);
+        assertThat((PsiClass) getField(psiClassBuilder, "builderClass")).isEqualTo(builderClass);
+        assertThat((PsiElementFactory) getField(psiClassBuilder, "elementFactory")).isEqualTo(elementFactory);
+        assertThat((String) getField(psiClassBuilder, "srcClassName")).isEqualTo(srcClassName);
+        assertThat((String) getField(psiClassBuilder, "srcClassFieldName")).isEqualTo(srcClassFieldName);
     }
 
 }

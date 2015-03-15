@@ -3,10 +3,9 @@ package pl.mjedynak.idea.plugins.builder.action;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GoToBuilderAdditionalActionTest {
 
@@ -23,7 +22,7 @@ public class GoToBuilderAdditionalActionTest {
         String result = action.getText();
 
         // then
-        assertThat(result, is(GoToBuilderAdditionalAction.TEXT));
+        assertThat(result).isEqualTo(GoToBuilderAdditionalAction.TEXT);
     }
 
     @Test
@@ -32,7 +31,7 @@ public class GoToBuilderAdditionalActionTest {
         Icon result = action.getIcon();
 
         // then
-        assertThat(result, is(GoToBuilderAdditionalAction.ICON));
+        assertThat(result).isEqualTo(GoToBuilderAdditionalAction.ICON);
     }
 
     @Test

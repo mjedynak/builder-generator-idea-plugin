@@ -9,8 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
@@ -33,8 +32,8 @@ public class PackageChooserDialogFactoryTest {
         PackageChooserDialog result = packageChooserDialogFactory.getPackageChooserDialog(title, project);
 
         // then
-        assertThat(result, is(packageChooserDialog));
-        assertThat(result.getTitle(), is(title));
+        assertThat(result).isEqualTo(packageChooserDialog);
+        assertThat(result.getTitle()).isEqualTo(title);
     }
 
 }

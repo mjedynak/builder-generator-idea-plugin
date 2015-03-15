@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.RETURNS_MOCKS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static pl.mjedynak.idea.plugins.builder.psi.PsiFieldsModifier.FINAL;
 
 @RunWith(MockitoJUnitRunner.class)

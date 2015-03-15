@@ -3,7 +3,6 @@ package pl.mjedynak.idea.plugins.builder.writer;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
@@ -16,13 +15,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -66,8 +61,8 @@ public class BuilderWriterComputableTest {
         // then
         verify(guiHelper).includeCurrentPlaceAsChangePlace(project);
         verify(guiHelper).positionCursor(project, psiFile, psiElement);
-        assertThat(result, is(instanceOf(PsiClass.class)));
-        assertThat((PsiClass) result, is(builderClass));
+        assertThat(result).isInstanceOf(PsiClass.class);
+        assertThat((PsiClass) result).isEqualTo(builderClass);
     }
 
     @Test
@@ -83,8 +78,8 @@ public class BuilderWriterComputableTest {
 
         // then
         verify(guiHelper).includeCurrentPlaceAsChangePlace(project);
-        assertThat(result, is(instanceOf(PsiClass.class)));
-        assertThat((PsiClass) result, is(builderClass));
+        assertThat(result).isInstanceOf(PsiClass.class);
+        assertThat((PsiClass) result).isEqualTo(builderClass);
     }
 
     @SuppressWarnings("unchecked")

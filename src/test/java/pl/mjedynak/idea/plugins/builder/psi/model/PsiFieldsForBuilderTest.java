@@ -9,8 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,8 +31,8 @@ public class PsiFieldsForBuilderTest {
 
     @Test
     public void shouldGetTwoListsOfFields() {
-        assertThat(psiFieldsForBuilder.getFieldsForSetters(), is(psiFieldsForSetters));
-        assertThat(psiFieldsForBuilder.getFieldsForConstructor(), is(psiFieldsForConstructor));
+        assertThat(psiFieldsForBuilder.getFieldsForSetters()).isEqualTo(psiFieldsForSetters);
+        assertThat(psiFieldsForBuilder.getFieldsForConstructor()).isEqualTo(psiFieldsForConstructor);
     }
 
     @Test(expected = UnsupportedOperationException.class)
