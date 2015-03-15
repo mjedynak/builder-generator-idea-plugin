@@ -3,7 +3,7 @@ package pl.mjedynak.idea.plugins.builder.action;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -104,7 +104,7 @@ public class CreateBuilderDialogTest {
     @Test
     public void shouldCreateThreeActions() {
         // given
-        int actionsCount = 3;
+        final int actionsCount = 3;
 
         // when
         Action[] actions = createBuilderDialog.createActions();

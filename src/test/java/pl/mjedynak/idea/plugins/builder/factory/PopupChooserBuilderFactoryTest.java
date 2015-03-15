@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

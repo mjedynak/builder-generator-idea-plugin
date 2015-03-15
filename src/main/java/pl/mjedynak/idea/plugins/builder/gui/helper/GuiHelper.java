@@ -7,7 +7,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
-import javax.swing.*;
+import javax.swing.Icon;
+
 
 public class GuiHelper {
 

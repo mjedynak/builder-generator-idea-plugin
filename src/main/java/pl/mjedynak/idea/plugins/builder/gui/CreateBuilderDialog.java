@@ -21,7 +21,13 @@ import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

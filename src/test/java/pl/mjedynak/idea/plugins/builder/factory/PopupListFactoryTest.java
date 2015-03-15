@@ -5,7 +5,7 @@ import com.intellij.ui.components.JBList;
 import org.junit.Test;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
-import javax.swing.*;
+import javax.swing.JList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.util.ReflectionTestUtils.getField;

@@ -1,6 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
+apply plugin: 'checkstyle'
 
 // --- properties ---
 ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 14.0'
