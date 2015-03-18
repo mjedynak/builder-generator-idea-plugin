@@ -14,8 +14,25 @@ public class BuilderFinder {
     }
 
     public PsiClass findBuilderForClass(PsiClass psiClass) {
-        String searchName = psiClass.getName() + SEARCH_PATTERN;
-        return findClass(psiClass, searchName);
+        PsiClass innerBuilderClass = tryFindInnerBuilder(psiClass);
+        if (innerBuilderClass != null) {
+            return innerBuilderClass;
+        } else {
+            String searchName = psiClass.getName() + SEARCH_PATTERN;
+            return findClass(psiClass, searchName);
+        }
+    }
+
+    private PsiClass tryFindInnerBuilder(PsiClass psiClass) {
+        PsiClass innerBuilderClass = null;
+        PsiClass[] allInnerClasses = psiClass.getAllInnerClasses();
+        for (PsiClass innerClass : allInnerClasses) {
+            if (innerClass.getName().contains(SEARCH_PATTERN)) {
+                innerBuilderClass = innerClass;
+                break;
+            }
+        }
+        return innerBuilderClass;
     }
 
     public PsiClass findClassForBuilder(PsiClass psiClass) {
