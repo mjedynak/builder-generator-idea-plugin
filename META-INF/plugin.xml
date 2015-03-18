@@ -11,9 +11,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.0.12-SNAPSHOT</version>
+    <version>1.1.0</version>
     <change-notes>
         <![CDATA[
+           version 1.1.0
+           <br/>
+           <ul>
+           <li>Added possibility to generate builder as inner class (issue #13)</li>
+           </ul>
            version 1.0.11
            <br/>
            <ul>
