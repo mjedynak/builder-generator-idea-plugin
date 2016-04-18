@@ -118,7 +118,9 @@ public class DisplayChoosersRunnableTest {
         // given
         String methodPrefix = "with";
         boolean isInner = true;
+        boolean hasButMethod = true;
         given(createBuilderDialog.isInnerBuilder()).willReturn(isInner);
+        given(createBuilderDialog.hasButMethod()).willReturn(hasButMethod);
         given(createBuilderDialog.isOK()).willReturn(true);
         given(memberChooserDialog.isOK()).willReturn(true);
         given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
@@ -137,6 +139,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner)));
+        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod)));
     }
 }

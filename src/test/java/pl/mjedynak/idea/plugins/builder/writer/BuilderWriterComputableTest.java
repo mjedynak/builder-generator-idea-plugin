@@ -102,7 +102,6 @@ public class BuilderWriterComputableTest {
         given(builderPsiClassBuilder.withPrivateConstructor()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withSetMethods(methodPrefix)).willReturn(builderPsiClassBuilder);
-        given(builderPsiClassBuilder.withButMethod()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.build()).willReturn(builderClass);
         given(builderClass.getContainingFile()).willReturn(psiFile);
         given(builderClass.getLBrace()).willReturn(psiElement);

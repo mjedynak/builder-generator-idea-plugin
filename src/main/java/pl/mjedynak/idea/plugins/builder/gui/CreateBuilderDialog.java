@@ -53,6 +53,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private JTextField targetClassNameField;
     private JTextField targetMethodPrefix;
     private JCheckBox innerBuilder;
+    private JCheckBox butMethod;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
@@ -166,14 +167,14 @@ public class CreateBuilderDialog extends DialogWrapper {
         addInnerPanelForDestinationPackageField(panel, gbConstraints);
         // Destination package
 
-        // Builder type
+        // Inner builder
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
         gbConstraints.weightx = 0;
         gbConstraints.gridy = 4;
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
-        panel.add(new JLabel("Builder type"), gbConstraints);
+        panel.add(new JLabel("Inner builder"), gbConstraints);
 
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 1;
@@ -182,7 +183,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
 
-        innerBuilder = new JCheckBox("inner");
+        innerBuilder = new JCheckBox();
         innerBuilder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -190,7 +191,27 @@ public class CreateBuilderDialog extends DialogWrapper {
             }
         });
         panel.add(innerBuilder, gbConstraints);
-        // Builder type
+        // Inner builder
+
+
+        // but method
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 5;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("'but' method"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        butMethod = new JCheckBox();
+        panel.add(butMethod, gbConstraints);
+        // but method
 
         return panel;
     }
@@ -250,6 +271,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public boolean isInnerBuilder() {
         return innerBuilder.isSelected();
+    }
+
+    public boolean hasButMethod() {
+        return butMethod.isSelected();
     }
 
     public PsiDirectory getTargetDirectory() {

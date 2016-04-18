@@ -6,6 +6,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
@@ -45,13 +46,17 @@ public class BuilderPsiClassBuilder {
         initializeFields(context);
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
         builderClass = javaDirectoryService.createClass(context.getTargetDirectory(), builderClassName);
+//        PsiModifierList modifierList = builderClass.getModifierList();
+//        modifierList.setModifierProperty("final", true);
         return this;
     }
 
     public BuilderPsiClassBuilder anInnerBuilder(BuilderContext context) {
         initializeFields(context);
         builderClass = elementFactory.createClass(builderClassName);
-        builderClass.getModifierList().setModifierProperty(STATIC_MODIFIER, true);
+        PsiModifierList modifierList = builderClass.getModifierList();
+//        modifierList.setModifierProperty("final", true);
+        modifierList.setModifierProperty(STATIC_MODIFIER, true);
         return this;
     }
 

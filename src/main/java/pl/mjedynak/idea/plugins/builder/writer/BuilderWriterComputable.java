@@ -10,14 +10,14 @@ import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-public class BuilderWriterComputable implements Computable<PsiElement> {
+class BuilderWriterComputable implements Computable<PsiElement> {
 
     private GuiHelper guiHelper = new GuiHelper();
     private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private BuilderContext context;
 
-    public BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context) {
+    BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.context = context;
     }
@@ -51,8 +51,8 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
-                .withSetMethods(context.getMethodPrefix())
-                .withButMethod();
+                .withSetMethods(context.getMethodPrefix());
+        addButMethodIfNecessary(context, builder);
         return builder.build();
     }
 
@@ -61,9 +61,15 @@ public class BuilderWriterComputable implements Computable<PsiElement> {
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
-                .withSetMethods(context.getMethodPrefix())
-                .withButMethod();
+                .withSetMethods(context.getMethodPrefix());
+        addButMethodIfNecessary(context, builder);
         return builder.build();
+    }
+
+    private void addButMethodIfNecessary(BuilderContext context, BuilderPsiClassBuilder builder) {
+        if (context.hasButMethod()) {
+            builder.withButMethod();
+        }
     }
 
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {

@@ -61,7 +61,8 @@ public class DisplayChoosersRunnable implements Runnable {
         if (memberChooserDialog.isOK()) {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
-            BuilderContext context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder());
+            BuilderContext context = new BuilderContext(
+                    project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder(), createBuilderDialog.hasButMethod());
             builderWriter.writeBuilder(context);
         }
     }
