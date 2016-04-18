@@ -24,6 +24,7 @@ public class BuilderPsiClassBuilder {
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
     static final String STATIC_MODIFIER = "static";
+    static final String FINAL_MODIFIER = "final";
 
     private PsiHelper psiHelper = new PsiHelper();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
@@ -46,8 +47,8 @@ public class BuilderPsiClassBuilder {
         initializeFields(context);
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
         builderClass = javaDirectoryService.createClass(context.getTargetDirectory(), builderClassName);
-//        PsiModifierList modifierList = builderClass.getModifierList();
-//        modifierList.setModifierProperty("final", true);
+        PsiModifierList modifierList = builderClass.getModifierList();
+        modifierList.setModifierProperty(FINAL_MODIFIER, true);
         return this;
     }
 
@@ -55,7 +56,7 @@ public class BuilderPsiClassBuilder {
         initializeFields(context);
         builderClass = elementFactory.createClass(builderClassName);
         PsiModifierList modifierList = builderClass.getModifierList();
-//        modifierList.setModifierProperty("final", true);
+        modifierList.setModifierProperty(FINAL_MODIFIER, true);
         modifierList.setModifierProperty(STATIC_MODIFIER, true);
         return this;
     }

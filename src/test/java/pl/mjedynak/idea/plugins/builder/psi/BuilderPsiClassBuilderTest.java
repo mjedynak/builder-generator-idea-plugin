@@ -28,9 +28,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.FINAL_MODIFIER;
 import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.STATIC_MODIFIER;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,6 +52,7 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiField srcClassNameField;
     @Mock private PsiMethod psiMethod;
+    @Mock private PsiModifierList psiModifierList;
 
     private BuilderContext context;
     private List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();
@@ -72,6 +73,8 @@ public class BuilderPsiClassBuilderTest {
         given(srcClass.getName()).willReturn(srcClassName);
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
+        given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
+        given(builderClass.getModifierList()).willReturn(psiModifierList);
         context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false);
         mockCodeStyleManager();
     }
@@ -90,21 +93,18 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         assertFieldsAreSet(result);
+        verify(psiModifierList).setModifierProperty(FINAL_MODIFIER, true);
     }
 
     @Test
     public void shouldSetPassedFieldsAndCreateRequiredOnesForInnerBuilder() {
-        // given
-        PsiModifierList psiModifierList = mock(PsiModifierList.class);
-        given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
-        given(builderClass.getModifierList()).willReturn(psiModifierList);
-
         // when
         BuilderPsiClassBuilder result = psiClassBuilder.anInnerBuilder(context);
 
         // then
         assertFieldsAreSet(result);
         verify(psiModifierList).setModifierProperty(STATIC_MODIFIER, true);
+        verify(psiModifierList).setModifierProperty(FINAL_MODIFIER, true);
     }
 
     @Test
@@ -131,7 +131,6 @@ public class BuilderPsiClassBuilderTest {
         // then
         verify(modifierList).setModifierProperty("private", true);
         verify(builderClass).add(constructor);
-        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -146,7 +145,6 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         verify(builderClass).add(method);
-        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -163,7 +161,6 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         verify(builderClass).add(method);
-        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -187,7 +184,6 @@ public class BuilderPsiClassBuilderTest {
         // then
         verify(builderClass).add(methodForFieldForSetter);
         verify(builderClass).add(methodForFieldForConstructor);
-        verifyNoMoreInteractions(builderClass);
     }
 
     @Test
@@ -224,7 +220,6 @@ public class BuilderPsiClassBuilderTest {
 
         // then
         verify(builderClass).add(method);
-        verifyNoMoreInteractions(builderClass);
         assertThat(result).isNotNull();
     }
 
