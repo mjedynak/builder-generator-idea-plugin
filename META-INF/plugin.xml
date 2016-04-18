@@ -11,9 +11,16 @@
           </ul>
         ]]>
     </description>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <change-notes>
         <![CDATA[
+           version 1.1.1
+           <br/>
+           <ul>
+           <li>'but' method is now optional and disabled by default (issue #23)</li>
+           <li>Generated builder class is final (issue #24)</li>
+           <li>Added possibility to find inner builder</li>
+           </ul>
            version 1.1.0
            <br/>
            <ul>
