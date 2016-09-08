@@ -11,6 +11,7 @@ public class CreateBuilderDialogFactory {
 
     static final String BUILDER_SUFFIX = "Builder";
     static final String METHOD_PREFIX = "with";
+
     private static final String DIALOG_NAME = "CreateBuilder";
     private PsiHelper psiHelper;
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;

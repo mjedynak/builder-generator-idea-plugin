@@ -22,6 +22,12 @@ public class PsiFieldsModifier {
         }
     }
 
+    public void modifyFieldsForInnerClass(List<PsiField> allFileds, PsiClass innerBuilderClass) {
+        for (PsiField field : allFileds) {
+            removeModifiers(field, innerBuilderClass);
+        }
+    }
+
     private void removeModifiers(PsiField psiField, PsiClass builderClass) {
         PsiElement copy = psiField.copy();
         removeAnnotationsFromElement(copy);

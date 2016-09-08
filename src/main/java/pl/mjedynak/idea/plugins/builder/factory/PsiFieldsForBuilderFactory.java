@@ -21,9 +21,11 @@ public class PsiFieldsForBuilderFactory {
     public PsiFieldsForBuilder createPsiFieldsForBuilder(List<PsiElementClassMember> psiElementClassMembers, PsiClass psiClass) {
         List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();
         List<PsiField> psiFieldsForConstructor = new ArrayList<PsiField>();
+        List<PsiField> allSelectedPsiFields = new ArrayList<PsiField>();
         for (PsiElementClassMember psiElementClassMember : psiElementClassMembers) {
             PsiElement psiElement = psiElementClassMember.getPsiElement();
             if (psiElement instanceof PsiField) {
+                allSelectedPsiFields.add((PsiField) psiElement);
                 if (psiFieldVerifier.isSetInSetterMethod((PsiField) psiElement, psiClass)) {
                     psiFieldsForSetters.add((PsiField) psiElement);
                 } else if (psiFieldVerifier.isSetInConstructor((PsiField) psiElement, psiClass)) {
@@ -31,6 +33,6 @@ public class PsiFieldsForBuilderFactory {
                 }
             }
         }
-        return new PsiFieldsForBuilder(psiFieldsForSetters, psiFieldsForConstructor);
+        return new PsiFieldsForBuilder(psiFieldsForSetters, psiFieldsForConstructor, allSelectedPsiFields);
     }
 }

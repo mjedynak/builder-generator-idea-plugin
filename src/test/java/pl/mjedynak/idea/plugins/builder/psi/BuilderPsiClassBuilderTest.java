@@ -36,23 +36,40 @@ import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.STATIC
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderTest {
 
-    @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
-    @Mock private CodeStyleSettings settings;
-    @Mock private PsiHelper psiHelper;
-    @Mock private ButMethodCreator butMethodCreator;
-    @Mock private MethodCreator methodCreator;
-    @Mock private PsiFieldsModifier psiFieldsModifier;
-    @Mock private Project project;
-    @Mock private PsiDirectory targetDirectory;
-    @Mock private PsiClass srcClass;
-    @Mock private JavaDirectoryService javaDirectoryService;
-    @Mock private PsiClass builderClass;
-    @Mock private JavaPsiFacade javaPsiFacade;
-    @Mock private PsiElementFactory elementFactory;
-    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
-    @Mock private PsiField srcClassNameField;
-    @Mock private PsiMethod psiMethod;
-    @Mock private PsiModifierList psiModifierList;
+    @InjectMocks
+    private BuilderPsiClassBuilder psiClassBuilder;
+    @Mock
+    private CodeStyleSettings settings;
+    @Mock
+    private PsiHelper psiHelper;
+    @Mock
+    private ButMethodCreator butMethodCreator;
+    @Mock
+    private MethodCreator methodCreator;
+    @Mock
+    private PsiFieldsModifier psiFieldsModifier;
+    @Mock
+    private Project project;
+    @Mock
+    private PsiDirectory targetDirectory;
+    @Mock
+    private PsiClass srcClass;
+    @Mock
+    private JavaDirectoryService javaDirectoryService;
+    @Mock
+    private PsiClass builderClass;
+    @Mock
+    private JavaPsiFacade javaPsiFacade;
+    @Mock
+    private PsiElementFactory elementFactory;
+    @Mock
+    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock
+    private PsiField srcClassNameField;
+    @Mock
+    private PsiMethod psiMethod;
+    @Mock
+    private PsiModifierList psiModifierList;
 
     private BuilderContext context;
     private List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();

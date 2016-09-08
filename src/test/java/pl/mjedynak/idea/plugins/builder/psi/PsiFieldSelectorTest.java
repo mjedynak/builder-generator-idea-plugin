@@ -22,11 +22,16 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class PsiFieldSelectorTest {
 
-    @InjectMocks private PsiFieldSelector psiFieldSelector;
-    @Mock private PsiElementClassMemberFactory psiElementClassMemberFactory;
-    @Mock private PsiFieldVerifier psiFieldVerifier;
-    @Mock private PsiClass psiClass;
-    @Mock private PsiField psiField;
+    @InjectMocks
+    private PsiFieldSelector psiFieldSelector;
+    @Mock
+    private PsiElementClassMemberFactory psiElementClassMemberFactory;
+    @Mock
+    private PsiFieldVerifier psiFieldVerifier;
+    @Mock
+    private PsiClass psiClass;
+    @Mock
+    private PsiField psiField;
 
     @Before
     public void setUp() {
@@ -42,7 +47,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(true);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(1);
@@ -54,7 +59,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(true);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(1);
@@ -67,7 +72,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(0);
