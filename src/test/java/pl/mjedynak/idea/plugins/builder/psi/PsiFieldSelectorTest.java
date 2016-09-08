@@ -78,4 +78,17 @@ public class PsiFieldSelectorTest {
         assertThat(result).hasSize(0);
     }
 
+    @Test
+    public void shouldSelectAllFieldsIfInnerBuilder() {
+        // given
+        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
+        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, true);
+
+        // then
+        assertThat(result).hasSize(1);
+    }
+
 }

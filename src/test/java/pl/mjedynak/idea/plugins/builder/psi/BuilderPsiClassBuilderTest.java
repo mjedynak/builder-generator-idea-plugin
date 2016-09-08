@@ -74,6 +74,7 @@ public class BuilderPsiClassBuilderTest {
     private BuilderContext context;
     private List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();
     private List<PsiField> psiFieldsForConstructor = new ArrayList<PsiField>();
+    private List<PsiField> allSelectedPsiFields = new ArrayList<PsiField>();
 
     private String builderClassName = "BuilderClassName";
     private String srcClassName = "ClassName";
@@ -90,6 +91,7 @@ public class BuilderPsiClassBuilderTest {
         given(srcClass.getName()).willReturn(srcClassName);
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
+        given(psiFieldsForBuilder.getAllSelectedFields()).willReturn(allSelectedPsiFields);
         given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
         given(builderClass.getModifierList()).willReturn(psiModifierList);
         context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false);
@@ -204,6 +206,29 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
+    public void shouldAddAllSelectedFieldAsSetterInInnerBuilder() {
+        // giver
+        PsiField selectedField = mock(PsiField.class);
+        allSelectedPsiFields.add(selectedField);
+
+        String methodPrefix = "with";
+
+        PsiMethod setterMethod = mock(PsiMethod.class);
+        given(methodCreator.createMethod(selectedField, methodPrefix)).willReturn(setterMethod);
+
+        BuilderPsiClassBuilder builder = psiClassBuilder.anInnerBuilder(context);
+        setField(builder, "methodCreator", methodCreator);
+
+        given(builderClass.hasModifierProperty("static")).willReturn(true);
+
+        // when
+        builder.withSetMethods(methodPrefix);
+
+        // then
+        verify(builderClass).add(setterMethod);
+    }
+
+    @Test
     public void shouldAddButMethod() {
         // given
         given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass)).willReturn(psiMethod);
@@ -238,6 +263,39 @@ public class BuilderPsiClassBuilderTest {
         // then
         verify(builderClass).add(method);
         assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void setterShouldHavePriorityOverField() {
+        // given
+        PsiField nameField = mock(PsiField.class);
+        PsiField ageField = mock(PsiField.class);
+        given(nameField.getName()).willReturn("name");
+        given(ageField.getName()).willReturn("age");
+
+        psiFieldsForConstructor.clear();
+        psiFieldsForSetters.clear();
+        allSelectedPsiFields.clear();
+        psiFieldsForSetters.add(nameField);
+        allSelectedPsiFields.add(nameField);
+        allSelectedPsiFields.add(ageField);
+
+        PsiMethod method = mock(PsiMethod.class);
+        String expectedCode = "public " + srcClassName + " build() { "
+                + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "();"
+                + srcClassFieldName + ".setName(name);"
+                + srcClassFieldName + ".age=this.age;return " + srcClassFieldName + ";}";
+        given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
+
+        given(builderClass.hasModifierProperty("static")).willReturn(true);
+
+        // when
+        PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
+
+        // then
+        verify(builderClass).add(method);
+        assertThat(result).isNotNull();
+
     }
 
     @SuppressWarnings("unchecked")

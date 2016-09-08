@@ -19,6 +19,7 @@ public class PsiFieldsForBuilderTest {
 
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
+    private List<PsiField> allSelectedPsiFields;
 
     @Before
     public void setUp() {
@@ -26,13 +27,17 @@ public class PsiFieldsForBuilderTest {
         psiFieldsForSetters.add(mock(PsiField.class));
         psiFieldsForConstructor = new ArrayList<PsiField>();
         psiFieldsForConstructor.add(mock(PsiField.class));
-        psiFieldsForBuilder = new PsiFieldsForBuilder(psiFieldsForSetters, psiFieldsForConstructor);
+        allSelectedPsiFields = new ArrayList<PsiField>();
+        allSelectedPsiFields.add(mock(PsiField.class));
+        allSelectedPsiFields.add(mock(PsiField.class));
+        psiFieldsForBuilder = new PsiFieldsForBuilder(psiFieldsForSetters, psiFieldsForConstructor, allSelectedPsiFields);
     }
 
     @Test
-    public void shouldGetTwoListsOfFields() {
+    public void shouldGetThreeListsOfFields() {
         assertThat(psiFieldsForBuilder.getFieldsForSetters()).isEqualTo(psiFieldsForSetters);
         assertThat(psiFieldsForBuilder.getFieldsForConstructor()).isEqualTo(psiFieldsForConstructor);
+        assertThat(psiFieldsForBuilder.getAllSelectedFields()).isEqualTo(allSelectedPsiFields);
     }
 
     @Test(expected = UnsupportedOperationException.class)
