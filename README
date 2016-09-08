@@ -6,3 +6,4 @@ Build instructions:
 - edit build.gradle and change values of 'ideaInstallationPath' and 'ideaJdk' to be in sync with your environment
 - invoke 'gradle build' from command line to build
 - invoke 'gradle idea' from command line to generate IDEA specific files - provides possibility to be opened as IDEA project.
+- in IDEA, select 'File' - 'Open' - ${YOUR_DIR}/Builder-Generator.ipr, donot use 'File' - 'Import' !!!!
