@@ -80,7 +80,11 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withFields() {
-        psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        if (isInnerBuilder(builderClass)) {
+            psiFieldsModifier.modifyFieldsForInnerClass(allSelectedPsiFields, builderClass);
+        } else {
+            psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        }
         return this;
     }
 
