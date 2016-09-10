@@ -22,16 +22,11 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class PsiFieldSelectorTest {
 
-    @InjectMocks
-    private PsiFieldSelector psiFieldSelector;
-    @Mock
-    private PsiElementClassMemberFactory psiElementClassMemberFactory;
-    @Mock
-    private PsiFieldVerifier psiFieldVerifier;
-    @Mock
-    private PsiClass psiClass;
-    @Mock
-    private PsiField psiField;
+    @InjectMocks private PsiFieldSelector psiFieldSelector;
+    @Mock private PsiElementClassMemberFactory psiElementClassMemberFactory;
+    @Mock private PsiFieldVerifier psiFieldVerifier;
+    @Mock private PsiClass psiClass;
+    @Mock private PsiField psiField;
 
     @Before
     public void setUp() {
