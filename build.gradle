@@ -6,8 +6,6 @@ apply plugin: 'checkstyle'
 // --- properties ---
 ext.ideaInstallationPath = 'c:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 2016.1.1'
 ext.ideaJdk = 'IntelliJ IDEA Community Edition IC-145.597.3'
-//ext.ideaInstallationPath = '/Applications/IntelliJ IDEA.app/Contents'
-//ext.ideaJdk = 'IntelliJ IDEA IU-162.1812.17'
 sourceCompatibility = 1.6
 // --- properties ---
 
