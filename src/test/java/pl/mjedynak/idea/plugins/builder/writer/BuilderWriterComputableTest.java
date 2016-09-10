@@ -27,27 +27,17 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderWriterComputableTest {
 
-    @InjectMocks
-    private BuilderWriterComputable builderWriterComputable;
+    @InjectMocks private BuilderWriterComputable builderWriterComputable;
 
-    @Mock
-    private PsiHelper psiHelper;
-    @Mock
-    private GuiHelper guiHelper;
-    @Mock
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-    @Mock
-    private Project project;
-    @Mock
-    private PsiClass srcClass;
-    @Mock
-    private PsiClass builderClass;
-    @Mock
-    private PsiFile psiFile;
-    @Mock
-    private PsiElement psiElement;
-    @Mock
-    private BuilderContext context;
+    @Mock private PsiHelper psiHelper;
+    @Mock private GuiHelper guiHelper;
+    @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
+    @Mock private Project project;
+    @Mock private PsiClass srcClass;
+    @Mock private PsiClass builderClass;
+    @Mock private PsiFile psiFile;
+    @Mock private PsiElement psiElement;
+    @Mock private BuilderContext context;
     private String methodPrefix = "with";
 
     @Before
