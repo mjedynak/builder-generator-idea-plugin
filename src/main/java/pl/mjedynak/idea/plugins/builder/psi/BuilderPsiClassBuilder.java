@@ -154,6 +154,7 @@ public class BuilderPsiClassBuilder {
         if (isInnerBuilder(builderClass)) {
             Set<PsiField> fieldsSetViaAssignment = new HashSet<PsiField>(allSelectedPsiFields);
             fieldsSetViaAssignment.removeAll(psiFieldsForSetters);
+            fieldsSetViaAssignment.removeAll(psiFieldsForConstructor);
             appendAssignments(buildMethodText, fieldsSetViaAssignment);
         }
     }

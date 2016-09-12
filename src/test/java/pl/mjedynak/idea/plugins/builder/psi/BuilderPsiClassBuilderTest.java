@@ -36,23 +36,40 @@ import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.STATIC
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderPsiClassBuilderTest {
 
-    @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
-    @Mock private CodeStyleSettings settings;
-    @Mock private PsiHelper psiHelper;
-    @Mock private ButMethodCreator butMethodCreator;
-    @Mock private MethodCreator methodCreator;
-    @Mock private PsiFieldsModifier psiFieldsModifier;
-    @Mock private Project project;
-    @Mock private PsiDirectory targetDirectory;
-    @Mock private PsiClass srcClass;
-    @Mock private JavaDirectoryService javaDirectoryService;
-    @Mock private PsiClass builderClass;
-    @Mock private JavaPsiFacade javaPsiFacade;
-    @Mock private PsiElementFactory elementFactory;
-    @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
-    @Mock private PsiField srcClassNameField;
-    @Mock private PsiMethod psiMethod;
-    @Mock private PsiModifierList psiModifierList;
+    @InjectMocks
+    private BuilderPsiClassBuilder psiClassBuilder;
+    @Mock
+    private CodeStyleSettings settings;
+    @Mock
+    private PsiHelper psiHelper;
+    @Mock
+    private ButMethodCreator butMethodCreator;
+    @Mock
+    private MethodCreator methodCreator;
+    @Mock
+    private PsiFieldsModifier psiFieldsModifier;
+    @Mock
+    private Project project;
+    @Mock
+    private PsiDirectory targetDirectory;
+    @Mock
+    private PsiClass srcClass;
+    @Mock
+    private JavaDirectoryService javaDirectoryService;
+    @Mock
+    private PsiClass builderClass;
+    @Mock
+    private JavaPsiFacade javaPsiFacade;
+    @Mock
+    private PsiElementFactory elementFactory;
+    @Mock
+    private PsiFieldsForBuilder psiFieldsForBuilder;
+    @Mock
+    private PsiField srcClassNameField;
+    @Mock
+    private PsiMethod psiMethod;
+    @Mock
+    private PsiModifierList psiModifierList;
 
     private BuilderContext context;
     private List<PsiField> psiFieldsForSetters = new ArrayList<PsiField>();
@@ -246,6 +263,37 @@ public class BuilderPsiClassBuilderTest {
         // then
         verify(builderClass).add(method);
         assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void constructorShouldHavePriorityOverSetter() {
+        // given
+        PsiField nameField = mock(PsiField.class);
+        PsiField ageField = mock(PsiField.class);
+        given(nameField.getName()).willReturn("name");
+        given(ageField.getName()).willReturn("age");
+
+        psiFieldsForConstructor.clear();
+        psiFieldsForSetters.clear();
+        allSelectedPsiFields.clear();
+        psiFieldsForConstructor.add(nameField);
+        psiFieldsForSetters.add(ageField);
+
+        PsiMethod method = mock(PsiMethod.class);
+        String expectedCode = "public " + srcClassName + " build() { "
+                + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(name);"
+                + srcClassFieldName + ".setAge(age);return " + srcClassFieldName + ";}";
+        given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
+
+        given(builderClass.hasModifierProperty("static")).willReturn(true);
+
+        // when
+        PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
+
+        // then
+        verify(builderClass).add(method);
+        assertThat(result).isNotNull();
+
     }
 
     @Test
