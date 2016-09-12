@@ -159,8 +159,8 @@ public class BuilderPsiClassBuilder {
         }
     }
 
-    private void appendSetMethods(StringBuilder buildMethodText, Collection<PsiField> fieldsBeSetViaSetter) {
-        for (PsiField psiFieldsForSetter : fieldsBeSetViaSetter) {
+    private void appendSetMethods(StringBuilder buildMethodText, Collection<PsiField> fieldsToBeSetViaSetter) {
+        for (PsiField psiFieldsForSetter : fieldsToBeSetViaSetter) {
             String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
             String fieldName = psiFieldsForSetter.getName();
             String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
