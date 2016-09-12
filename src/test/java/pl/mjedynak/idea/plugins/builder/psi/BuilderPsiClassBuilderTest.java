@@ -256,9 +256,6 @@ public class BuilderPsiClassBuilderTest {
         given(nameField.getName()).willReturn("name");
         given(ageField.getName()).willReturn("age");
 
-        psiFieldsForConstructor.clear();
-        psiFieldsForSetters.clear();
-        allSelectedPsiFields.clear();
         psiFieldsForConstructor.add(nameField);
         psiFieldsForSetters.add(ageField);
 
@@ -287,9 +284,6 @@ public class BuilderPsiClassBuilderTest {
         given(nameField.getName()).willReturn("name");
         given(ageField.getName()).willReturn("age");
 
-        psiFieldsForConstructor.clear();
-        psiFieldsForSetters.clear();
-        allSelectedPsiFields.clear();
         psiFieldsForSetters.add(nameField);
         allSelectedPsiFields.add(nameField);
         allSelectedPsiFields.add(ageField);
