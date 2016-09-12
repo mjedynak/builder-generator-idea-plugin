@@ -128,7 +128,7 @@ public class DisplayChoosersRunnableTest {
         given(createBuilderDialog.getMethodPrefix()).willReturn(methodPrefix);
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor)).willReturn(selectedFields);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false)).willReturn(selectedFields);
         given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
 
         // when

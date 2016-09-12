@@ -11,8 +11,11 @@ import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
@@ -37,6 +40,7 @@ public class BuilderPsiClassBuilder {
 
     private List<PsiField> psiFieldsForSetters = null;
     private List<PsiField> psiFieldsForConstructor = null;
+    private List<PsiField> allSelectedPsiFields = null;
 
     private PsiClass builderClass = null;
     private PsiElementFactory elementFactory = null;
@@ -70,12 +74,17 @@ public class BuilderPsiClassBuilder {
         srcClassFieldName = StringUtils.uncapitalize(srcClassName);
         psiFieldsForSetters = context.getPsiFieldsForBuilder().getFieldsForSetters();
         psiFieldsForConstructor = context.getPsiFieldsForBuilder().getFieldsForConstructor();
+        allSelectedPsiFields = context.getPsiFieldsForBuilder().getAllSelectedFields();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
     }
 
     public BuilderPsiClassBuilder withFields() {
-        psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        if (isInnerBuilder(builderClass)) {
+            psiFieldsModifier.modifyFieldsForInnerClass(allSelectedPsiFields, builderClass);
+        } else {
+            psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        }
         return this;
     }
 
@@ -95,13 +104,23 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withSetMethods(String methodPrefix) {
-        for (PsiField psiFieldForSetter : psiFieldsForSetters) {
-            createAndAddMethod(psiFieldForSetter, methodPrefix);
-        }
-        for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
-            createAndAddMethod(psiFieldForConstructor, methodPrefix);
+        if (isInnerBuilder(builderClass)) {
+            for (PsiField psiFieldForAssignment : allSelectedPsiFields) {
+                createAndAddMethod(psiFieldForAssignment, methodPrefix);
+            }
+        } else {
+            for (PsiField psiFieldForSetter : psiFieldsForSetters) {
+                createAndAddMethod(psiFieldForSetter, methodPrefix);
+            }
+            for (PsiField psiFieldForConstructor : psiFieldsForConstructor) {
+                createAndAddMethod(psiFieldForConstructor, methodPrefix);
+            }
         }
         return this;
+    }
+
+    private boolean isInnerBuilder(PsiClass aClass) {
+        return aClass.hasModifierProperty("static");
     }
 
     public BuilderPsiClassBuilder withButMethod() {
@@ -117,7 +136,7 @@ public class BuilderPsiClassBuilder {
     public PsiClass build() {
         StringBuilder buildMethodText = new StringBuilder();
         appendConstructor(buildMethodText);
-        appendSetMethods(buildMethodText);
+        appendSetMethodsOrAssignments(buildMethodText);
         buildMethodText.append("return ").append(srcClassFieldName).append(";}");
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
         builderClass.add(buildMethod);
@@ -130,13 +149,31 @@ public class BuilderPsiClassBuilder {
                 .append(srcClassFieldName).append(" = new ").append(srcClassName).append("(").append(constructorParameters).append(");");
     }
 
-    private void appendSetMethods(StringBuilder buildMethodText) {
-        for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
+    private void appendSetMethodsOrAssignments(StringBuilder buildMethodText) {
+        appendSetMethods(buildMethodText, psiFieldsForSetters);
+        if (isInnerBuilder(builderClass)) {
+            Set<PsiField> fieldsSetViaAssignment = new HashSet<PsiField>(allSelectedPsiFields);
+            fieldsSetViaAssignment.removeAll(psiFieldsForSetters);
+            fieldsSetViaAssignment.removeAll(psiFieldsForConstructor);
+            appendAssignments(buildMethodText, fieldsSetViaAssignment);
+        }
+    }
+
+    private void appendSetMethods(StringBuilder buildMethodText, Collection<PsiField> fieldsBeSetViaSetter) {
+        for (PsiField psiFieldsForSetter : fieldsBeSetViaSetter) {
             String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
             String fieldName = psiFieldsForSetter.getName();
             String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
             String fieldNameUppercase = StringUtils.capitalize(fieldNameWithoutPrefix);
             buildMethodText.append(srcClassFieldName).append(".set").append(fieldNameUppercase).append("(").append(fieldName).append(");");
+        }
+    }
+
+    private void appendAssignments(StringBuilder buildMethodText, Collection<PsiField> fieldsSetViaAssignment) {
+        for (PsiField field : fieldsSetViaAssignment) {
+            buildMethodText.append(srcClassFieldName).append(".")
+                    .append(field.getName()).append("=").append("this.")
+                    .append(field.getName()).append(";");
         }
     }
 

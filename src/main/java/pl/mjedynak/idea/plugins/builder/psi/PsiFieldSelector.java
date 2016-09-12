@@ -23,13 +23,14 @@ public class PsiFieldSelector {
         this.psiFieldVerifier = psiFieldVerifier;
     }
 
-    public List<PsiElementClassMember> selectFieldsToIncludeInBuilder(final PsiClass psiClass) {
+    public List<PsiElementClassMember> selectFieldsToIncludeInBuilder(final PsiClass psiClass, final boolean innerBuilder) {
         List<PsiElementClassMember> result = new ArrayList<PsiElementClassMember>();
+
         List<PsiField> psiFields = Arrays.asList(psiClass.getAllFields());
         Iterable<PsiField> filtered = filter(psiFields, new Predicate<PsiField>() {
             @Override
             public boolean apply(PsiField psiField) {
-                return isAppropriate(psiClass, psiField);
+                return innerBuilder || isAppropriate(psiClass, psiField);
             }
         });
 
@@ -41,7 +42,6 @@ public class PsiFieldSelector {
 
     private boolean isAppropriate(PsiClass psiClass, PsiField psiField) {
         return psiFieldVerifier.isSetInSetterMethod(psiField, psiClass) || psiFieldVerifier.isSetInConstructor(psiField, psiClass);
-
     }
 
 

@@ -49,7 +49,8 @@ public class DisplayChoosersRunnable implements Runnable {
             PsiDirectory targetDirectory = createBuilderDialog.getTargetDirectory();
             String className = createBuilderDialog.getClassName();
             String methodPrefix = createBuilderDialog.getMethodPrefix();
-            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor);
+            boolean innerBuilder = createBuilderDialog.isInnerBuilder();
+            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder);
             MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
             memberChooserDialog.show();
             writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog);
@@ -75,8 +76,8 @@ public class DisplayChoosersRunnable implements Runnable {
         return dialog;
     }
 
-    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz) {
-        return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz);
+    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder) {
+        return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz, innerBuilder);
     }
 
     public void setPsiClassFromEditor(PsiClass psiClassFromEditor) {

@@ -42,7 +42,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(true);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(1);
@@ -54,7 +54,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(true);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(1);
@@ -67,10 +67,23 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass);
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
 
         // then
         assertThat(result).hasSize(0);
+    }
+
+    @Test
+    public void shouldSelectAllFieldsIfInnerBuilder() {
+        // given
+        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
+        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, true);
+
+        // then
+        assertThat(result).hasSize(1);
     }
 
 }
