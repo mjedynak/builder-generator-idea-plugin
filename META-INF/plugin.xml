@@ -11,9 +11,15 @@
           </ul>
         ]]>
     </description>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.2</version>
     <change-notes>
         <![CDATA[
+           version 1.1.2
+           <br/>
+           <ul>
+           <li>Inner builder is able to assign fields without constructor or setter <a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/11">(issue #11)</a>
+           (contribution by <a href="https://github.com/blindpirate">blindpirate</a>)</li>
+           </ul>
            version 1.1.1
            <br/>
            <ul>
