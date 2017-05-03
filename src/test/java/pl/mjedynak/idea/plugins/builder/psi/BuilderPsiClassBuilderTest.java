@@ -50,7 +50,6 @@ public class BuilderPsiClassBuilderTest {
     @Mock private JavaPsiFacade javaPsiFacade;
     @Mock private PsiElementFactory elementFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
-    @Mock private PsiField srcClassNameField;
     @Mock private PsiMethod psiMethod;
     @Mock private PsiModifierList psiModifierList;
 

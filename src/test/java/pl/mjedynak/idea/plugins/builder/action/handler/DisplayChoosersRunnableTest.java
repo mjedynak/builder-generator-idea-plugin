@@ -1,7 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
-import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -16,13 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
-import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
-import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
+import pl.mjedynak.idea.plugins.builder.factory.*;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
-import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
@@ -47,8 +41,6 @@ public class DisplayChoosersRunnableTest {
     @Mock private PsiHelper psiHelper;
     @Mock private PsiManagerFactory psiManagerFactory;
     @Mock private CreateBuilderDialogFactory createBuilderDialogFactory;
-    @Mock private GuiHelper guiHelper;
-    @Mock private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
     @Mock private PsiFieldSelector psiFieldSelector;
     @Mock private MemberChooserDialogFactory memberChooserDialogFactory;
     @Mock private BuilderWriter builderWriter;
@@ -63,7 +55,7 @@ public class DisplayChoosersRunnableTest {
 
     private String className = "className";
     private PsiField[] allFields = {};
-    private List<PsiElementClassMember> selectedFields = new ArrayList<PsiElementClassMember>();
+    private List<PsiElementClassMember> selectedFields = new ArrayList<>();
 
     @Before
     public void setUp() {

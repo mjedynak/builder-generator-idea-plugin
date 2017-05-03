@@ -1,4 +1,4 @@
-<idea-plugin version="2" url="https://github.com/mjedynak/Builder-Generator">
+<idea-plugin url="https://github.com/mjedynak/Builder-Generator">
     <name>Builder Generator</name>
     <description>
         <![CDATA[
@@ -11,9 +11,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <change-notes>
         <![CDATA[
+           version 1.1.3
+           <br/>
+           <ul>
+           <li>Fix incompatibility with IntelliJ 2017.1 <a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/33">(issue #33)</li>
+           </ul>
            version 1.1.2
            <br/>
            <ul>
@@ -96,7 +101,7 @@
 
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="129.713"/>
+    <idea-version since-build="171.4249.39"/>
 
     <application-components>
     </application-components>

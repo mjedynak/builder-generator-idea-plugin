@@ -1,7 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
-import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.project.Project;
 import org.junit.Test;
 import org.junit.runner.RunWith;

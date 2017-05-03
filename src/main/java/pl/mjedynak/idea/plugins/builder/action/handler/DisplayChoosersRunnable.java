@@ -1,13 +1,13 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
-import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooser;
 import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;

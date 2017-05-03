@@ -1,12 +1,12 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
-apply plugin: 'checkstyle'
+//apply plugin: 'checkstyle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'c:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 2016.2'
-ext.ideaJdk = 'IntelliJ IDEA Community Edition IC-162.1812.17'
-sourceCompatibility = 1.6
+ext.ideaInstallationPath = 'C:/Users/Michal/AppData/Local/JetBrains/Toolbox/apps/IDEA-C/ch-0/171.4249.39'
+ext.ideaJdk = 'IntelliJ IDEA Community Edition IC-171.4249.39'
+sourceCompatibility = 1.8
 // --- properties ---
 
 // workaround for http://issues.gradle.org/browse/GRADLE-2538

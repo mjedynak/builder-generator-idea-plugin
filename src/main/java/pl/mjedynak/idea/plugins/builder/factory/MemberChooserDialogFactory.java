@@ -1,7 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.codeInsight.generation.PsiElementClassMember;
-import com.intellij.ide.util.MemberChooser;
 import com.intellij.openapi.project.Project;
 
 import java.util.List;
@@ -22,4 +21,6 @@ public class MemberChooserDialogFactory {
     MemberChooser<PsiElementClassMember> createNewInstance(Project project, PsiElementClassMember[] psiElementClassMembers) {
         return new MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
     }
+
+
 }
