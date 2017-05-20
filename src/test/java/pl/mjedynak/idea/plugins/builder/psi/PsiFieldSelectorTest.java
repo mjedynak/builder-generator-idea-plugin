@@ -86,4 +86,18 @@ public class PsiFieldSelectorTest {
         assertThat(result).hasSize(1);
     }
 
+    @Test
+    public void shouldNotSelectSerialVersionUIDFieldIfInnerBuilder() {
+        // given
+        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
+        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
+        given(psiField.getName()).willReturn("serialVersionUID");
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, true);
+
+        // then
+        assertThat(result).hasSize(0);
+    }
+
 }

@@ -1,6 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.google.common.base.Predicate;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
@@ -8,10 +7,10 @@ import pl.mjedynak.idea.plugins.builder.factory.PsiElementClassMemberFactory;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.filter;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
 public class PsiFieldSelector {
 
@@ -24,15 +23,10 @@ public class PsiFieldSelector {
     }
 
     public List<PsiElementClassMember> selectFieldsToIncludeInBuilder(final PsiClass psiClass, final boolean innerBuilder) {
-        List<PsiElementClassMember> result = new ArrayList<PsiElementClassMember>();
+        List<PsiElementClassMember> result = new ArrayList<>();
 
-        List<PsiField> psiFields = Arrays.asList(psiClass.getAllFields());
-        Iterable<PsiField> filtered = filter(psiFields, new Predicate<PsiField>() {
-            @Override
-            public boolean apply(PsiField psiField) {
-                return innerBuilder || isAppropriate(psiClass, psiField);
-            }
-        });
+        List<PsiField> psiFields = stream(psiClass.getAllFields()).filter(psiField -> !"serialVersionUID".equals(psiField.getName())).collect(toList());
+        Iterable<PsiField> filtered = psiFields.stream().filter(psiField -> innerBuilder || isAppropriate(psiClass, psiField)).collect(toList());
 
         for (PsiField psiField : filtered) {
             result.add(psiElementClassMemberFactory.createPsiElementClassMember(psiField));
