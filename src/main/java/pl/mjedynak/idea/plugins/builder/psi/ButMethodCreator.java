@@ -4,6 +4,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
+import org.apache.commons.lang3.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 public class ButMethodCreator {
@@ -15,21 +16,21 @@ public class ButMethodCreator {
         this.elementFactory = elementFactory;
     }
 
-    public PsiMethod butMethod(String builderClassName, PsiClass builderClass, PsiClass srcClass) {
+    public PsiMethod butMethod(String builderClassName, PsiClass builderClass, PsiClass srcClass, String srcClassFieldName, boolean useSingleField) {
         PsiMethod[] methods = builderClass.getMethods();
         StringBuilder text = new StringBuilder("public " + builderClassName + " but() { return ");
         for (PsiMethod method : methods) {
             PsiParameterList parameterList = method.getParameterList();
             if (methodIsNotConstructor(builderClassName, method)) {
-                appendMethod(text, method, parameterList);
+                appendMethod(text, method, parameterList, srcClassFieldName, useSingleField);
             }
         }
         deleteLastDot(text);
-        text.append(";}");
+        text.append("; }");
         return elementFactory.createMethodFromText(text.toString(), srcClass);
     }
 
-    private void appendMethod(StringBuilder text, PsiMethod method, PsiParameterList parameterList) {
+    private void appendMethod(StringBuilder text, PsiMethod method, PsiParameterList parameterList, String srcClassFieldName, boolean useSingleField) {
         if (isInitializingMethod(parameterList)) {
             text.append(method.getName()).append("().");
         } else {
@@ -37,7 +38,13 @@ public class ButMethodCreator {
             String parameterNamePrefix = codeStyleSettings.getParameterNamePrefix();
             String parameterNameWithoutPrefix = parameterName.replaceFirst(parameterNamePrefix, "");
             String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
-            text.append(method.getName()).append("(").append(fieldNamePrefix).append(parameterNameWithoutPrefix).append(").");
+            text.append(method.getName()).append("(");
+            if (useSingleField) {
+                text.append(srcClassFieldName).append(".get").append(StringUtils.capitalize(parameterNameWithoutPrefix)).append("()");
+            } else {
+                text.append(fieldNamePrefix).append(parameterNameWithoutPrefix);
+            }
+            text.append(").");
         }
     }
 

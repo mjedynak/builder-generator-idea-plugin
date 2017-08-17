@@ -45,15 +45,16 @@ public class CreateBuilderDialog extends DialogWrapper {
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
     private static final int WIDTH = 40;
 
-    private PsiHelper psiHelper;
-    private GuiHelper guiHelper;
-    private Project project;
-    private PsiDirectory targetDirectory;
-    private PsiClass sourceClass;
-    private JTextField targetClassNameField;
-    private JTextField targetMethodPrefix;
-    private JCheckBox innerBuilder;
-    private JCheckBox butMethod;
+    private PsiHelper                            psiHelper;
+    private GuiHelper                            guiHelper;
+    private Project                              project;
+    private PsiDirectory                         targetDirectory;
+    private PsiClass                             sourceClass;
+    private JTextField                           targetClassNameField;
+    private JTextField                           targetMethodPrefix;
+    private JCheckBox                            innerBuilder;
+    private JCheckBox                            butMethod;
+    private JCheckBox                            useSingleField;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
@@ -213,6 +214,26 @@ public class CreateBuilderDialog extends DialogWrapper {
         panel.add(butMethod, gbConstraints);
         // but method
 
+
+        // useSingleField
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 6;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Use single field"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        useSingleField = new JCheckBox();
+        panel.add(useSingleField, gbConstraints);
+        // useSingleField
+
         return panel;
     }
 
@@ -275,6 +296,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public boolean hasButMethod() {
         return butMethod.isSelected();
+    }
+
+    public boolean useSingleField() {
+        return useSingleField.isSelected();
     }
 
     public PsiDirectory getTargetDirectory() {

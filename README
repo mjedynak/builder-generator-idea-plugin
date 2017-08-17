@@ -4,5 +4,6 @@ Generated builder class does not use reflection, only setter methods or construc
 Requires gradle and IntelliJ IDEA for building.
 Build instructions:
 - edit build.gradle and change values of 'ideaInstallationPath' and 'ideaJdk' to be in sync with your environment
+- edit build.gradle and change "from('/META-INF')" to "from('./META-INF')" if using linux as dev environment
 - invoke 'gradle build' from command line to build
 - invoke 'gradle idea' from command line to generate IDEA specific files - provides possibility to be opened as IDEA project (open builder-generator-idea-plugin.ipr)

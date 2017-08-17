@@ -1,5 +1,12 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -15,21 +22,17 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.*;
+import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooser;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DisplayChoosersRunnableTest {
@@ -111,6 +114,7 @@ public class DisplayChoosersRunnableTest {
         String methodPrefix = "with";
         boolean isInner = true;
         boolean hasButMethod = true;
+        boolean useSingleField = true;
         given(createBuilderDialog.isInnerBuilder()).willReturn(isInner);
         given(createBuilderDialog.hasButMethod()).willReturn(hasButMethod);
         given(createBuilderDialog.isOK()).willReturn(true);
@@ -131,6 +135,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod)));
+        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField)));
     }
 }
