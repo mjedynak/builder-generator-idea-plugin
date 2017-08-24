@@ -38,66 +38,60 @@ public class PsiFieldSelectorTest {
 
     @Test
     public void shouldSelectFieldIfVerifierAcceptsItAsSetInSetter() {
-        // given
-        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(true);
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
-
-        // then
-        assertThat(result).hasSize(1);
+        doTest(false, true, false, false, false, false, 1);
     }
 
     @Test
     public void shouldSelectFieldIfVerifierAcceptsItAsSetInConstructor() {
-        // given
-        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(true);
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
-
-        // then
-        assertThat(result).hasSize(1);
+        doTest(true, false, false, false, false, false, 1);
     }
 
     @Test
     public void shouldNotSelectFieldIfVerifierDoesNotAcceptsItAsSetInConstructorOrInSetter() {
-        // given
-        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
-        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, false);
-
-        // then
-        assertThat(result).hasSize(0);
+        doTest(false, false, true, false, false, false, 0);
     }
 
     @Test
     public void shouldSelectAllFieldsIfInnerBuilder() {
-        // given
-        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
-        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, true);
-
-        // then
-        assertThat(result).hasSize(1);
+        doTest(false, false, false, true, false, false, 1);
     }
 
     @Test
-    public void shouldNotSelectSerialVersionUIDFieldIfInnerBuilder() {
-        // given
-        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(false);
-        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
+    public void shouldNeverSelectSerialVersionUIDField() {
         given(psiField.getName()).willReturn("serialVersionUID");
-
-        // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, true);
-
-        // then
-        assertThat(result).hasSize(0);
+        doTest(true, true, true, false, false, false, 0);
     }
 
+    @Test
+    public void shouldSelectFieldIfUseSingleFieldAndHasSetter() {
+        doTest(false, true, false, false, true, false, 1);
+    }
+
+    @Test
+    public void shouldNotSelectFieldIfUseSingleFieldAndHasNoSetter() {
+        doTest(true, false, true, false, true, false, 0);
+    }
+
+    @Test
+    public void shouldSelectFieldIfUseSingleFieldAndButMethodAndHasSetterAndGetter() {
+        doTest(false, true, true, false, true, true, 1);
+    }
+
+    @Test
+    public void shouldNotSelectFieldIfUseSingleFieldAndButMethodAndHasSetterAndNoGetter() {
+        doTest(true, true, false, false, true, true, 0);
+    }
+
+    private void doTest(boolean isSetInConstructor, boolean isSetInSetter, boolean hasGetter, boolean isInnerBuilder, boolean useSingleField, boolean hasButMethod, int size) {
+        // given
+        given(psiFieldVerifier.isSetInConstructor(psiField, psiClass)).willReturn(isSetInConstructor);
+        given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(isSetInSetter);
+        given(psiFieldVerifier.hasGetterMethod(psiField, psiClass)).willReturn(hasGetter);
+
+        // when
+        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, isInnerBuilder, useSingleField, hasButMethod);
+
+        // then
+        assertThat(result).hasSize(size);
+    }
 }

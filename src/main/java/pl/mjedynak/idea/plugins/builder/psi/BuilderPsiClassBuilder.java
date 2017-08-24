@@ -1,12 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import static com.intellij.openapi.util.text.StringUtil.isVowel;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -17,6 +10,14 @@ import com.intellij.psi.PsiModifierList;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
 public class BuilderPsiClassBuilder {
 

@@ -1,12 +1,5 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -33,6 +26,14 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DisplayChoosersRunnableTest {
@@ -124,7 +125,7 @@ public class DisplayChoosersRunnableTest {
         given(createBuilderDialog.getMethodPrefix()).willReturn(methodPrefix);
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false)).willReturn(selectedFields);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false, false, false)).willReturn(selectedFields);
         given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
 
         // when

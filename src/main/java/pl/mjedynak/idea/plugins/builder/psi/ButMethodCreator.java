@@ -4,7 +4,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 public class ButMethodCreator {

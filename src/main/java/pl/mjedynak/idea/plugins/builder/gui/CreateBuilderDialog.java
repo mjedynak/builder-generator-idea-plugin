@@ -45,16 +45,16 @@ public class CreateBuilderDialog extends DialogWrapper {
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
     private static final int WIDTH = 40;
 
-    private PsiHelper                            psiHelper;
-    private GuiHelper                            guiHelper;
-    private Project                              project;
-    private PsiDirectory                         targetDirectory;
-    private PsiClass                             sourceClass;
-    private JTextField                           targetClassNameField;
-    private JTextField                           targetMethodPrefix;
-    private JCheckBox                            innerBuilder;
-    private JCheckBox                            butMethod;
-    private JCheckBox                            useSingleField;
+    private PsiHelper psiHelper;
+    private GuiHelper guiHelper;
+    private Project project;
+    private PsiDirectory targetDirectory;
+    private PsiClass sourceClass;
+    private JTextField targetClassNameField;
+    private JTextField targetMethodPrefix;
+    private JCheckBox innerBuilder;
+    private JCheckBox butMethod;
+    private JCheckBox useSingleField;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
 
     public CreateBuilderDialog(Project project,
