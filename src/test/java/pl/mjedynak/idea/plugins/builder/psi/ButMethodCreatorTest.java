@@ -34,6 +34,8 @@ public class ButMethodCreatorTest {
     @Mock private PsiParameterList parameterList2;
     @Mock private PsiParameter parameter;
 
+    private String srcClassFieldName = "className";
+
     @Before
     public void mockCodeStyleManager() {
         given(settings.getFieldNamePrefix()).willReturn("m_");
@@ -41,9 +43,7 @@ public class ButMethodCreatorTest {
         setField(butMethodCreator, "codeStyleSettings", settings);
     }
 
-    @Test
-    public void shouldCreateButMethod() {
-        // given
+    private void initOtherCommonMocks() {
         given(builderClass.getMethods()).willReturn((PsiMethod[]) asList(method1, method2, method3).toArray());
         given(method1.getName()).willReturn("Builder");
         given(method2.getName()).willReturn("aBuilder");
@@ -54,11 +54,29 @@ public class ButMethodCreatorTest {
         given(parameterList2.getParametersCount()).willReturn(1);
         given(parameterList2.getParameters()).willReturn((PsiParameter[]) asList(parameter).toArray());
         given(parameter.getName()).willReturn("age");
+    }
 
-        given(psiElementFactory.createMethodFromText("public Builder but() { return aBuilder().withAge(m_age);}", srcClass)).willReturn(createdMethod);
+    @Test
+    public void shouldCreateButMethod() {
+        // given
+        initOtherCommonMocks();
+        given(psiElementFactory.createMethodFromText("public Builder but() { return aBuilder().withAge(m_age); }", srcClass)).willReturn(createdMethod);
 
         // when
-        PsiMethod result = butMethodCreator.butMethod("Builder", builderClass, srcClass);
+        PsiMethod result = butMethodCreator.butMethod("Builder", builderClass, srcClass, srcClassFieldName, false);
+
+        // then
+        assertThat(result).isEqualTo(createdMethod);
+    }
+
+    @Test
+    public void shouldCreateButMethodForSingleField() {
+        // given
+        initOtherCommonMocks();
+        given(psiElementFactory.createMethodFromText("public Builder but() { return aBuilder().withAge(className.getAge()); }", srcClass)).willReturn(createdMethod);
+
+        // when
+        PsiMethod result = butMethodCreator.butMethod("Builder", builderClass, srcClass, srcClassFieldName, true);
 
         // then
         assertThat(result).isEqualTo(createdMethod);

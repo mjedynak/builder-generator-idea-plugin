@@ -50,7 +50,9 @@ public class DisplayChoosersRunnable implements Runnable {
             String className = createBuilderDialog.getClassName();
             String methodPrefix = createBuilderDialog.getMethodPrefix();
             boolean innerBuilder = createBuilderDialog.isInnerBuilder();
-            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder);
+            boolean useSingleField = createBuilderDialog.useSingleField();
+            boolean hasButMethod = createBuilderDialog.hasButMethod();
+            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder, useSingleField, hasButMethod);
             MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
             memberChooserDialog.show();
             writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog);
@@ -63,7 +65,7 @@ public class DisplayChoosersRunnable implements Runnable {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
             BuilderContext context = new BuilderContext(
-                    project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder(), createBuilderDialog.hasButMethod());
+                    project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder(), createBuilderDialog.hasButMethod(), createBuilderDialog.useSingleField());
             builderWriter.writeBuilder(context);
         }
     }
@@ -76,8 +78,8 @@ public class DisplayChoosersRunnable implements Runnable {
         return dialog;
     }
 
-    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder) {
-        return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz, innerBuilder);
+    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder, boolean useSingleField, boolean hasButMethod) {
+        return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz, innerBuilder, useSingleField, hasButMethod);
     }
 
     public void setPsiClassFromEditor(PsiClass psiClassFromEditor) {

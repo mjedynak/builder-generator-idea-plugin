@@ -15,7 +15,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.*;
+import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooser;
+import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
+import pl.mjedynak.idea.plugins.builder.factory.PsiManagerFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -111,6 +115,7 @@ public class DisplayChoosersRunnableTest {
         String methodPrefix = "with";
         boolean isInner = true;
         boolean hasButMethod = true;
+        boolean useSingleField = true;
         given(createBuilderDialog.isInnerBuilder()).willReturn(isInner);
         given(createBuilderDialog.hasButMethod()).willReturn(hasButMethod);
         given(createBuilderDialog.isOK()).willReturn(true);
@@ -120,7 +125,7 @@ public class DisplayChoosersRunnableTest {
         given(createBuilderDialog.getMethodPrefix()).willReturn(methodPrefix);
         given(psiClassFromEditor.getAllFields()).willReturn(allFields);
         given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false)).willReturn(selectedFields);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false, false, false)).willReturn(selectedFields);
         given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
 
         // when
@@ -131,6 +136,6 @@ public class DisplayChoosersRunnableTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod)));
+        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField)));
     }
 }

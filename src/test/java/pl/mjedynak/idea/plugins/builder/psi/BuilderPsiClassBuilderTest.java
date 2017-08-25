@@ -27,6 +27,7 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -76,8 +77,12 @@ public class BuilderPsiClassBuilderTest {
         given(psiFieldsForBuilder.getAllSelectedFields()).willReturn(allSelectedPsiFields);
         given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
         given(builderClass.getModifierList()).willReturn(psiModifierList);
-        context = new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false);
+        context = createBuilderContext(false);
         mockCodeStyleManager();
+    }
+
+    private BuilderContext createBuilderContext(boolean useSingleField) {
+        return new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false, useSingleField);
     }
 
     private void mockCodeStyleManager() {
@@ -119,6 +124,23 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
+    public void shouldNotDelegatePsiFieldsModificationButDirectlyCreateFieldWhenUsingSingleField() {
+        // given
+        context = createBuilderContext(true);
+        String fieldText = "private " + srcClassName + " " + srcClassFieldName + ";";
+        PsiField singleField = mock(PsiField.class);
+        given(elementFactory.createFieldFromText(fieldText, srcClass)).willReturn(singleField);
+
+        // when
+        BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(context).withFields();
+
+        // then
+        verify(psiFieldsModifier, never()).modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
+        verify(builderClass).add(singleField);
+        assertThat(result).isSameAs(psiClassBuilder);
+    }
+
+    @Test
     public void shouldAddPrivateConstructorToBuildClass() {
         // given
         PsiMethod constructor = mock(PsiMethod.class);
@@ -135,11 +157,29 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
+    public void shouldAddPrivateConstructorToBuildClassWithBuildingObjectInstanciationWhenUsingSingleField() {
+        // given
+        context = createBuilderContext(true);
+        String constructorText = builderClassName + "(){ " + srcClassFieldName + " = new " + srcClassName + "(); }";
+        PsiMethod constructor = mock(PsiMethod.class);
+        PsiModifierList modifierList = mock(PsiModifierList.class);
+        given(constructor.getModifierList()).willReturn(modifierList);
+        given(elementFactory.createMethodFromText(constructorText, srcClass)).willReturn(constructor);
+
+        // when
+        psiClassBuilder.aBuilder(context).withPrivateConstructor();
+
+        // then
+        verify(modifierList).setModifierProperty("private", true);
+        verify(builderClass).add(constructor);
+    }
+
+    @Test
     public void shouldAddInitializingMethod() {
         // given
         PsiMethod method = mock(PsiMethod.class);
         given(elementFactory.createMethodFromText(
-                "public static " + builderClassName + " a" + srcClassName + "() { return new " + builderClassName + "();}", srcClass)).willReturn(method);
+                "public static " + builderClassName + " a" + srcClassName + "() { return new " + builderClassName + "(); }", srcClass)).willReturn(method);
 
         // when
         psiClassBuilder.aBuilder(context).withInitializingMethod();
@@ -155,7 +195,7 @@ public class BuilderPsiClassBuilderTest {
         String srcClassNameStartingWithVowel = "Inventory";
         given(srcClass.getName()).willReturn(srcClassNameStartingWithVowel);
         given(elementFactory.createMethodFromText(
-                "public static " + builderClassName + " an" + srcClassNameStartingWithVowel + "() { return new " + builderClassName + "();}", srcClass)).willReturn(method);
+                "public static " + builderClassName + " an" + srcClassNameStartingWithVowel + "() { return new " + builderClassName + "(); }", srcClass)).willReturn(method);
 
         // when
         psiClassBuilder.aBuilder(context).withInitializingMethod();
@@ -174,8 +214,8 @@ public class BuilderPsiClassBuilderTest {
         String methodPrefix = "with";
         PsiMethod methodForFieldForSetter = mock(PsiMethod.class);
         PsiMethod methodForFieldForConstructor = mock(PsiMethod.class);
-        given(methodCreator.createMethod(psiFieldForSetter, methodPrefix)).willReturn(methodForFieldForSetter);
-        given(methodCreator.createMethod(psiFieldForConstructor, methodPrefix)).willReturn(methodForFieldForConstructor);
+        given(methodCreator.createMethod(psiFieldForSetter, methodPrefix, srcClassFieldName, false)).willReturn(methodForFieldForSetter);
+        given(methodCreator.createMethod(psiFieldForConstructor, methodPrefix, srcClassFieldName, false)).willReturn(methodForFieldForConstructor);
         BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
         setField(builder, "methodCreator", methodCreator);
 
@@ -196,7 +236,7 @@ public class BuilderPsiClassBuilderTest {
         String methodPrefix = "with";
 
         PsiMethod setterMethod = mock(PsiMethod.class);
-        given(methodCreator.createMethod(selectedField, methodPrefix)).willReturn(setterMethod);
+        given(methodCreator.createMethod(selectedField, methodPrefix, srcClassFieldName, false)).willReturn(setterMethod);
 
         BuilderPsiClassBuilder builder = psiClassBuilder.anInnerBuilder(context);
         setField(builder, "methodCreator", methodCreator);
@@ -211,9 +251,47 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
+    public void shouldAddAllSelectedFieldAsSetterWhenUsingSingleField() {
+        // given
+        context = createBuilderContext(true);
+        PsiField selectedField = mock(PsiField.class);
+        allSelectedPsiFields.add(selectedField);
+
+        String methodPrefix = "with";
+
+        PsiMethod setterMethod = mock(PsiMethod.class);
+        given(methodCreator.createMethod(selectedField, methodPrefix, srcClassFieldName, true)).willReturn(setterMethod);
+
+        BuilderPsiClassBuilder builder = psiClassBuilder.anInnerBuilder(context);
+        setField(builder, "methodCreator", methodCreator);
+
+        // when
+        builder.withSetMethods(methodPrefix);
+
+        // then
+        verify(builderClass).add(setterMethod);
+    }
+
+    @Test
     public void shouldAddButMethod() {
         // given
-        given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass)).willReturn(psiMethod);
+        given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, false)).willReturn(psiMethod);
+        BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
+        setField(builder, "butMethodCreator", butMethodCreator);
+
+        // when
+        BuilderPsiClassBuilder result = builder.withButMethod();
+
+        // then
+        verify(builderClass).add(psiMethod);
+        assertThat(result).isSameAs(psiClassBuilder);
+    }
+
+    @Test
+    public void shouldAddButMethodWhenUsingSingleField() {
+        // given
+        context = createBuilderContext(true);
+        given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, true)).willReturn(psiMethod);
         BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
         setField(builder, "butMethodCreator", butMethodCreator);
 
@@ -238,7 +316,29 @@ public class BuilderPsiClassBuilderTest {
         given(psiFieldForSetter.getName()).willReturn("name");
         PsiMethod method = mock(PsiMethod.class);
         given(elementFactory.createMethodFromText("public " + srcClassName + " build() { " + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age);"
-                + srcClassFieldName + ".setName(name);return " + srcClassFieldName + ";}", srcClass)).willReturn(method);
+                + srcClassFieldName + ".setName(name);return " + srcClassFieldName + "; }", srcClass)).willReturn(method);
+        // when
+        PsiClass result = psiClassBuilder.aBuilder(context).build();
+
+        // then
+        verify(builderClass).add(method);
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructorWhenUsingSingleField() {
+        // given
+        context = createBuilderContext(true);
+        PsiField psiFieldForSetter = mock(PsiField.class);
+        psiFieldsForSetters.add(psiFieldForSetter);
+
+        PsiField psiFieldForConstructor = mock(PsiField.class);
+        psiFieldsForConstructor.add(psiFieldForConstructor);
+        given(psiFieldForConstructor.getName()).willReturn("age");
+
+        given(psiFieldForSetter.getName()).willReturn("name");
+        PsiMethod method = mock(PsiMethod.class);
+        given(elementFactory.createMethodFromText("public " + srcClassName + " build() { return " + srcClassFieldName + "; }", srcClass)).willReturn(method);
         // when
         PsiClass result = psiClassBuilder.aBuilder(context).build();
 
@@ -261,7 +361,7 @@ public class BuilderPsiClassBuilderTest {
         PsiMethod method = mock(PsiMethod.class);
         String expectedCode = "public " + srcClassName + " build() { "
                 + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(name);"
-                + srcClassFieldName + ".setAge(age);return " + srcClassFieldName + ";}";
+                + srcClassFieldName + ".setAge(age);return " + srcClassFieldName + "; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
         given(builderClass.hasModifierProperty("static")).willReturn(true);
@@ -291,7 +391,7 @@ public class BuilderPsiClassBuilderTest {
         String expectedCode = "public " + srcClassName + " build() { "
                 + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "();"
                 + srcClassFieldName + ".setName(name);"
-                + srcClassFieldName + ".age=this.age;return " + srcClassFieldName + ";}";
+                + srcClassFieldName + ".age=this.age;return " + srcClassFieldName + "; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
         given(builderClass.hasModifierProperty("static")).willReturn(true);

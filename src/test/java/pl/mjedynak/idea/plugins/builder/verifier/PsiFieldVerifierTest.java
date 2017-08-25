@@ -160,6 +160,50 @@ public class PsiFieldVerifierTest {
         assertThat(result).isFalse();
     }
 
+    @Test
+    public void shouldVerifyThatFieldHasGetterMethodAvailableIfTheMethodIsNotPrivateAndHasCorrectName() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+        given(method.getName()).willReturn("getField");
+
+        // when
+        boolean result = psiFieldVerifier.hasGetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsPrivate() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+        given(modifierList.hasExplicitModifier(PsiFieldVerifier.PRIVATE_MODIFIER)).willReturn(true);
+        given(method.getName()).willReturn("setField");
+        // when
+        boolean result = psiFieldVerifier.hasGetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsNotPrivateButHasIncorrectName() {
+        // given
+        given(psiClass.getAllMethods()).willReturn(methods);
+        given(method.getModifierList()).willReturn(modifierList);
+        given(psiField.getName()).willReturn("field");
+        given(method.getName()).willReturn("getAnotherField");
+        // when
+        boolean result = psiFieldVerifier.hasGetterMethod(psiField, psiClass);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
     private void prepareBehaviourForReturningParameter() {
         given(psiClass.getConstructors()).willReturn(constructors);
         given(constructor.getParameterList()).willReturn(parameterList);

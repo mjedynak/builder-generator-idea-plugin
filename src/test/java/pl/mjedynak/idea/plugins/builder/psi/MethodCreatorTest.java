@@ -27,6 +27,8 @@ public class MethodCreatorTest {
     @Mock private PsiType type;
     @Mock private PsiMethod method;
 
+    private String srcClassFieldName = "className";
+
     @Before
     public void mockCodeStyleManager() {
         methodCreator = new MethodCreator(elementFactory, "BuilderClassName");
@@ -36,18 +38,37 @@ public class MethodCreatorTest {
         given(codeStyleSettings.getParameterNamePrefix()).willReturn(EMPTY);
     }
 
-    @Test
-    public void shouldCreateMethod() {
-        // given
+    private void initOtherCommonMocks() {
         given(psiField.getName()).willReturn("name");
         given(type.getPresentableText()).willReturn("String");
         given(psiField.getType()).willReturn(type);
         given(methodNameCreator.createMethodName("with", "name")).willReturn("withName");
+    }
+
+    @Test
+    public void shouldCreateMethod() {
+        // given
+        initOtherCommonMocks();
         given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
         String methodPrefix = "with";
 
         // when
-        PsiMethod result = methodCreator.createMethod(psiField, methodPrefix);
+        PsiMethod result = methodCreator.createMethod(psiField, methodPrefix, srcClassFieldName, false);
+
+        // then
+        assertThat(result).isEqualTo(method);
+    }
+
+    @Test
+    public void shouldCreateMethodForSingleField() {
+        // given
+        initOtherCommonMocks();
+        given(methodNameCreator.createMethodName("set", "name")).willReturn("setName");
+        given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { className.setName(name); return this; }", psiField)).willReturn(method);
+        String methodPrefix = "with";
+
+        // when
+        PsiMethod result = methodCreator.createMethod(psiField, methodPrefix, srcClassFieldName, true);
 
         // then
         assertThat(result).isEqualTo(method);

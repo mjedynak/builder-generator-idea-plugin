@@ -15,6 +15,7 @@ public class PsiFieldVerifier {
 
     static final String PRIVATE_MODIFIER = "private";
     static final String SET_PREFIX = "set";
+    static final String GET_PREFIX = "get";
 
     private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
 
@@ -60,9 +61,17 @@ public class PsiFieldVerifier {
     }
 
     public boolean isSetInSetterMethod(PsiField psiField, PsiClass psiClass) {
+        return methodIsNotPrivateAndHasProperPrefixAndProperName(psiField, psiClass, SET_PREFIX);
+    }
+
+    public boolean hasGetterMethod(PsiField psiField, PsiClass psiClass) {
+        return methodIsNotPrivateAndHasProperPrefixAndProperName(psiField, psiClass, GET_PREFIX);
+    }
+
+    private boolean methodIsNotPrivateAndHasProperPrefixAndProperName(PsiField psiField, PsiClass psiClass, String prefix) {
         boolean result = false;
         for (PsiMethod method : psiClass.getAllMethods()) {
-            if (methodIsNotPrivate(method) && methodIsSetterWithProperName(psiField, method)) {
+            if (methodIsNotPrivate(method) && methodHaProperPrefixAndProperName(psiField, method, prefix)) {
                 result = true;
                 break;
             }
@@ -75,10 +84,10 @@ public class PsiFieldVerifier {
         return modifierListHasNoPrivateModifier(modifierList);
     }
 
-    private boolean methodIsSetterWithProperName(PsiField psiField, PsiMethod method) {
+    private boolean methodHaProperPrefixAndProperName(PsiField psiField, PsiMethod method, String prefix) {
         String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
         String fieldNameWithoutPrefix = psiField.getName().replace(fieldNamePrefix, EMPTY);
-        return method.getName().equals(SET_PREFIX + WordUtils.capitalize(fieldNameWithoutPrefix));
+        return method.getName().equals(prefix + WordUtils.capitalize(fieldNameWithoutPrefix));
     }
 
     private boolean modifierListHasNoPrivateModifier(PsiModifierList modifierList) {
