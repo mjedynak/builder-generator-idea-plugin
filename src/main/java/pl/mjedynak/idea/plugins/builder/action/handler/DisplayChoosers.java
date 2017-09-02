@@ -19,7 +19,7 @@ import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
 import java.util.List;
 
-public class DisplayChoosersRunnable implements Runnable {
+public class DisplayChoosers {
 
     private PsiClass psiClassFromEditor;
     private Project project;
@@ -31,9 +31,9 @@ public class DisplayChoosersRunnable implements Runnable {
     private BuilderWriter builderWriter;
     private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
-    public DisplayChoosersRunnable(PsiHelper psiHelper, CreateBuilderDialogFactory createBuilderDialogFactory,
-                                   PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
-                                   BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
+    public DisplayChoosers(PsiHelper psiHelper, CreateBuilderDialogFactory createBuilderDialogFactory,
+                           PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
+                           BuilderWriter builderWriter, PsiFieldsForBuilderFactory psiFieldsForBuilderFactory) {
         this.psiHelper = psiHelper;
         this.createBuilderDialogFactory = createBuilderDialogFactory;
         this.psiFieldSelector = psiFieldSelector;
@@ -42,9 +42,9 @@ public class DisplayChoosersRunnable implements Runnable {
         this.psiFieldsForBuilderFactory = psiFieldsForBuilderFactory;
     }
 
-    @Override
-    public void run() {
-        CreateBuilderDialog createBuilderDialog = showDialog();
+    @SuppressWarnings("rawtypes")
+    public void run(PsiClass existingBuilder) {
+        CreateBuilderDialog createBuilderDialog = showDialog(existingBuilder);
         if (createBuilderDialog.isOK()) {
             PsiDirectory targetDirectory = createBuilderDialog.getTargetDirectory();
             String className = createBuilderDialog.getClassName();
@@ -55,29 +55,31 @@ public class DisplayChoosersRunnable implements Runnable {
             List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder, useSingleField, hasButMethod);
             MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
             memberChooserDialog.show();
-            writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog);
+            writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog, existingBuilder);
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void writeBuilderIfNecessary(
-            PsiDirectory targetDirectory, String className, String methodPrefix, MemberChooser<PsiElementClassMember> memberChooserDialog, CreateBuilderDialog createBuilderDialog) {
+            PsiDirectory targetDirectory, String className, String methodPrefix, MemberChooser<PsiElementClassMember> memberChooserDialog, CreateBuilderDialog createBuilderDialog, PsiClass existingBuilder) {
         if (memberChooserDialog.isOK()) {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
             BuilderContext context = new BuilderContext(
                     project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder(), createBuilderDialog.hasButMethod(), createBuilderDialog.useSingleField());
-            builderWriter.writeBuilder(context);
+            builderWriter.writeBuilder(context, existingBuilder);
         }
     }
 
-    private CreateBuilderDialog showDialog() {
+    private CreateBuilderDialog showDialog(PsiClass existingBuilder) {
         PsiDirectory srcDir = psiHelper.getPsiFileFromEditor(editor, project).getContainingDirectory();
         PsiPackage srcPackage = psiHelper.getPackage(srcDir);
-        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, srcPackage);
+        CreateBuilderDialog dialog = createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, srcPackage, existingBuilder);
         dialog.show();
         return dialog;
     }
 
+    @SuppressWarnings("rawtypes")
     private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder, boolean useSingleField, boolean hasButMethod) {
         return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz, innerBuilder, useSingleField, hasButMethod);
     }

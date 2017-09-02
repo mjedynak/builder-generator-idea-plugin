@@ -6,21 +6,22 @@ import pl.mjedynak.idea.plugins.builder.factory.PopupChooserBuilderFactory;
 
 import javax.swing.JList;
 
-public class PopupDisplayer {
-
-    static final String TITLE = "Builder not found";
+public abstract class AbstractPopupDisplayer {
 
     private PopupChooserBuilderFactory popupChooserBuilderFactory;
 
-    public PopupDisplayer(PopupChooserBuilderFactory popupChooserBuilderFactory) {
+    public AbstractPopupDisplayer(PopupChooserBuilderFactory popupChooserBuilderFactory) {
         this.popupChooserBuilderFactory = popupChooserBuilderFactory;
     }
 
+    @SuppressWarnings("rawtypes")
     public void displayPopupChooser(Editor editor, JList list, Runnable runnable) {
         PopupChooserBuilder builder = popupChooserBuilderFactory.getPopupChooserBuilder(list);
-        builder.setTitle(TITLE).
-                setItemChoosenCallback(runnable).
-                setMovable(true).
-                createPopup().showInBestPositionFor(editor);
+        builder.setTitle(getTitle()).
+            setItemChoosenCallback(runnable).
+            setMovable(true).
+            createPopup().showInBestPositionFor(editor);
     }
+
+    protected abstract String getTitle();
 }

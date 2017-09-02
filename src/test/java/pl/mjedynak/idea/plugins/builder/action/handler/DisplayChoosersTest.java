@@ -9,6 +9,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,6 @@ import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderWriter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -36,9 +36,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DisplayChoosersRunnableTest {
+public class DisplayChoosersTest {
 
-    @InjectMocks private DisplayChoosersRunnable displayChoosersRunnable;
+    private static final String CLASS_NAME = "className";
+    private static final PsiField[] ALL_FIELDS = {};
+    @SuppressWarnings("rawtypes")
+    private static final List<PsiElementClassMember> SELECTED_FIELDS = Lists.newArrayList();
+
+    @InjectMocks private DisplayChoosers displayChoosers;
     @Mock private PsiClass psiClassFromEditor;
     @Mock private Project project;
     @Mock private Editor editor;
@@ -53,53 +58,52 @@ public class DisplayChoosersRunnableTest {
     @Mock private PsiPackage psiPackage;
     @Mock private PsiManager psiManager;
     @Mock private CreateBuilderDialog createBuilderDialog;
+    @SuppressWarnings("rawtypes")
     @Mock private MemberChooser memberChooserDialog;
     @Mock private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
-
-    private String className = "className";
-    private PsiField[] allFields = {};
-    private List<PsiElementClassMember> selectedFields = new ArrayList<>();
+    @Mock private PsiClass existingBuilder;
 
     @Before
     public void setUp() {
-        displayChoosersRunnable.setEditor(editor);
-        displayChoosersRunnable.setProject(project);
-        displayChoosersRunnable.setPsiClassFromEditor(psiClassFromEditor);
+        displayChoosers.setEditor(editor);
+        displayChoosers.setProject(project);
+        displayChoosers.setPsiClassFromEditor(psiClassFromEditor);
         given(psiHelper.getPsiFileFromEditor(editor, project)).willReturn(psiFile);
         given(psiFile.getContainingDirectory()).willReturn(psiDirectory);
         given(psiHelper.getPackage(psiDirectory)).willReturn(psiPackage);
         given(psiManagerFactory.getPsiManager(project)).willReturn(psiManager);
-        given(psiClassFromEditor.getName()).willReturn(className);
-        given(psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedFields, psiClassFromEditor)).willReturn(psiFieldsForBuilder);
-        given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage)).willReturn(createBuilderDialog);
+        given(psiClassFromEditor.getName()).willReturn(CLASS_NAME);
+        given(psiFieldsForBuilderFactory.createPsiFieldsForBuilder(SELECTED_FIELDS, psiClassFromEditor)).willReturn(psiFieldsForBuilder);
+//        given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage)).willReturn(createBuilderDialog);
     }
 
     @Test
     public void shouldDisplayCreateBuilderDialogAndDoNothingWhenOKNotSelected() {
         // given
+        given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage, null)).willReturn(createBuilderDialog);
         given(createBuilderDialog.isOK()).willReturn(false);
         // when
-        displayChoosersRunnable.run();
+        displayChoosers.run(null);
         // then
         verify(createBuilderDialog).show();
         verifyZeroInteractions(psiFieldSelector, memberChooserDialogFactory, builderWriter);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void shouldNotWriteBuilderWhenOkNotSelectedFromMemberChooserDialog() {
         // given
+        given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage, null)).willReturn(createBuilderDialog);
         given(createBuilderDialog.isOK()).willReturn(true);
         given(memberChooserDialog.isOK()).willReturn(false);
         given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
-        given(createBuilderDialog.getClassName()).willReturn(className);
-        given(psiClassFromEditor.getAllFields()).willReturn(allFields);
-        given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
+        given(createBuilderDialog.getClassName()).willReturn(CLASS_NAME);
+        given(psiClassFromEditor.getAllFields()).willReturn(ALL_FIELDS);
+        given(memberChooserDialogFactory.getMemberChooserDialog(SELECTED_FIELDS, project)).willReturn(memberChooserDialog);
 
         // when
-        displayChoosersRunnable.run();
+        displayChoosers.run(null);
 
         // then
         verify(createBuilderDialog).isOK();
@@ -116,26 +120,27 @@ public class DisplayChoosersRunnableTest {
         boolean isInner = true;
         boolean hasButMethod = true;
         boolean useSingleField = true;
+        given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage, existingBuilder)).willReturn(createBuilderDialog);
         given(createBuilderDialog.isInnerBuilder()).willReturn(isInner);
         given(createBuilderDialog.hasButMethod()).willReturn(hasButMethod);
         given(createBuilderDialog.isOK()).willReturn(true);
         given(memberChooserDialog.isOK()).willReturn(true);
         given(createBuilderDialog.getTargetDirectory()).willReturn(psiDirectory);
-        given(createBuilderDialog.getClassName()).willReturn(className);
+        given(createBuilderDialog.getClassName()).willReturn(CLASS_NAME);
         given(createBuilderDialog.getMethodPrefix()).willReturn(methodPrefix);
-        given(psiClassFromEditor.getAllFields()).willReturn(allFields);
-        given(memberChooserDialogFactory.getMemberChooserDialog(selectedFields, project)).willReturn(memberChooserDialog);
-        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false, false, false)).willReturn(selectedFields);
-        given(memberChooserDialog.getSelectedElements()).willReturn(selectedFields);
+        given(psiClassFromEditor.getAllFields()).willReturn(ALL_FIELDS);
+        given(memberChooserDialogFactory.getMemberChooserDialog(SELECTED_FIELDS, project)).willReturn(memberChooserDialog);
+        given(psiFieldSelector.selectFieldsToIncludeInBuilder(psiClassFromEditor, false, false, false)).willReturn(SELECTED_FIELDS);
+        given(memberChooserDialog.getSelectedElements()).willReturn(SELECTED_FIELDS);
 
         // when
-        displayChoosersRunnable.run();
+        displayChoosers.run(existingBuilder);
 
         // then
         verify(createBuilderDialog).isOK();
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, className, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField)));
+        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, CLASS_NAME, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField)), eq(existingBuilder));
     }
 }

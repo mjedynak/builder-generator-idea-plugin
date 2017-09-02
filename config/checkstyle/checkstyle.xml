@@ -70,7 +70,7 @@
        <property name="maximum" value="0"/>
        <property name="message" value="Line has trailing spaces."/>
     </module>
-
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
 
         <!-- Checks for Javadoc comments.                     -->
@@ -176,7 +176,9 @@
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
+        </module>
 
 
         <!-- Miscellaneous other checks.                   -->
@@ -185,7 +187,7 @@
         <!--<module name="FinalParameters"/>-->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
-
+        <module name="SuppressWarningsHolder" />
 
     </module>
 

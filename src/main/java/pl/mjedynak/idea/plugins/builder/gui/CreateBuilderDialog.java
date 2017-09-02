@@ -1,5 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.gui;
 
+import com.intellij.CommonBundle;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -8,6 +9,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -16,8 +18,9 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
-import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
+import com.intellij.util.IncorrectOperationException;
 import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -56,6 +59,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private JCheckBox butMethod;
     private JCheckBox useSingleField;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
+    private PsiClass existingBuilder;
 
     public CreateBuilderDialog(Project project,
                                String title,
@@ -65,12 +69,14 @@ public class CreateBuilderDialog extends DialogWrapper {
                                PsiPackage targetPackage,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
-                               ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory) {
+                               ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
+                               PsiClass existingBuilder) {
         super(project, true);
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
         this.project = project;
         this.sourceClass = sourceClass;
+        this.existingBuilder = existingBuilder;
         targetClassNameField = new JTextField(targetClassName);
         targetMethodPrefix = new JTextField(methodPrefix);
         setPreferredSize(targetClassNameField);
@@ -95,10 +101,12 @@ public class CreateBuilderDialog extends DialogWrapper {
         field.setPreferredSize(size);
     }
 
+    @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }
 
+    @Override
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbConstraints = new GridBagConstraints();
@@ -248,17 +256,26 @@ public class CreateBuilderDialog extends DialogWrapper {
         return innerPanel;
     }
 
+    @Override
     protected void doOKAction() {
         registerEntry(RECENTS_KEY, targetPackageField.getText());
         Module module = psiHelper.findModuleForPsiClass(sourceClass, project);
         if (module == null) {
             throw new IllegalStateException("Cannot find module for class " + sourceClass.getName());
         }
+        try {
+            checkIfClassCanBeCreated(module);
+            callSuper();
+        } catch (IncorrectOperationException e) {
+            guiHelper.showMessageDialog(project, e.getMessage(), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+        }
+    }
+
+    void checkIfClassCanBeCreated(Module module) {
         if (!isInnerBuilder()) {
-            SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, guiHelper, project, module, getPackageName(), getClassName());
+            SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, module, getPackageName(), getClassName(), existingBuilder);
             executeCommand(selectDirectory);
         }
-        callSuper();
     }
 
     void registerEntry(String key, String entry) {

@@ -1,6 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.psi.PsiClass;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
@@ -15,8 +16,8 @@ public class BuilderWriter {
         this.psiHelper = psiHelper;
     }
 
-    public void writeBuilder(BuilderContext context) {
+    public void writeBuilder(BuilderContext context, PsiClass existingBuilder) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
-        commandProcessor.executeCommand(context.getProject(), new BuilderWriterRunnable(builderPsiClassBuilder, context), CREATE_BUILDER_STRING, this);
+        commandProcessor.executeCommand(context.getProject(), new BuilderWriterRunnable(builderPsiClassBuilder, context, existingBuilder), CREATE_BUILDER_STRING, this);
     }
 }
