@@ -8,16 +8,16 @@ import javax.swing.Icon;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GoToBuilderAdditionalActionTest {
+public class RegenerateBuilderAdditionalActionTest {
 
-    private static final String TEXT = "Go to builder...";
+    private static final String TEXT = "Regenerate builder...";
     private static final Icon ICON = IconLoader.getIcon("/actions/intentionBulb.png");
 
-    private GoToBuilderAdditionalAction action;
+    private RegenerateBuilderAdditionalAction action;
 
     @Before
     public void setUp() {
-        action = new GoToBuilderAdditionalAction();
+        action = new RegenerateBuilderAdditionalAction();
     }
 
     @Test

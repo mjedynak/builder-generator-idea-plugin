@@ -12,9 +12,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.mjedynak.idea.plugins.builder.factory.GoToBuilderPopupListFactory;
+import pl.mjedynak.idea.plugins.builder.action.GoToBuilderAdditionalAction;
+import pl.mjedynak.idea.plugins.builder.action.RegenerateBuilderAdditionalAction;
+import pl.mjedynak.idea.plugins.builder.factory.GenerateBuilderPopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
-import pl.mjedynak.idea.plugins.builder.gui.displayer.GoToBuilderPopupDisplayer;
+import pl.mjedynak.idea.plugins.builder.gui.displayer.GenerateBuilderPopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
@@ -28,14 +30,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GoToBuilderActionHandlerTest {
+public class GenerateBuilderActionHandlerTest {
 
-    @InjectMocks private GoToBuilderActionHandler builderActionHandler;
+    @InjectMocks private GenerateBuilderActionHandler builderActionHandler;
     @Mock private BuilderVerifier builderVerifier;
     @Mock private BuilderFinder builderFinder;
     @Mock private PsiHelper psiHelper;
-    @Mock private GoToBuilderPopupListFactory popupListFactory;
-    @Mock private GoToBuilderPopupDisplayer popupDisplayer;
+    @Mock private GenerateBuilderPopupListFactory popupListFactory;
+    @Mock private GenerateBuilderPopupDisplayer popupDisplayer;
     @Mock private DisplayChoosers displayChoosers;
     @Mock private PsiClass psiClass;
     @Mock private PsiClass builderClass;
@@ -51,39 +53,11 @@ public class GoToBuilderActionHandlerTest {
     }
 
     @Test
-    public void shouldNavigateToBuilderIfItExistsAndInvokedInsideNotBuilderClass() {
+    public void shouldDisplayPopupWhenBuilderIsFoundAndInvokedInsideNotBuilderClass() {
         // given
         given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
         given(builderVerifier.isBuilder(psiClass)).willReturn(false);
         given(builderFinder.findBuilderForClass(psiClass)).willReturn(builderClass);
-
-        // when
-        builderActionHandler.execute(editor, dataContext);
-
-        // then
-        verify(psiHelper).navigateToClass(builderClass);
-    }
-
-    @Test
-    public void shouldNavigateToNotBuilderClassIfItExistsAndInvokedInsideBuilder() {
-        // given
-        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
-        given(builderVerifier.isBuilder(builderClass)).willReturn(true);
-        given(builderFinder.findClassForBuilder(builderClass)).willReturn(psiClass);
-
-        // when
-        builderActionHandler.execute(editor, dataContext);
-
-        // then
-        verify(psiHelper).navigateToClass(psiClass);
-    }
-
-    @Test
-    public void shouldDisplayPopupWhenBuilderNotFoundAndInvokedInsideNotBuilderClass() {
-        // given
-        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
-        given(builderVerifier.isBuilder(psiClass)).willReturn(false);
-        given(builderFinder.findBuilderForClass(psiClass)).willReturn(null);
         given(popupListFactory.getPopupList()).willReturn(list);
 
         // when
@@ -93,14 +67,65 @@ public class GoToBuilderActionHandlerTest {
         verifyDisplayChoosersSetMethods();
         ArgumentCaptor<Runnable> runnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
         verify(popupDisplayer).displayPopupChooser(eq(editor), eq(list), runnableArgumentCaptor.capture());
-        runnableArgumentCaptor.getValue().run();
-        verify(displayChoosers).run(null);
+        testRunnableWhenGoToBuilderIsSelected(runnableArgumentCaptor);
+        testRunnableWhenRegenerateBuilderIsSelected(runnableArgumentCaptor);
     }
 
     private void verifyDisplayChoosersSetMethods() {
         verify(displayChoosers).setEditor(editor);
         verify(displayChoosers).setProject(project);
         verify(displayChoosers).setPsiClassFromEditor(psiClass);
+    }
+
+    private void testRunnableWhenGoToBuilderIsSelected(ArgumentCaptor<Runnable> runnableArgumentCaptor) {
+        // given
+        given(list.getSelectedValue()).willReturn(new GoToBuilderAdditionalAction());
+
+        // when
+        runnableArgumentCaptor.getValue().run();
+
+        // then
+        verify(psiHelper).navigateToClass(builderClass);
+    }
+
+    private void testRunnableWhenRegenerateBuilderIsSelected(ArgumentCaptor<Runnable> runnableArgumentCaptor) {
+        // given
+        given(list.getSelectedValue()).willReturn(new RegenerateBuilderAdditionalAction());
+
+        // when
+        runnableArgumentCaptor.getValue().run();
+
+        // then
+        verify(displayChoosers).run(builderClass);
+    }
+
+    @Test
+    public void shouldDirectlyCallDisplayChoosersWhenBuilderNotFoundAndInvokedInsideNotBuilderClass() {
+        // given
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
+        given(builderVerifier.isBuilder(psiClass)).willReturn(false);
+        given(builderFinder.findBuilderForClass(psiClass)).willReturn(null);
+
+        // when
+        builderActionHandler.execute(editor, dataContext);
+
+        // then
+        verifyDisplayChoosersSetMethods();
+        verify(displayChoosers).run(null);
+    }
+
+    @Test
+    public void shouldNotDoAnythingWhenNotBuilderClassFoundAndInvokedInsideBuilder() {
+        // given
+        given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
+        given(builderVerifier.isBuilder(builderClass)).willReturn(true);
+        given(builderFinder.findClassForBuilder(builderClass)).willReturn(psiClass);
+
+        // when
+        builderActionHandler.execute(editor, dataContext);
+
+        // then
+        verifyNothingIsDone();
     }
 
     @Test

@@ -10,9 +10,9 @@ import javax.swing.JList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
-public class PopupListFactoryTest {
+public class GoToBuilderPopupListFactoryTest {
 
-    private PopupListFactory popupListFactory = new PopupListFactory();
+    private AbstractPopupListFactory popupListFactory = new GoToBuilderPopupListFactory();
 
     @Test
     public void shouldCreateJBListWithActionCellRenderer() {

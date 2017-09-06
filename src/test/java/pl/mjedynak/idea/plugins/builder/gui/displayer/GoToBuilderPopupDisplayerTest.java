@@ -16,22 +16,24 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PopupDisplayerTest {
+public class GoToBuilderPopupDisplayerTest {
 
-    @InjectMocks private PopupDisplayer popupDisplayer;
+    private static final String TITLE = "Builder not found";
+
+    @InjectMocks private GoToBuilderPopupDisplayer popupDisplayer;
     @Mock private PopupChooserBuilderFactory popupChooserBuilderFactory;
+    @SuppressWarnings("rawtypes")
     @Mock private JList list;
     @Mock private PopupChooserBuilder popupChooserBuilder;
     @Mock private Editor editor;
     @Mock private Runnable runnable;
     @Mock private JBPopup popup;
 
-
     @Test
     public void shouldInvokePopupChooserBuilder() {
         // given
         given(popupChooserBuilderFactory.getPopupChooserBuilder(list)).willReturn(popupChooserBuilder);
-        given(popupChooserBuilder.setTitle(PopupDisplayer.TITLE)).willReturn(popupChooserBuilder);
+        given(popupChooserBuilder.setTitle(TITLE)).willReturn(popupChooserBuilder);
         given(popupChooserBuilder.setItemChoosenCallback(runnable)).willReturn(popupChooserBuilder);
         given(popupChooserBuilder.setMovable(true)).willReturn(popupChooserBuilder);
         given(popupChooserBuilder.createPopup()).willReturn(popup);

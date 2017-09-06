@@ -16,26 +16,31 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiHelper psiHelper = new PsiHelper();
     private BuilderPsiClassBuilder builderPsiClassBuilder;
     private BuilderContext context;
+    private PsiClass existingBuilder;
 
-    BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context) {
+    BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.context = context;
+        this.existingBuilder = existingBuilder;
     }
 
     @Override
     public PsiElement compute() {
-        return createBuilder(context);
+        return createBuilder();
     }
 
-    private PsiElement createBuilder(BuilderContext context) {
+    private PsiElement createBuilder() {
         try {
             guiHelper.includeCurrentPlaceAsChangePlace(context.getProject());
             PsiClass targetClass;
+            if (existingBuilder != null) {
+                existingBuilder.delete();
+            }
             if (context.isInner()) {
-                targetClass = getInnerBuilderPsiClass(context);
+                targetClass = getInnerBuilderPsiClass();
                 context.getPsiClassFromEditor().add(targetClass);
             } else {
-                targetClass = getBuilderPsiClass(context);
+                targetClass = getBuilderPsiClass();
                 navigateToClassAndPositionCursor(context.getProject(), targetClass);
             }
             return targetClass;
@@ -46,27 +51,27 @@ class BuilderWriterComputable implements Computable<PsiElement> {
         }
     }
 
-    private PsiClass getInnerBuilderPsiClass(BuilderContext context) {
+    private PsiClass getInnerBuilderPsiClass() {
         BuilderPsiClassBuilder builder = builderPsiClassBuilder.anInnerBuilder(context)
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
                 .withSetMethods(context.getMethodPrefix());
-        addButMethodIfNecessary(context, builder);
+        addButMethodIfNecessary(builder);
         return builder.build();
     }
 
-    private PsiClass getBuilderPsiClass(BuilderContext context) {
+    private PsiClass getBuilderPsiClass() {
         BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(context)
                 .withFields()
                 .withPrivateConstructor()
                 .withInitializingMethod()
                 .withSetMethods(context.getMethodPrefix());
-        addButMethodIfNecessary(context, builder);
+        addButMethodIfNecessary(builder);
         return builder.build();
     }
 
-    private void addButMethodIfNecessary(BuilderContext context, BuilderPsiClassBuilder builder) {
+    private void addButMethodIfNecessary(BuilderPsiClassBuilder builder) {
         if (context.hasButMethod()) {
             builder.withButMethod();
         }

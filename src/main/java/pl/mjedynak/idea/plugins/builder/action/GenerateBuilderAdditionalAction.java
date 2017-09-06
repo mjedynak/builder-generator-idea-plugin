@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.Icon;
 
-public class GoToBuilderAdditionalAction extends AbstractBuilderAdditionalAction {
+public class GenerateBuilderAdditionalAction extends AbstractBuilderAdditionalAction {
 
-    private static final String TEXT = "Go to builder...";
+    private static final String TEXT = "Create New Builder...";
     private static final Icon ICON = IconLoader.getIcon("/actions/intentionBulb.png");
 
     @NotNull

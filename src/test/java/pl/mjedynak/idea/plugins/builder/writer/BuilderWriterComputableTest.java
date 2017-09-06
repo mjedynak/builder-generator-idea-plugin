@@ -9,7 +9,6 @@ import com.intellij.util.IncorrectOperationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
@@ -23,11 +22,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class BuilderWriterComputableTest {
 
-    @InjectMocks private BuilderWriterComputable builderWriterComputable;
+    private static final String METHOD_PREFIX = "with";
+
+    private BuilderWriterComputable builderWriterComputable;
 
     @Mock private PsiHelper psiHelper;
     @Mock private GuiHelper guiHelper;
@@ -38,12 +38,13 @@ public class BuilderWriterComputableTest {
     @Mock private PsiFile psiFile;
     @Mock private PsiElement psiElement;
     @Mock private BuilderContext context;
-    private String methodPrefix = "with";
+    @Mock private PsiClass existingBuilder;
 
     @Before
     public void setUp() {
+        builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, context, existingBuilder);
         given(context.getProject()).willReturn(project);
-        given(context.getMethodPrefix()).willReturn(methodPrefix);
+        given(context.getMethodPrefix()).willReturn(METHOD_PREFIX);
         given(context.isInner()).willReturn(false);
         setField(builderWriterComputable, "psiHelper", psiHelper);
         setField(builderWriterComputable, "guiHelper", guiHelper);
@@ -101,7 +102,7 @@ public class BuilderWriterComputableTest {
         given(builderPsiClassBuilder.withFields()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withPrivateConstructor()).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.withInitializingMethod()).willReturn(builderPsiClassBuilder);
-        given(builderPsiClassBuilder.withSetMethods(methodPrefix)).willReturn(builderPsiClassBuilder);
+        given(builderPsiClassBuilder.withSetMethods(METHOD_PREFIX)).willReturn(builderPsiClassBuilder);
         given(builderPsiClassBuilder.build()).willReturn(builderClass);
         given(builderClass.getContainingFile()).willReturn(psiFile);
         given(builderClass.getLBrace()).willReturn(psiElement);

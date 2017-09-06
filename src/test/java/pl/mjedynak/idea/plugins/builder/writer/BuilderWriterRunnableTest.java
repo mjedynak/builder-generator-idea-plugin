@@ -1,18 +1,21 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.psi.PsiClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,10 +26,11 @@ public class BuilderWriterRunnableTest {
     @Mock private PsiHelper psiHelper;
     @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
     @Mock private BuilderContext context;
+    @Mock private PsiClass existingBuilder;
 
     @Before
     public void setUp() {
-        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, context);
+        builderWriterRunnable = new BuilderWriterRunnable(builderPsiClassBuilder, context, existingBuilder);
         setField(builderWriterRunnable, "psiHelper", psiHelper);
     }
 
@@ -40,6 +44,10 @@ public class BuilderWriterRunnableTest {
         builderWriterRunnable.run();
 
         // then
-        verify(application).runWriteAction(any(BuilderWriterComputable.class));
+        ArgumentCaptor<BuilderWriterComputable> builderWriterComputableArgumentCaptor = ArgumentCaptor.forClass(BuilderWriterComputable.class);
+        verify(application).runWriteAction(builderWriterComputableArgumentCaptor.capture());
+        assertEquals(builderPsiClassBuilder, getField(builderWriterComputableArgumentCaptor.getValue(), "builderPsiClassBuilder"));
+        assertEquals(context, getField(builderWriterComputableArgumentCaptor.getValue(), "context"));
+        assertEquals(existingBuilder, getField(builderWriterComputableArgumentCaptor.getValue(), "existingBuilder"));
     }
 }

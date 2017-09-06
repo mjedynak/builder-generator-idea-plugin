@@ -1,23 +1,22 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
-import com.intellij.ui.components.JBList;
-import pl.mjedynak.idea.plugins.builder.action.GoToBuilderAdditionalAction;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
 import javax.swing.JList;
 
-import static java.util.Arrays.asList;
-
-public class PopupListFactory {
+public abstract class AbstractPopupListFactory {
 
     private ActionCellRenderer actionCellRenderer;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public JList getPopupList() {
-        JList list = new JBList(asList(new GoToBuilderAdditionalAction()));
+        JList list = createList();
         list.setCellRenderer(cellRenderer());
         return list;
     }
+
+    @SuppressWarnings("rawtypes")
+    protected abstract JList createList();
 
     private ActionCellRenderer cellRenderer() {
         if (actionCellRenderer == null) {
