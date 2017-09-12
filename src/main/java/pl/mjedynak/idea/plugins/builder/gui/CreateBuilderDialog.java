@@ -13,12 +13,14 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NotNull;
 import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
@@ -101,6 +103,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         field.setPreferredSize(size);
     }
 
+    @NotNull
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -130,6 +133,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.anchor = GridBagConstraints.WEST;
         panel.add(targetClassNameField, gbConstraints);
         targetClassNameField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
             protected void textChanged(DocumentEvent e) {
                 getOKAction().setEnabled(JavaPsiFacade.getInstance(project).getNameHelper().isIdentifier(getClassName()));
             }
@@ -166,6 +170,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.weightx = 1;
 
         AnAction clickAction = new AnAction() {
+            @Override
             public void actionPerformed(AnActionEvent e) {
                 targetPackageField.getButton().doClick();
             }
@@ -264,10 +269,26 @@ public class CreateBuilderDialog extends DialogWrapper {
             throw new IllegalStateException("Cannot find module for class " + sourceClass.getName());
         }
         try {
+            checkIfSourceClassHasZeroArgsConstructorWhenUsingSingleField();
             checkIfClassCanBeCreated(module);
             callSuper();
         } catch (IncorrectOperationException e) {
             guiHelper.showMessageDialog(project, e.getMessage(), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+        }
+    }
+
+    void checkIfSourceClassHasZeroArgsConstructorWhenUsingSingleField() {
+        if (useSingleField()) {
+            PsiMethod[] constructors = sourceClass.getConstructors();
+            if(constructors.length == 0){
+                return;
+            }
+            for (PsiMethod constructor : constructors) {
+                if (constructor.getParameterList().getParametersCount() == 0) {
+                    return;
+                }
+            }
+            throw new IncorrectOperationException(String.format("%s must define a default constructor", sourceClass.getName()));
         }
     }
 
@@ -295,6 +316,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         return (name != null) ? name.trim() : "";
     }
 
+    @Override
     public JComponent getPreferredFocusedComponent() {
         return targetClassNameField;
     }
