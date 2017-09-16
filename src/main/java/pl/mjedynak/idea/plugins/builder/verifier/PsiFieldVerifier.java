@@ -28,7 +28,7 @@ public class PsiFieldVerifier {
         return result;
     }
 
-    private boolean checkConstructor(PsiField psiField, PsiMethod constructor) {
+    public boolean checkConstructor(PsiField psiField, PsiMethod constructor) {
         PsiParameterList parameterList = constructor.getParameterList();
         PsiParameter[] parameters = parameterList.getParameters();
         return iterateOverParameters(psiField, parameters);
@@ -50,7 +50,7 @@ public class PsiFieldVerifier {
         return result;
     }
 
-    private boolean areNameAndTypeEqual(PsiField psiField, PsiParameter parameter) {
+    public boolean areNameAndTypeEqual(PsiField psiField, PsiParameter parameter) {
         String parameterNamePrefix = codeStyleSettings.getParameterNamePrefix();
         String parameterName = parameter.getName();
         String parameterNameWithoutPrefix = parameterName.replace(parameterNamePrefix, "");

@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -46,8 +46,8 @@ public class BuilderWriterRunnableTest {
         // then
         ArgumentCaptor<BuilderWriterComputable> builderWriterComputableArgumentCaptor = ArgumentCaptor.forClass(BuilderWriterComputable.class);
         verify(application).runWriteAction(builderWriterComputableArgumentCaptor.capture());
-        assertEquals(builderPsiClassBuilder, getField(builderWriterComputableArgumentCaptor.getValue(), "builderPsiClassBuilder"));
-        assertEquals(context, getField(builderWriterComputableArgumentCaptor.getValue(), "context"));
-        assertEquals(existingBuilder, getField(builderWriterComputableArgumentCaptor.getValue(), "existingBuilder"));
+        assertThat(getField(builderWriterComputableArgumentCaptor.getValue(), "builderPsiClassBuilder")).isEqualTo(builderPsiClassBuilder);
+        assertThat(getField(builderWriterComputableArgumentCaptor.getValue(), "context")).isEqualTo(context);
+        assertThat(getField(builderWriterComputableArgumentCaptor.getValue(), "existingBuilder")).isEqualTo(existingBuilder);
     }
 }

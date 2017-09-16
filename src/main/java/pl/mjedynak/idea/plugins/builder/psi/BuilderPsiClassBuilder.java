@@ -7,8 +7,11 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiType;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
+import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 import pl.mjedynak.idea.plugins.builder.writer.BuilderContext;
 
 import java.util.Collection;
@@ -31,6 +34,7 @@ public class BuilderPsiClassBuilder {
 
     private PsiHelper psiHelper = new PsiHelper();
     private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
+    private PsiFieldVerifier psiFieldVerifier = new PsiFieldVerifier();
     private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
     private MethodCreator methodCreator;
@@ -41,6 +45,7 @@ public class BuilderPsiClassBuilder {
     private List<PsiField> psiFieldsForSetters = null;
     private List<PsiField> psiFieldsForConstructor = null;
     private List<PsiField> allSelectedPsiFields = null;
+    private PsiMethod bestConstructor = null;
 
     private PsiClass builderClass = null;
     private PsiElementFactory elementFactory = null;
@@ -48,6 +53,7 @@ public class BuilderPsiClassBuilder {
     private String srcClassFieldName = null;
 
     private boolean useSingleField = false;
+    private boolean isInline = false;
 
     public BuilderPsiClassBuilder aBuilder(BuilderContext context) {
         initializeFields(context);
@@ -78,8 +84,10 @@ public class BuilderPsiClassBuilder {
         psiFieldsForConstructor = context.getPsiFieldsForBuilder().getFieldsForConstructor();
         allSelectedPsiFields = context.getPsiFieldsForBuilder().getAllSelectedFields();
         useSingleField = context.useSingleField();
+        bestConstructor = context.getPsiFieldsForBuilder().getBestContructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
+        isInline = allSelectedPsiFields.size() == psiFieldsForConstructor.size();
     }
 
     public BuilderPsiClassBuilder withFields() {
@@ -146,13 +154,43 @@ public class BuilderPsiClassBuilder {
     }
 
     public PsiClass build() {
+        if (useSingleField) {
+            return buildUseSingleField();
+        } else if (isInline) {
+            return buildIsInline();
+        } else {
+            return buildDefault();
+        }
+    }
+
+    private PsiClass buildUseSingleField() {
+        String buildMethodText = "public " + srcClassName + " build() { "
+                + "return " + srcClassFieldName + ";"
+                + " }";
+        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText, srcClass);
+        builderClass.add(buildMethod);
+        return builderClass;
+    }
+
+    private PsiClass buildIsInline() {
         StringBuilder buildMethodText = new StringBuilder();
         buildMethodText.append("public ").append(srcClassName).append(" build() { ");
-        if (!useSingleField) {
-            appendConstructor(buildMethodText);
-            appendSetMethodsOrAssignments(buildMethodText);
-        }
-        buildMethodText.append("return ").append(srcClassFieldName).append("; }");
+        buildMethodText.append("return ");
+        appendConstructor(buildMethodText);
+        buildMethodText.append(" }");
+        PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
+        builderClass.add(buildMethod);
+        return builderClass;
+    }
+
+    private PsiClass buildDefault() {
+        StringBuilder buildMethodText = new StringBuilder();
+        buildMethodText.append("public ").append(srcClassName).append(" build() { ");
+        buildMethodText.append(srcClassName).append(SPACE).append(srcClassFieldName).append(" = ");
+        appendConstructor(buildMethodText);
+        appendSetMethodsOrAssignments(buildMethodText);
+        buildMethodText.append("return ").append(srcClassFieldName).append(";");
+        buildMethodText.append(" }");
         PsiMethod buildMethod = elementFactory.createMethodFromText(buildMethodText.toString(), srcClass);
         builderClass.add(buildMethod);
         return builderClass;
@@ -160,8 +198,7 @@ public class BuilderPsiClassBuilder {
 
     private void appendConstructor(StringBuilder buildMethodText) {
         String constructorParameters = createConstructorParameters();
-        buildMethodText.append(srcClassName).append(SPACE).append(srcClassFieldName).append(" = new ")
-            .append(srcClassName).append("(").append(constructorParameters).append(");");
+        buildMethodText.append("new ").append(srcClassName).append("(").append(constructorParameters).append(");");
     }
 
     private void appendSetMethodsOrAssignments(StringBuilder buildMethodText) {
@@ -193,12 +230,42 @@ public class BuilderPsiClassBuilder {
     }
 
     private String createConstructorParameters() {
+        if (bestConstructor == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        for (PsiField psiField : psiFieldsForConstructor) {
-            sb.append(psiField.getName()).append(SEMICOLON);
+        for (PsiParameter psiParameter : bestConstructor.getParameterList().getParameters()) {
+            boolean parameterHasMatchingField = false;
+            for (PsiField psiField : psiFieldsForConstructor) {
+                if (psiFieldVerifier.areNameAndTypeEqual(psiField, psiParameter)) {
+                    sb.append(psiField.getName()).append(SEMICOLON);
+                    parameterHasMatchingField = true;
+                    break;
+                }
+            }
+            if (!parameterHasMatchingField) {
+                sb.append(getDefaultValue(psiParameter.getType())).append(SEMICOLON);
+            }
         }
         removeLastSemicolon(sb);
         return sb.toString();
+    }
+
+    private String getDefaultValue(PsiType type) {
+        if (type.equals(PsiType.BOOLEAN)) {
+            return "false";
+        } else if (type.equals(PsiType.BYTE) || type.equals(PsiType.SHORT) || type.equals(PsiType.INT)) {
+            return "0";
+        } else if (type.equals(PsiType.LONG)) {
+            return "0L";
+        } else if (type.equals(PsiType.FLOAT)) {
+            return "0.0f";
+        } else if (type.equals(PsiType.DOUBLE)) {
+            return "0.0d";
+        } else if (type.equals(PsiType.CHAR)) {
+            return "'\\u0000'";
+        }
+        return "null";
     }
 
     private void removeLastSemicolon(StringBuilder sb) {

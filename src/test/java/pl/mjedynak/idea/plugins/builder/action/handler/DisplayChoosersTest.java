@@ -1,5 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
+import com.google.common.collect.Lists;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -9,7 +10,6 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

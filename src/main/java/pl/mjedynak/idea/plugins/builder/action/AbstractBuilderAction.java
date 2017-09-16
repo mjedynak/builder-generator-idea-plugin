@@ -15,6 +15,7 @@ import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseBu
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.finder.ClassFinder;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.BestConstructorSelector;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiFieldSelector;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
@@ -46,6 +47,7 @@ public abstract class AbstractBuilderAction extends EditorAction {
         picoContainer.registerComponentImplementation(PsiFieldSelector.class);
         picoContainer.registerComponentImplementation(PsiFieldsForBuilderFactory.class);
         picoContainer.registerComponentImplementation(DisplayChoosers.class);
+        picoContainer.registerComponentImplementation(BestConstructorSelector.class);
     }
 
     protected AbstractBuilderAction() {
