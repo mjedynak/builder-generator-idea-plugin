@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
-//apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 
 // --- properties ---
 ext.ideaInstallationPath = 'C:/Users/Michal/AppData/Local/JetBrains/Toolbox/apps/IDEA-C/ch-0/171.4249.39'
