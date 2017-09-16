@@ -26,9 +26,12 @@
            version 1.1.7
            <br/>
            <ul>
-           <li>Added best constructor selection in order to prevent generation of faulty constructor in build() method</li>
-           <li>Fixed missorted parameters in constructor (<a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/35">issue #35</a>)</li>
-           <li>Fixed inline return statement when using constructor only in build() method (<a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/26">issue #26</a>)</li>
+           <li>Added best constructor selection in order to prevent generation of faulty constructor in build() method
+           (contribution by <a href="https://github.com/mkickax">mkickax</a>)</li>
+           <li>Fixed missorted parameters in constructor (<a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/35">issue #35</a>)
+           (contribution by <a href="https://github.com/mkickax">mkickax</a>)</li>
+           <li>Fixed inline return statement when using constructor only in build() method (<a href="https://github.com/mjedynak/builder-generator-idea-plugin/issues/26">issue #26</a>)
+           (contribution by <a href="https://github.com/mkickax">mkickax</a>)</li>
            </ul>
            version 1.1.6
            <br/>
