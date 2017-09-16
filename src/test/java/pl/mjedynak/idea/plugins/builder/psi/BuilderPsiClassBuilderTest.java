@@ -98,7 +98,7 @@ public class BuilderPsiClassBuilderTest {
         given(psiFieldsForBuilder.getFieldsForConstructor()).willReturn(psiFieldsForConstructor);
         given(psiFieldsForBuilder.getFieldsForSetters()).willReturn(psiFieldsForSetters);
         given(psiFieldsForBuilder.getAllSelectedFields()).willReturn(allSelectedPsiFields);
-        given(psiFieldsForBuilder.getBestContructor()).willReturn(bestConstructor);
+        given(psiFieldsForBuilder.getBestConstructor()).willReturn(bestConstructor);
         given(elementFactory.createClass(builderClassName)).willReturn(builderClass);
         given(builderClass.getModifierList()).willReturn(psiModifierList);
         context = createBuilderContext(false);

@@ -41,7 +41,7 @@ public class PsiFieldsForBuilderTest {
         assertThat(psiFieldsForBuilder.getFieldsForSetters()).isEqualTo(psiFieldsForSetters);
         assertThat(psiFieldsForBuilder.getFieldsForConstructor()).isEqualTo(psiFieldsForConstructor);
         assertThat(psiFieldsForBuilder.getAllSelectedFields()).isEqualTo(allSelectedPsiFields);
-        assertThat(psiFieldsForBuilder.getBestContructor()).isEqualTo(bestConstructor);
+        assertThat(psiFieldsForBuilder.getBestConstructor()).isEqualTo(bestConstructor);
     }
 
     @Test(expected = UnsupportedOperationException.class)

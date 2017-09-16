@@ -11,13 +11,13 @@ public class PsiFieldsForBuilder {
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
     private List<PsiField> allSelectedPsiFields;
-    private final PsiMethod bestContructor;
+    private final PsiMethod bestConstructor;
 
     public PsiFieldsForBuilder(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, List<PsiField> allSelectedPsiFields, PsiMethod bestConstructor) {
         this.psiFieldsForSetters = ImmutableList.copyOf(psiFieldsForSetters);
         this.psiFieldsForConstructor = ImmutableList.copyOf(psiFieldsForConstructor);
         this.allSelectedPsiFields = ImmutableList.copyOf(allSelectedPsiFields);
-        this.bestContructor = bestConstructor;
+        this.bestConstructor = bestConstructor;
     }
 
     public List<PsiField> getFieldsForSetters() {
@@ -32,7 +32,7 @@ public class PsiFieldsForBuilder {
         return allSelectedPsiFields;
     }
 
-    public PsiMethod getBestContructor() {
-        return bestContructor;
+    public PsiMethod getBestConstructor() {
+        return bestConstructor;
     }
 }

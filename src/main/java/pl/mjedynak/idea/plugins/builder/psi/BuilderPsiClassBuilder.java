@@ -84,7 +84,7 @@ public class BuilderPsiClassBuilder {
         psiFieldsForConstructor = context.getPsiFieldsForBuilder().getFieldsForConstructor();
         allSelectedPsiFields = context.getPsiFieldsForBuilder().getAllSelectedFields();
         useSingleField = context.useSingleField();
-        bestConstructor = context.getPsiFieldsForBuilder().getBestContructor();
+        bestConstructor = context.getPsiFieldsForBuilder().getBestConstructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
         isInline = allSelectedPsiFields.size() == psiFieldsForConstructor.size();

@@ -170,6 +170,6 @@ public class PsiFieldsForBuilderFactoryTest {
                 .containsOnly(psiFieldInConstructorOnly, psiFieldInSetterAndConstructor);
         assertThat(result.getFieldsForSetters()).isNotNull().hasSize(1)
                 .containsOnly(psiFieldInSetterOnly);
-        assertThat(result.getBestContructor()).isEqualTo(bestConstructor);
+        assertThat(result.getBestConstructor()).isEqualTo(bestConstructor);
     }
 }

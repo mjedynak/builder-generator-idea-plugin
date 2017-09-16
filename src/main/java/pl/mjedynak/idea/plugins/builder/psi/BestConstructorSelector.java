@@ -27,7 +27,7 @@ public class BestConstructorSelector {
 
     public PsiMethod getBestConstructor(Collection<PsiField> psiFieldsToFindInConstructor, PsiClass psiClass) {
         int fieldsToFindCount = psiFieldsToFindInConstructor.size();
-        createContructorLists(psiFieldsToFindInConstructor, psiClass);
+        createConstructorLists(psiFieldsToFindInConstructor, psiClass);
 
         computeNumberOfMatchingFields(constructorsWithEqualParameterCount, psiFieldsToFindInConstructor);
         PsiMethod bestConstructor = findConstructorWithAllFieldsToFind(constructorsWithEqualParameterCount, fieldsToFindCount);
@@ -45,7 +45,7 @@ public class BestConstructorSelector {
         return findConstructorWithMaximumOfFieldsToFind();
     }
 
-    private void createContructorLists(Collection<PsiField> psiFieldsToFindInConstructor, PsiClass psiClass) {
+    private void createConstructorLists(Collection<PsiField> psiFieldsToFindInConstructor, PsiClass psiClass) {
         constructorsWithEqualParameterCount = Lists.newArrayList();
         constructorsWithHigherParameterCount = Sets.newTreeSet();
         constructorsWithLowerParameterCount = Lists.newArrayList();
@@ -84,11 +84,11 @@ public class BestConstructorSelector {
     }
 
     private PsiMethod findConstructorWithMaximumOfFieldsToFind() {
-        Iterable<ConstructorWithExtraData> allContructors = Iterables.concat(constructorsWithEqualParameterCount, constructorsWithHigherParameterCount, constructorsWithLowerParameterCount);
+        Iterable<ConstructorWithExtraData> allConstructors = Iterables.concat(constructorsWithEqualParameterCount, constructorsWithHigherParameterCount, constructorsWithLowerParameterCount);
         int matchingFieldCount = -1;
         int parameterCount = 0;
         PsiMethod bestConstructor = null;
-        for (ConstructorWithExtraData constructor : allContructors) {
+        for (ConstructorWithExtraData constructor : allConstructors) {
             if (constructor.getMatchingFieldsCount() > matchingFieldCount || constructor.getMatchingFieldsCount() == matchingFieldCount && constructor.getParametersCount() < parameterCount) {
                 bestConstructor = constructor.getConstructor();
                 matchingFieldCount = constructor.getMatchingFieldsCount();

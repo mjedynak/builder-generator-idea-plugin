@@ -78,11 +78,11 @@ public class BestConstructorSelectorTest {
         mockPsiVariable(psiParameter3, NAME_3, PsiType.INT);
         mockPsiVariable(psiParameter4, NAME_4, PsiType.INT);
 
-        mockContructor(constructor0, parameterList0, EMPTY_PSI_PARAMETERS);
-        mockContructor(constructor1, parameterList1, psiParameter4);
-        mockContructor(constructor2a, parameterList2a, psiParameter1, psiParameter2);
-        mockContructor(constructor2b, parameterList2b, psiParameter1, psiParameter4);
-        mockContructor(constructor3, parameterList3, psiParameter1, psiParameter2, psiParameter3);
+        mockConstructor(constructor0, parameterList0, EMPTY_PSI_PARAMETERS);
+        mockConstructor(constructor1, parameterList1, psiParameter4);
+        mockConstructor(constructor2a, parameterList2a, psiParameter1, psiParameter2);
+        mockConstructor(constructor2b, parameterList2b, psiParameter1, psiParameter4);
+        mockConstructor(constructor3, parameterList3, psiParameter1, psiParameter2, psiParameter3);
     }
 
     private void mockPsiVariable(PsiVariable psiVariable, String name, PsiPrimitiveType type) {
@@ -90,7 +90,7 @@ public class BestConstructorSelectorTest {
         given(psiVariable.getType()).willReturn(type);
     }
 
-    private void mockContructor(PsiParameterListOwner constructor, PsiParameterList parameterList, PsiParameter... psiParameters) {
+    private void mockConstructor(PsiParameterListOwner constructor, PsiParameterList parameterList, PsiParameter... psiParameters) {
         given(constructor.getParameterList()).willReturn(parameterList);
         given(parameterList.getParameters()).willReturn(psiParameters);
         given(parameterList.getParametersCount()).willReturn(psiParameters.length);
