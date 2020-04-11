@@ -1,8 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
 import com.intellij.openapi.editor.actionSystem.EditorAction;
+import com.intellij.util.pico.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
 import pl.mjedynak.idea.plugins.builder.action.handler.AbstractBuilderActionHandler;
 import pl.mjedynak.idea.plugins.builder.action.handler.DisplayChoosers;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;

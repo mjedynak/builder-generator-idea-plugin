@@ -7,7 +7,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.factory.CreateBuilderDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.MemberChooser;
 import pl.mjedynak.idea.plugins.builder.factory.MemberChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.PsiFieldsForBuilderFactory;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
@@ -53,7 +52,7 @@ public class DisplayChoosers {
             boolean useSingleField = createBuilderDialog.useSingleField();
             boolean hasButMethod = createBuilderDialog.hasButMethod();
             List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder, useSingleField, hasButMethod);
-            MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
+            com.intellij.ide.util.MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
             memberChooserDialog.show();
             writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog, existingBuilder);
         }
@@ -61,7 +60,7 @@ public class DisplayChoosers {
 
     @SuppressWarnings("rawtypes")
     private void writeBuilderIfNecessary(
-            PsiDirectory targetDirectory, String className, String methodPrefix, MemberChooser<PsiElementClassMember> memberChooserDialog, CreateBuilderDialog createBuilderDialog, PsiClass existingBuilder) {
+            PsiDirectory targetDirectory, String className, String methodPrefix, com.intellij.ide.util.MemberChooser<PsiElementClassMember> memberChooserDialog, CreateBuilderDialog createBuilderDialog, PsiClass existingBuilder) {
         if (memberChooserDialog.isOK()) {
             List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);

@@ -1,11 +1,10 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
-apply plugin: 'checkstyle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'C:/Users/Michal/AppData/Local/JetBrains/Toolbox/apps/IDEA-C/ch-0/171.4249.39'
-ext.ideaJdk = 'IntelliJ IDEA Community Edition IC-171.4249.39'
+ext.ideaInstallationPath = 'C:/Users/Michal/AppData/Local/JetBrains/Toolbox/apps/IDEA-C/ch-0/201.6668.121'
+ext.ideaJdk = 'IntelliJ IDEA Community Edition IC-201.6668.121'
 sourceCompatibility = 1.8
 // --- properties ---
 
@@ -20,6 +19,7 @@ repositories {
 
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
+    compile fileTree(dir: ideaInstallationPath + '/plugins/java/lib', include: '*.jar')
     testCompile 'org.mockito:mockito-core:2.0.3-beta'
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile 'org.springframework:spring-test:4.0.0.RELEASE'
@@ -31,9 +31,5 @@ jar {
             include 'plugin.xml'
         }
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
 }
 
