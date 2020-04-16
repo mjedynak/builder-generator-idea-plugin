@@ -169,4 +169,5 @@
 
     <extensions defaultExtensionNs="com.intellij">
     </extensions>
+    <depends>com.intellij.modules.java</depends>
 </idea-plugin>
