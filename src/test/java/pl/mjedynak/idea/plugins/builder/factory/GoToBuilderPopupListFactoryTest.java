@@ -17,7 +17,7 @@ public class GoToBuilderPopupListFactoryTest {
     @Test
     public void shouldCreateJBListWithActionCellRenderer() {
         // when
-        JList popupList = popupListFactory.getPopupList();
+        JList<?> popupList = popupListFactory.getPopupList();
 
         // then
         assertThat(popupList).isInstanceOf(JBList.class);

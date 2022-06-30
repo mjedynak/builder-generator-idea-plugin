@@ -28,13 +28,13 @@ public class PsiFieldVerifierTest {
     private PsiMethod[] methods;
     private PsiParameter[] parameters;
 
-    @Mock private PsiField psiField;
+    @Mock(lenient = true) private PsiField psiField;
     @Mock private PsiClass psiClass;
     @Mock private PsiMethod constructor;
     @Mock private PsiParameterList parameterList;
-    @Mock private PsiParameter parameter;
+    @Mock(lenient = true) private PsiParameter parameter;
     @Mock private PsiType psiType;
-    @Mock private PsiMethod method;
+    @Mock(lenient = true) private PsiMethod method;
     @Mock private PsiModifierList modifierList;
     @Mock private CodeStyleSettings settings;
 

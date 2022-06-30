@@ -36,6 +36,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.withSettings;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.FINAL_MODIFIER;
@@ -47,7 +48,7 @@ public class BuilderPsiClassBuilderTest {
     private static final PsiParameter[] EMPTY_PSI_PARAMETERS = {};
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
-    @Mock private CodeStyleSettings settings;
+    @Mock(lenient = true) private CodeStyleSettings settings;
     @Mock private PsiHelper psiHelper;
     @Mock private ButMethodCreator butMethodCreator;
     @Mock private MethodCreator methodCreator;
@@ -56,14 +57,14 @@ public class BuilderPsiClassBuilderTest {
     @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass srcClass;
     @Mock private JavaDirectoryService javaDirectoryService;
-    @Mock private PsiClass builderClass;
+    @Mock(lenient = true) private PsiClass builderClass;
     @Mock private JavaPsiFacade javaPsiFacade;
     @Mock private PsiElementFactory elementFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiMethod psiMethod;
     @Mock private PsiModifierList psiModifierList;
     @Mock private PsiMethod bestConstructor;
-    @Mock private PsiFieldVerifier psiFieldVerifier;
+    @Mock(lenient = true) private PsiFieldVerifier psiFieldVerifier;
 
     @Captor private ArgumentCaptor<String> stringCaptor;
 
@@ -349,10 +350,10 @@ public class BuilderPsiClassBuilderTest {
     public void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructorWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
-        PsiField psiFieldForSetter = mock(PsiField.class);
+        PsiField psiFieldForSetter = mock(PsiField.class, withSettings().lenient());
         psiFieldsForSetters.add(psiFieldForSetter);
 
-        PsiField psiFieldForConstructor = mock(PsiField.class);
+        PsiField psiFieldForConstructor = mock(PsiField.class, withSettings().lenient());
         psiFieldsForConstructor.add(psiFieldForConstructor);
         given(psiFieldForConstructor.getName()).willReturn("age");
 

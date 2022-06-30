@@ -44,7 +44,7 @@ public class ButMethodCreatorTest {
     }
 
     private void initOtherCommonMocks() {
-        given(builderClass.getMethods()).willReturn((PsiMethod[]) asList(method1, method2, method3).toArray());
+        given(builderClass.getMethods()).willReturn(asList(method1, method2, method3).toArray(PsiMethod[]::new));
         given(method1.getName()).willReturn("Builder");
         given(method2.getName()).willReturn("aBuilder");
         given(method2.getParameterList()).willReturn(parameterList1);
@@ -52,7 +52,7 @@ public class ButMethodCreatorTest {
         given(method3.getName()).willReturn("withAge");
         given(method3.getParameterList()).willReturn(parameterList2);
         given(parameterList2.getParametersCount()).willReturn(1);
-        given(parameterList2.getParameters()).willReturn((PsiParameter[]) asList(parameter).toArray());
+        given(parameterList2.getParameters()).willReturn(asList(parameter).toArray(PsiParameter[]::new));
         given(parameter.getName()).willReturn("age");
     }
 

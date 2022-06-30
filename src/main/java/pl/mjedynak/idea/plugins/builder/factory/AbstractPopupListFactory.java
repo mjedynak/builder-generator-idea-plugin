@@ -9,14 +9,13 @@ public abstract class AbstractPopupListFactory {
     private ActionCellRenderer actionCellRenderer;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public JList getPopupList() {
+    public JList<?> getPopupList() {
         JList list = createList();
         list.setCellRenderer(cellRenderer());
         return list;
     }
 
-    @SuppressWarnings("rawtypes")
-    protected abstract JList createList();
+    protected abstract JList<?> createList();
 
     private ActionCellRenderer cellRenderer() {
         if (actionCellRenderer == null) {

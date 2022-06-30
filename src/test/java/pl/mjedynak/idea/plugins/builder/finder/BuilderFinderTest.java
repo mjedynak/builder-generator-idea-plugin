@@ -21,7 +21,7 @@ public class BuilderFinderTest {
     private static final String BUILDER_NAME = CLASS_NAME + BuilderFinder.SEARCH_PATTERN;
 
     @InjectMocks private BuilderFinder builderFinder;
-    @Mock private ClassFinder classFinder;
+    @Mock(lenient = true) private ClassFinder classFinder;
     @Mock private PsiClass psiClass;
     @Mock private PsiClass builderClass;
     @Mock private Project project;

@@ -1,7 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
@@ -33,7 +33,7 @@ public abstract class AbstractBuilderActionHandler extends EditorActionHandler {
 
     @Override
     public void execute(Editor editor, DataContext dataContext) {
-        Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
+        Project project = (Project) dataContext.getData(CommonDataKeys.PROJECT.getName());
         PsiClass psiClassFromEditor = psiHelper.getPsiClassFromEditor(editor, project);
         prepareDisplayChoosers(editor, psiClassFromEditor, dataContext);
         if (psiClassFromEditor != null) {
@@ -42,7 +42,7 @@ public abstract class AbstractBuilderActionHandler extends EditorActionHandler {
     }
 
     private void prepareDisplayChoosers(Editor editor, PsiClass psiClassFromEditor, DataContext dataContext) {
-        Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
+        Project project = (Project) dataContext.getData(CommonDataKeys.PROJECT.getName());
         displayChoosers.setEditor(editor);
         displayChoosers.setProject(project);
         displayChoosers.setPsiClassFromEditor(psiClassFromEditor);
