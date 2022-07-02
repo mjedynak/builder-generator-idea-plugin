@@ -1,12 +1,10 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.javadoc.PsiDocComment;
 
 import java.util.List;
 
@@ -28,43 +26,18 @@ public class PsiFieldsModifier {
     }
 
     private void removeModifiers(PsiField psiField, PsiClass builderClass) {
-        PsiElement copy = psiField.copy();
-        removeAnnotationsFromElement(copy);
-        removeFinalModifierFromElement(copy);
-        removeComments(copy);
+        PsiElement copy = copyField(psiField, builderClass);
         builderClass.add(copy);
     }
 
-    private void removeComments(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiDocComment docComment = ((PsiField) psiElement).getDocComment();
-            if (docComment != null) {
-                docComment.delete();
-            }
+    private PsiElement copyField(final PsiField psiField, final PsiClass builderClass) {
+        PsiField builderField = PsiElementFactory.getInstance(builderClass.getProject())
+                .createField(psiField.getName(), psiField.getType()
+        );
+        if (builderField.getModifierList() != null) {
+            builderField.getModifierList().setModifierProperty(PsiModifier.PRIVATE, true);
         }
-    }
 
-    private void removeFinalModifierFromElement(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
-            if (modifierList != null && modifierList.hasExplicitModifier(PsiModifier.FINAL)) {
-                modifierList.setModifierProperty(PsiModifier.FINAL, false);
-            }
-        }
-    }
-
-    private void removeAnnotationsFromElement(PsiElement psiElement) {
-        if (psiElement instanceof PsiField) {
-            PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
-            if (modifierList != null) {
-                deleteAnnotationsFromModifierList(modifierList);
-            }
-        }
-    }
-
-    private void deleteAnnotationsFromModifierList(PsiModifierList modifierList) {
-        for (PsiAnnotation annotation : modifierList.getAnnotations()) {
-            annotation.delete();
-        }
+        return builderField;
     }
 }

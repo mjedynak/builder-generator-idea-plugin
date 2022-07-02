@@ -22,9 +22,14 @@
           </ul>
         ]]>
     </description>
-    <version>1.1.8</version>
+    <version>1.2.0</version>
     <change-notes>
         <![CDATA[
+           version 1.2.0
+           <br/>
+           <ul>
+           <li>Added ability to generate builder for Java records and lombok @Value types</li>
+           </ul>
            version 1.1.8
            <br/>
            <ul>
@@ -148,9 +153,8 @@
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak</vendor>
-<!--
+
     <idea-version since-build="201.6668.121"/>
--->
 
     <actions>
         <action id="GoToBuilder" class="pl.mjedynak.idea.plugins.builder.action.GoToBuilderAction"
@@ -168,9 +172,6 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.java</depends>
-<!--
-    <depends>com.intellij.modules.platform</depends>
--->
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->

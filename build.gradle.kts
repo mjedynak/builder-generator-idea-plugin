@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "pl.mjedynak"
-version = "1.1.8"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -44,9 +44,5 @@ tasks {
 
     wrapper {
         gradleVersion = "7.4.2"
-    }
-
-    test {
-        useJUnitPlatform()
     }
 }
