@@ -1,16 +1,16 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MethodNameCreatorTest {
 
-    private MethodNameCreator methodNameCreator = new MethodNameCreator();
+    private final MethodNameCreator methodNameCreator = new MethodNameCreator();
 
     @Test
-    public void shouldCreateMethodIfPrefixIsEmpty() {
+    void shouldCreateMethodIfPrefixIsEmpty() {
         // when
         String result = methodNameCreator.createMethodName(EMPTY, "userName");
 
@@ -19,7 +19,7 @@ public class MethodNameCreatorTest {
     }
 
     @Test
-    public void shouldCreateMethodWithCapitalizedFieldNameIfPrefixIsNotEmpty() {
+    void shouldCreateMethodWithCapitalizedFieldNameIfPrefixIsNotEmpty() {
         // when
         String result = methodNameCreator.createMethodName("with", "field");
 

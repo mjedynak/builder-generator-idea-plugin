@@ -10,7 +10,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+
+    testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
     testImplementation("org.assertj:assertj-core:3.23.1")
     testImplementation("org.springframework:spring-test:5.2.22.RELEASE")
 }
@@ -41,5 +44,9 @@ tasks {
 
     wrapper {
         gradleVersion = "7.4.2"
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

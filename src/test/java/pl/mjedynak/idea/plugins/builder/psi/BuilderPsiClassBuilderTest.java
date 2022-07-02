@@ -9,19 +9,21 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiFieldImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
@@ -31,40 +33,38 @@ import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.withSettings;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.FINAL_MODIFIER;
-import static pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder.STATIC_MODIFIER;
 
-@RunWith(MockitoJUnitRunner.class)
+
+@ExtendWith(MockitoExtension.class)
 public class BuilderPsiClassBuilderTest {
-
     private static final PsiParameter[] EMPTY_PSI_PARAMETERS = {};
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
-    @Mock(lenient = true) private CodeStyleSettings settings;
-    @Mock private PsiHelper psiHelper;
+    @Mock(strictness = Mock.Strictness.LENIENT) private CodeStyleSettings settings;
+    @Mock(strictness = Mock.Strictness.LENIENT) private PsiHelper psiHelper;
     @Mock private ButMethodCreator butMethodCreator;
     @Mock private MethodCreator methodCreator;
     @Mock private PsiFieldsModifier psiFieldsModifier;
     @Mock private Project project;
     @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass srcClass;
-    @Mock private JavaDirectoryService javaDirectoryService;
-    @Mock(lenient = true) private PsiClass builderClass;
+    @Mock(strictness = Mock.Strictness.LENIENT) private JavaDirectoryService javaDirectoryService;
+    @Mock(strictness = Mock.Strictness.LENIENT) private PsiClass builderClass;
     @Mock private JavaPsiFacade javaPsiFacade;
-    @Mock private PsiElementFactory elementFactory;
+    @Mock(strictness = Mock.Strictness.LENIENT) private PsiElementFactory elementFactory;
     @Mock private PsiFieldsForBuilder psiFieldsForBuilder;
     @Mock private PsiMethod psiMethod;
     @Mock private PsiModifierList psiModifierList;
     @Mock private PsiMethod bestConstructor;
-    @Mock(lenient = true) private PsiFieldVerifier psiFieldVerifier;
+    @Mock(strictness = Mock.Strictness.LENIENT) private PsiFieldVerifier psiFieldVerifier;
 
     @Captor private ArgumentCaptor<String> stringCaptor;
 
@@ -79,15 +79,15 @@ public class BuilderPsiClassBuilderTest {
     }
 
     private BuilderContext context;
-    private List<PsiField> psiFieldsForSetters = Lists.newArrayList();
-    private List<PsiField> psiFieldsForConstructor = Lists.newArrayList();
-    private List<PsiField> allSelectedPsiFields = Lists.newArrayList();
+    private final List<PsiField> psiFieldsForSetters = Lists.newArrayList();
+    private final List<PsiField> psiFieldsForConstructor = Lists.newArrayList();
+    private final List<PsiField> allSelectedPsiFields = Lists.newArrayList();
 
-    private String builderClassName = "BuilderClassName";
-    private String srcClassName = "ClassName";
-    private String srcClassFieldName = "className";
+    private final String builderClassName = "BuilderClassName";
+    private final String srcClassName = "ClassName";
+    private final String srcClassFieldName = "className";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         setField(psiClassBuilder, "psiFieldsModifier", psiFieldsModifier);
         setField(psiClassBuilder, "psiHelper", psiHelper);
@@ -107,28 +107,28 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldSetPassedFieldsAndCreateRequiredOnes() {
+    void shouldSetPassedFieldsAndCreateRequiredOnes() {
         // when
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(context);
 
         // then
         assertFieldsAreSet(result);
-        verify(psiModifierList).setModifierProperty(FINAL_MODIFIER, true);
+        verify(psiModifierList).setModifierProperty(PsiModifier.FINAL, true);
     }
 
     @Test
-    public void shouldSetPassedFieldsAndCreateRequiredOnesForInnerBuilder() {
+    void shouldSetPassedFieldsAndCreateRequiredOnesForInnerBuilder() {
         // when
         BuilderPsiClassBuilder result = psiClassBuilder.anInnerBuilder(context);
 
         // then
         assertFieldsAreSet(result);
-        verify(psiModifierList).setModifierProperty(STATIC_MODIFIER, true);
-        verify(psiModifierList).setModifierProperty(FINAL_MODIFIER, true);
+        verify(psiModifierList).setModifierProperty(PsiModifier.STATIC, true);
+        verify(psiModifierList).setModifierProperty(PsiModifier.FINAL, true);
     }
 
     @Test
-    public void shouldDelegatePsiFieldsModification() {
+    void shouldDelegatePsiFieldsModification() {
         // when
         BuilderPsiClassBuilder result = psiClassBuilder.aBuilder(context).withFields();
 
@@ -138,7 +138,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldNotDelegatePsiFieldsModificationButDirectlyCreateFieldWhenUsingSingleField() {
+    void shouldNotDelegatePsiFieldsModificationButDirectlyCreateFieldWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
         String fieldText = "private " + srcClassName + " " + srcClassFieldName + ";";
@@ -155,7 +155,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddPrivateConstructorToBuildClass() {
+    void shouldAddPrivateConstructorToBuildClass() {
         // given
         PsiMethod constructor = mock(PsiMethod.class);
         PsiModifierList modifierList = mock(PsiModifierList.class);
@@ -166,12 +166,12 @@ public class BuilderPsiClassBuilderTest {
         psiClassBuilder.aBuilder(context).withPrivateConstructor();
 
         // then
-        verify(modifierList).setModifierProperty("private", true);
+        verify(modifierList).setModifierProperty(PsiModifier.PRIVATE, true);
         verify(builderClass).add(constructor);
     }
 
     @Test
-    public void shouldAddPrivateConstructorToBuildClassWithBuildingObjectInstanciationWhenUsingSingleField() {
+    void shouldAddPrivateConstructorToBuildClassWithBuildingObjectInstantiationWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
         String constructorText = builderClassName + "(){ " + srcClassFieldName + " = new " + srcClassName + "(); }";
@@ -184,12 +184,12 @@ public class BuilderPsiClassBuilderTest {
         psiClassBuilder.aBuilder(context).withPrivateConstructor();
 
         // then
-        verify(modifierList).setModifierProperty("private", true);
+        verify(modifierList).setModifierProperty(PsiModifier.PRIVATE, true);
         verify(builderClass).add(constructor);
     }
 
     @Test
-    public void shouldAddInitializingMethod() {
+    void shouldAddInitializingMethod() {
         // given
         PsiMethod method = mock(PsiMethod.class);
         given(elementFactory.createMethodFromText(
@@ -203,7 +203,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddInitializingMethodStartingWithAnIfSourceClassNameStartsWithVowel() {
+    void shouldAddInitializingMethodStartingWithAnIfSourceClassNameStartsWithVowel() {
         // given
         PsiMethod method = mock(PsiMethod.class);
         String srcClassNameStartingWithVowel = "Inventory";
@@ -219,7 +219,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddSetMethodsForFieldsFromBothLists() {
+    void shouldAddSetMethodsForFieldsFromBothLists() {
         // given
         PsiFieldImpl psiFieldForSetter = mock(PsiFieldImpl.class);
         psiFieldsForSetters.add(psiFieldForSetter);
@@ -242,7 +242,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddAllSelectedFieldAsSetterInInnerBuilder() {
+    void shouldAddAllSelectedFieldAsSetterInInnerBuilder() {
         // giver
         PsiField selectedField = mock(PsiField.class);
         allSelectedPsiFields.add(selectedField);
@@ -255,7 +255,7 @@ public class BuilderPsiClassBuilderTest {
         BuilderPsiClassBuilder builder = psiClassBuilder.anInnerBuilder(context);
         setField(builder, "methodCreator", methodCreator);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         // when
         builder.withSetMethods(methodPrefix);
@@ -265,7 +265,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddAllSelectedFieldAsSetterWhenUsingSingleField() {
+    void shouldAddAllSelectedFieldAsSetterWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
         PsiField selectedField = mock(PsiField.class);
@@ -287,7 +287,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddButMethod() {
+    void shouldAddButMethod() {
         // given
         given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, false)).willReturn(psiMethod);
         BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
@@ -302,7 +302,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddButMethodWhenUsingSingleField() {
+    void shouldAddButMethodWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
         given(butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, true)).willReturn(psiMethod);
@@ -318,7 +318,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructor() {
+    void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructor() {
         // given
         PsiField psiFieldForSetter = mock(PsiField.class);
         psiFieldsForSetters.add(psiFieldForSetter);
@@ -347,13 +347,13 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructorWhenUsingSingleField() {
+    void shouldReturnBuilderObjectWithBuildMethodUsingSetterAndConstructorWhenUsingSingleField() {
         // given
         context = createBuilderContext(true);
-        PsiField psiFieldForSetter = mock(PsiField.class, withSettings().lenient());
+        PsiField psiFieldForSetter = mock(PsiField.class, withSettings().strictness(Strictness.LENIENT));
         psiFieldsForSetters.add(psiFieldForSetter);
 
-        PsiField psiFieldForConstructor = mock(PsiField.class, withSettings().lenient());
+        PsiField psiFieldForConstructor = mock(PsiField.class, withSettings().strictness(Strictness.LENIENT));
         psiFieldsForConstructor.add(psiFieldForConstructor);
         given(psiFieldForConstructor.getName()).willReturn("age");
 
@@ -370,7 +370,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void constructorShouldHavePriorityOverSetter() {
+    void constructorShouldHavePriorityOverSetter() {
         // given
         PsiField nameField = mock(PsiField.class);
         PsiField ageField = mock(PsiField.class);
@@ -386,7 +386,7 @@ public class BuilderPsiClassBuilderTest {
                 + srcClassFieldName + ".setAge(age);return " + srcClassFieldName + "; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         PsiParameterList psiParameterList = mock(PsiParameterList.class);
         given(bestConstructor.getParameterList()).willReturn(psiParameterList);
@@ -405,7 +405,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void setterShouldHavePriorityOverField() {
+    void setterShouldHavePriorityOverField() {
         // given
         PsiField nameField = mock(PsiField.class);
         PsiField ageField = mock(PsiField.class);
@@ -426,7 +426,7 @@ public class BuilderPsiClassBuilderTest {
                 + srcClassFieldName + ".age=this.age;return " + srcClassFieldName + "; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         // when
         PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
@@ -439,7 +439,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldHavePriorityOverSetter() {
+    void shouldHavePriorityOverSetter() {
         // given
         PsiField nameField = mock(PsiField.class);
         PsiField ageField = mock(PsiField.class);
@@ -455,7 +455,7 @@ public class BuilderPsiClassBuilderTest {
                 + srcClassFieldName + ".setAge(age);return " + srcClassFieldName + "; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         PsiParameterList psiParameterList = mock(PsiParameterList.class);
         given(bestConstructor.getParameterList()).willReturn(psiParameterList);
@@ -474,7 +474,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldOutputInlineConstructor() {
+    void shouldOutputInlineConstructor() {
         // given
         PsiField nameField = mock(PsiField.class);
         PsiField ageField = mock(PsiField.class);
@@ -500,7 +500,7 @@ public class BuilderPsiClassBuilderTest {
                 + "return new " + srcClassName + "(name,age); }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         // when
         PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
@@ -513,7 +513,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldSortConstructorParameters() {
+    void shouldSortConstructorParameters() {
         // given
         PsiField nameField = mock(PsiField.class);
         PsiField ageField = mock(PsiField.class);
@@ -537,7 +537,7 @@ public class BuilderPsiClassBuilderTest {
                 + srcClassName + " " + srcClassFieldName + " = new " + srcClassName + "(age,name);return className; }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         // when
         PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
@@ -550,7 +550,7 @@ public class BuilderPsiClassBuilderTest {
     }
 
     @Test
-    public void shouldAddDefaultValueWhenNeeded() {
+    void shouldAddDefaultValueWhenNeeded() {
         // given
         PsiParameterList psiParameterList = mock(PsiParameterList.class);
         given(bestConstructor.getParameterList()).willReturn(psiParameterList);
@@ -573,7 +573,7 @@ public class BuilderPsiClassBuilderTest {
                 + "return new " + srcClassName + "(false,0,0,0,0L,0.0f,0.0d,'\\u0000',null); }";
         given(elementFactory.createMethodFromText(expectedCode, srcClass)).willReturn(method);
 
-        given(builderClass.hasModifierProperty("static")).willReturn(true);
+        given(builderClass.hasModifierProperty(PsiModifier.STATIC)).willReturn(true);
 
         // when
         PsiClass result = psiClassBuilder.anInnerBuilder(context).build();
@@ -591,7 +591,6 @@ public class BuilderPsiClassBuilderTest {
         return psiParameter;
     }
 
-    @SuppressWarnings("unchecked")
     private void assertFieldsAreSet(BuilderPsiClassBuilder result) {
         assertThat(result).isSameAs(psiClassBuilder);
         assertThat(getField(psiClassBuilder, "elementFactory")).isEqualTo(elementFactory);

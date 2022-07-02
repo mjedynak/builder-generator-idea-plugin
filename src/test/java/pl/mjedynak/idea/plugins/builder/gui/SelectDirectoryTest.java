@@ -5,24 +5,25 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SelectDirectoryTest {
 
     private static final String PACKAGE_NAME = "packageName";
@@ -38,16 +39,13 @@ public class SelectDirectoryTest {
     @Mock private PsiDirectory targetDirectory;
     @Mock private PsiClass existingBuilder;
 
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME)).willReturn(targetDirectory);
     }
 
     @Test
-    public void shouldDoNothingIfTargetDirectoryReturnedByPsiHelperIsNull() {
+    void shouldDoNothingIfTargetDirectoryReturnedByPsiHelperIsNull() {
         // given
         selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
         given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME)).willReturn(null);
@@ -56,11 +54,11 @@ public class SelectDirectoryTest {
         selectDirectory.run();
 
         // then
-        verifyZeroInteractions(createBuilderDialog);
+        verifyNoInteractions(createBuilderDialog);
     }
 
     @Test
-    public void shouldSetTargetDirectoryOnCaller() {
+    void shouldSetTargetDirectoryOnCaller() {
         // given
         selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
         given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME)).willReturn(null);
@@ -74,37 +72,36 @@ public class SelectDirectoryTest {
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @Test
-    public void shouldThrowExceptionWhenPsiHelperCheckReturnsErrorString() {
-        // should throw
-        expectedException.expect(IncorrectOperationException.class);
-        expectedException.expectMessage(ERROR_MESSAGE);
+    void shouldThrowExceptionWhenPsiHelperCheckReturnsErrorString() {
+        Throwable exception = assertThrows(IncorrectOperationException.class, () -> {
 
-        // given
-        selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
-        given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME)).willReturn(ERROR_MESSAGE);
+            // given
+            selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
+            given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME)).willReturn(ERROR_MESSAGE);
 
-        // when
-        selectDirectory.run();
+            // when
+            selectDirectory.run();
+        });
+        assertTrue(exception.getMessage().contains(ERROR_MESSAGE));
     }
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @Test
-    public void shouldThrowExceptionWhenPsiHelperThrowsIncorrectOperationException() {
-        // should throw
-        expectedException.expect(IncorrectOperationException.class);
-        expectedException.expectMessage(ERROR_MESSAGE);
-
+    void shouldThrowExceptionWhenPsiHelperThrowsIncorrectOperationException() {
         // given
         selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
         IncorrectOperationException exception = new IncorrectOperationException(ERROR_MESSAGE);
         given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME)).willThrow(exception);
 
         // when
-        selectDirectory.run();
+        Throwable expectedException = assertThrows(IncorrectOperationException.class, () -> selectDirectory.run());
+
+        // then
+        assertThat(expectedException).hasMessageContaining(ERROR_MESSAGE);
     }
 
     @Test
-    public void shouldNotCheckIfClassCanBeCreatedIfExistingBuilderMustBeDeletedAndClassToCreateIsTheSame() {
+    void shouldNotCheckIfClassCanBeCreatedIfExistingBuilderMustBeDeletedAndClassToCreateIsTheSame() {
         // given
         selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, existingBuilder);
         mockIsClassToCreateSameAsBuilderToDelete();

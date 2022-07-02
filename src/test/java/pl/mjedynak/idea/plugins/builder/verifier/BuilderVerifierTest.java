@@ -1,29 +1,29 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
 import com.intellij.psi.PsiClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BuilderVerifierTest {
 
     private BuilderVerifier builderVerifier;
 
     @Mock private PsiClass psiClass;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         builderVerifier = new BuilderVerifier();
     }
 
     @Test
-    public void shouldVerifyThatClassIsNotABuilderWhenItsDoesNotHaveBuilderSuffix() {
+    void shouldVerifyThatClassIsNotABuilderWhenItsDoesNotHaveBuilderSuffix() {
         // given
         given(psiClass.getName()).willReturn("AnyNameThatDoesn'tHaveBuilderAtTheEnd");
 
@@ -35,7 +35,7 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatClassIsABuilderWhenItHasBuilderSuffix() {
+    void shouldVerifyThatClassIsABuilderWhenItHasBuilderSuffix() {
         // given
         given(psiClass.getName()).willReturn("AnyNameThatEndsWithBuilder");
 

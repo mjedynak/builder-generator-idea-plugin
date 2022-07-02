@@ -1,11 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.renderer;
 
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.swing.Icon;
 import javax.swing.JList;
@@ -15,18 +15,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ActionCellRendererTest {
 
     private ActionCellRenderer actionCellRenderer;
 
-    @Mock private JList list;
+    @Mock private JList<?> list;
     @Mock private GotoTargetHandler.AdditionalAction action;
 
     private boolean anyBooleanValue;
     private int anyIndex;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         actionCellRenderer = new ActionCellRenderer();
         anyBooleanValue = false;
@@ -34,7 +34,7 @@ public class ActionCellRendererTest {
     }
 
     @Test
-    public void shouldGetTextAndIconFromActionWhenRendering() {
+    void shouldGetTextAndIconFromActionWhenRendering() {
         // given
         Icon icon = mock(Icon.class);
         String actionText = "actionText";

@@ -4,14 +4,13 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.javadoc.PsiDocComment;
 
 import java.util.List;
 
 public class PsiFieldsModifier {
-
-    static final String FINAL = "final";
 
     public void modifyFields(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, PsiClass builderClass) {
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
@@ -22,8 +21,8 @@ public class PsiFieldsModifier {
         }
     }
 
-    public void modifyFieldsForInnerClass(List<PsiField> allFileds, PsiClass innerBuilderClass) {
-        for (PsiField field : allFileds) {
+    public void modifyFieldsForInnerClass(List<PsiField> allFields, PsiClass innerBuilderClass) {
+        for (PsiField field : allFields) {
             removeModifiers(field, innerBuilderClass);
         }
     }
@@ -48,8 +47,8 @@ public class PsiFieldsModifier {
     private void removeFinalModifierFromElement(PsiElement psiElement) {
         if (psiElement instanceof PsiField) {
             PsiModifierList modifierList = ((PsiField) psiElement).getModifierList();
-            if (modifierList != null && modifierList.hasExplicitModifier(FINAL)) {
-                modifierList.setModifierProperty(FINAL, false);
+            if (modifierList != null && modifierList.hasExplicitModifier(PsiModifier.FINAL)) {
+                modifierList.setModifierProperty(PsiModifier.FINAL, false);
             }
         }
     }

@@ -3,11 +3,11 @@ package pl.mjedynak.idea.plugins.builder.gui.displayer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.factory.PopupChooserBuilderFactory;
 
 import javax.swing.JList;
@@ -15,7 +15,7 @@ import javax.swing.JList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GoToBuilderPopupDisplayerTest {
 
     private static final String TITLE = "Builder not found";
@@ -30,7 +30,7 @@ public class GoToBuilderPopupDisplayerTest {
     @Mock private JBPopup popup;
 
     @Test
-    public void shouldInvokePopupChooserBuilder() {
+    void shouldInvokePopupChooserBuilder() {
         // given
         given(popupChooserBuilderFactory.getPopupChooserBuilder(list)).willReturn(popupChooserBuilder);
         given(popupChooserBuilder.setTitle(TITLE)).willReturn(popupChooserBuilder);

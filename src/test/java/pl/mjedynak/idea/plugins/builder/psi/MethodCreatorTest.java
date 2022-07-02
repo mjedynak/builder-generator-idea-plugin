@@ -4,11 +4,11 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MethodCreatorTest {
 
     private MethodCreator methodCreator;
@@ -27,9 +27,9 @@ public class MethodCreatorTest {
     @Mock private PsiType type;
     @Mock private PsiMethod method;
 
-    private String srcClassFieldName = "className";
+    private final String srcClassFieldName = "className";
 
-    @Before
+    @BeforeEach
     public void mockCodeStyleManager() {
         methodCreator = new MethodCreator(elementFactory, "BuilderClassName");
         setField(methodCreator, "codeStyleSettings", codeStyleSettings);
@@ -46,7 +46,7 @@ public class MethodCreatorTest {
     }
 
     @Test
-    public void shouldCreateMethod() {
+    void shouldCreateMethod() {
         // given
         initOtherCommonMocks();
         given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
@@ -60,7 +60,7 @@ public class MethodCreatorTest {
     }
 
     @Test
-    public void shouldCreateMethodForSingleField() {
+    void shouldCreateMethodForSingleField() {
         // given
         initOtherCommonMocks();
         given(methodNameCreator.createMethodName("set", "name")).willReturn("setName");
