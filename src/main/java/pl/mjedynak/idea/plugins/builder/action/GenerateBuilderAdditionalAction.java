@@ -8,7 +8,7 @@ import javax.swing.Icon;
 public class GenerateBuilderAdditionalAction extends AbstractBuilderAdditionalAction {
 
     private static final String TEXT = "Create New Builder...";
-    private static final Icon ICON = IconLoader.getIcon("/actions/intentionBulb.png");
+    private static final Icon ICON = IconLoader.getIcon("/actions/intentionBulb.png", GenerateBuilderAdditionalAction.class);
 
     @NotNull
     @Override

@@ -10,11 +10,11 @@ import com.intellij.psi.PsiParameterListOwner;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiVariable;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.psi.BestConstructorSelector;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
@@ -24,9 +24,10 @@ import java.util.Collection;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BestConstructorSelectorTest {
 
     private static final String NAME_1 = "name1";
@@ -36,32 +37,32 @@ public class BestConstructorSelectorTest {
     private static final String NAME_5 = "name5";
     private static final PsiParameter[] EMPTY_PSI_PARAMETERS = new PsiParameter[0];
 
-    @Mock private CodeStyleSettings settings;
+    @Mock(strictness = LENIENT) private CodeStyleSettings settings;
     @Mock private PsiClass psiClass;
     @Mock private PsiMethod constructor0;
     @Mock private PsiMethod constructor1;
     @Mock private PsiMethod constructor2a;
     @Mock private PsiMethod constructor2b;
     @Mock private PsiMethod constructor3;
-    @Mock private PsiParameterList parameterList0;
-    @Mock private PsiParameterList parameterList1;
-    @Mock private PsiParameterList parameterList2a;
-    @Mock private PsiParameterList parameterList2b;
-    @Mock private PsiParameterList parameterList3;
-    @Mock private PsiField psiField1;
-    @Mock private PsiField psiField2;
-    @Mock private PsiField psiField3;
-    @Mock private PsiField psiField4;
-    @Mock private PsiField psiField5;
-    @Mock private PsiParameter psiParameter1;
-    @Mock private PsiParameter psiParameter2;
-    @Mock private PsiParameter psiParameter3;
-    @Mock private PsiParameter psiParameter4;
+    @Mock(strictness = LENIENT) private PsiParameterList parameterList0;
+    @Mock(strictness = LENIENT) private PsiParameterList parameterList1;
+    @Mock(strictness = LENIENT) private PsiParameterList parameterList2a;
+    @Mock(strictness = LENIENT) private PsiParameterList parameterList2b;
+    @Mock(strictness = LENIENT) private PsiParameterList parameterList3;
+    @Mock(strictness = LENIENT) private PsiField psiField1;
+    @Mock(strictness = LENIENT) private PsiField psiField2;
+    @Mock(strictness = LENIENT) private PsiField psiField3;
+    @Mock(strictness = LENIENT) private PsiField psiField4;
+    @Mock(strictness = LENIENT) private PsiField psiField5;
+    @Mock(strictness = LENIENT) private PsiParameter psiParameter1;
+    @Mock(strictness = LENIENT) private PsiParameter psiParameter2;
+    @Mock(strictness = LENIENT) private PsiParameter psiParameter3;
+    @Mock(strictness = LENIENT) private PsiParameter psiParameter4;
 
-    private PsiFieldVerifier verifier = new PsiFieldVerifier();
-    private BestConstructorSelector finder = new BestConstructorSelector(verifier);
+    private final PsiFieldVerifier verifier = new PsiFieldVerifier();
+    private final BestConstructorSelector finder = new BestConstructorSelector(verifier);
 
-    @Before
+    @BeforeEach
     public void initMock() {
         setField(verifier, "codeStyleSettings", settings);
         given(settings.getParameterNamePrefix()).willReturn(EMPTY);
@@ -97,7 +98,7 @@ public class BestConstructorSelectorTest {
     }
 
     @Test
-    public void shouldFindConstructorWithLeastParametersIfAnyFieldsToFind() {
+    void shouldFindConstructorWithLeastParametersIfAnyFieldsToFind() {
         doTest(
                 Lists.newArrayList(),
                 new PsiMethod[]{constructor0, constructor1, constructor2a, constructor2b, constructor3},
@@ -106,7 +107,7 @@ public class BestConstructorSelectorTest {
     }
 
     @Test
-    public void shouldFindConstructorWithLeastParametersIfAnyFieldsToFindFoundInConstructors() {
+    void shouldFindConstructorWithLeastParametersIfAnyFieldsToFindFoundInConstructors() {
         doTest(
                 Lists.newArrayList(psiField5),
                 new PsiMethod[]{constructor0, constructor1, constructor2a, constructor2b, constructor3},
@@ -115,7 +116,7 @@ public class BestConstructorSelectorTest {
     }
 
     @Test
-    public void shouldFindConstructorWithExactMatching() {
+    void shouldFindConstructorWithExactMatching() {
         doTest(
                 Lists.newArrayList(psiField1, psiField2),
                 new PsiMethod[]{constructor0, constructor1, constructor2a, constructor2b, constructor3},
@@ -124,7 +125,7 @@ public class BestConstructorSelectorTest {
     }
 
     @Test
-    public void shouldFindConstructorWithAllFieldsFoundButExtraParameters() {
+    void shouldFindConstructorWithAllFieldsFoundButExtraParameters() {
         doTest(
                 Lists.newArrayList(psiField2, psiField3),
                 new PsiMethod[]{constructor0, constructor1, constructor2a, constructor2b, constructor3},
@@ -133,7 +134,7 @@ public class BestConstructorSelectorTest {
     }
 
     @Test
-    public void shouldFindConstructorWithMaxFieldsFoundAndLessParameters() {
+    void shouldFindConstructorWithMaxFieldsFoundAndLessParameters() {
         doTest(
                 Lists.newArrayList(psiField2, psiField4),
                 new PsiMethod[]{constructor0, constructor1, constructor2a, constructor2b, constructor3},

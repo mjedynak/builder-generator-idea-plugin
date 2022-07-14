@@ -1,17 +1,17 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.factory.GoToBuilderPopupListFactory;
 import pl.mjedynak.idea.plugins.builder.finder.BuilderFinder;
 import pl.mjedynak.idea.plugins.builder.gui.displayer.GoToBuilderPopupDisplayer;
@@ -20,14 +20,14 @@ import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
 import javax.swing.JList;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GoToBuilderActionHandlerTest {
 
     @InjectMocks private GoToBuilderActionHandler builderActionHandler;
@@ -45,13 +45,13 @@ public class GoToBuilderActionHandlerTest {
     @SuppressWarnings("rawtypes")
     @Mock private JList list;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        given(dataContext.getData(DataKeys.PROJECT.getName())).willReturn(project);
+        given(dataContext.getData(CommonDataKeys.PROJECT.getName())).willReturn(project);
     }
 
     @Test
-    public void shouldNavigateToBuilderIfItExistsAndInvokedInsideNotBuilderClass() {
+    void shouldNavigateToBuilderIfItExistsAndInvokedInsideNotBuilderClass() {
         // given
         given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
         given(builderVerifier.isBuilder(psiClass)).willReturn(false);
@@ -65,7 +65,7 @@ public class GoToBuilderActionHandlerTest {
     }
 
     @Test
-    public void shouldNavigateToNotBuilderClassIfItExistsAndInvokedInsideBuilder() {
+    void shouldNavigateToNotBuilderClassIfItExistsAndInvokedInsideBuilder() {
         // given
         given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
         given(builderVerifier.isBuilder(builderClass)).willReturn(true);
@@ -79,7 +79,7 @@ public class GoToBuilderActionHandlerTest {
     }
 
     @Test
-    public void shouldDisplayPopupWhenBuilderNotFoundAndInvokedInsideNotBuilderClass() {
+    void shouldDisplayPopupWhenBuilderNotFoundAndInvokedInsideNotBuilderClass() {
         // given
         given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(psiClass);
         given(builderVerifier.isBuilder(psiClass)).willReturn(false);
@@ -104,7 +104,7 @@ public class GoToBuilderActionHandlerTest {
     }
 
     @Test
-    public void shouldNotDoAnythingWhenNotBuilderClassNotFoundAndInvokedInsideBuilder() {
+    void shouldNotDoAnythingWhenNotBuilderClassNotFoundAndInvokedInsideBuilder() {
         // given
         given(psiHelper.getPsiClassFromEditor(editor, project)).willReturn(builderClass);
         given(builderVerifier.isBuilder(builderClass)).willReturn(true);

@@ -2,7 +2,7 @@ package pl.mjedynak.idea.plugins.builder.factory;
 
 import com.intellij.ui.ExpandedItemListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
 import javax.swing.JList;
@@ -12,12 +12,12 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 public class GoToBuilderPopupListFactoryTest {
 
-    private AbstractPopupListFactory popupListFactory = new GoToBuilderPopupListFactory();
+    private final AbstractPopupListFactory popupListFactory = new GoToBuilderPopupListFactory();
 
     @Test
-    public void shouldCreateJBListWithActionCellRenderer() {
+    void shouldCreateJBListWithActionCellRenderer() {
         // when
-        JList popupList = popupListFactory.getPopupList();
+        JList<?> popupList = popupListFactory.getPopupList();
 
         // then
         assertThat(popupList).isInstanceOf(JBList.class);
@@ -27,7 +27,7 @@ public class GoToBuilderPopupListFactoryTest {
     }
 
     @Test
-    public void shouldLazilyInitializeCellRenderer() {
+    void shouldLazilyInitializeCellRenderer() {
         // when
         Object actionCellRenderer = getField(popupListFactory, "actionCellRenderer");
 
@@ -36,7 +36,7 @@ public class GoToBuilderPopupListFactoryTest {
     }
 
     @Test
-    public void shouldUseTheSameCellRendererForConsequentInvocations() {
+    void shouldUseTheSameCellRendererForConsequentInvocations() {
         // when
         popupListFactory.getPopupList();
         ActionCellRenderer firstRenderer = (ActionCellRenderer) getField(popupListFactory, "actionCellRenderer");

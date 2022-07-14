@@ -1,8 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
 import com.intellij.openapi.util.IconLoader;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.Icon;
 
@@ -15,13 +15,13 @@ public class RegenerateBuilderAdditionalActionTest {
 
     private RegenerateBuilderAdditionalAction action;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         action = new RegenerateBuilderAdditionalAction();
     }
 
     @Test
-    public void shouldGetItsOwnText() {
+    void shouldGetItsOwnText() {
         // when
         String result = action.getText();
 
@@ -30,7 +30,7 @@ public class RegenerateBuilderAdditionalActionTest {
     }
 
     @Test
-    public void shouldGetItsOwnIcon() {
+    void shouldGetItsOwnIcon() {
         // when
         Icon result = action.getIcon();
 
@@ -39,7 +39,7 @@ public class RegenerateBuilderAdditionalActionTest {
     }
 
     @Test
-    public void shouldDoNothingWhenInvokingExecute() {
+    void shouldDoNothingWhenInvokingExecute() {
         // this test has no assertion. Is it really useful, if so it needs rework.
         // when
         action.execute();

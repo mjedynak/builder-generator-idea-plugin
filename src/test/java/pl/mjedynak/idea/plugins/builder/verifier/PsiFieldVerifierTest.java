@@ -3,24 +3,26 @@ package pl.mjedynak.idea.plugins.builder.verifier;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PsiFieldVerifierTest {
 
     private PsiFieldVerifier psiFieldVerifier;
@@ -28,19 +30,19 @@ public class PsiFieldVerifierTest {
     private PsiMethod[] methods;
     private PsiParameter[] parameters;
 
-    @Mock private PsiField psiField;
+    @Mock(strictness = LENIENT) private PsiField psiField;
     @Mock private PsiClass psiClass;
     @Mock private PsiMethod constructor;
     @Mock private PsiParameterList parameterList;
-    @Mock private PsiParameter parameter;
+    @Mock(strictness = LENIENT) private PsiParameter parameter;
     @Mock private PsiType psiType;
-    @Mock private PsiMethod method;
+    @Mock(strictness = LENIENT) private PsiMethod method;
     @Mock private PsiModifierList modifierList;
-    @Mock private CodeStyleSettings settings;
+    @Mock(strictness = LENIENT) private CodeStyleSettings settings;
 
     private String name;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         psiFieldVerifier = new PsiFieldVerifier();
         setField(psiFieldVerifier, "codeStyleSettings", settings);
@@ -56,7 +58,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorDoesNotExist() {
+    void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorDoesNotExist() {
         // given
         given(psiClass.getConstructors()).willReturn(new PsiMethod[0]);
 
@@ -68,7 +70,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorHasDifferentParameterName() {
+    void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorHasDifferentParameterName() {
         // given
         prepareBehaviourForReturningParameter();
         given(parameter.getType()).willReturn(psiType);
@@ -84,7 +86,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorHasDifferentParameterType() {
+    void shouldNotVerifyThatFieldIsSetInConstructorIfConstructorHasDifferentParameterType() {
         // given
         PsiType differentPsiType = mock(PsiType.class);
         prepareBehaviourForReturningParameter();
@@ -101,7 +103,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldIsSetInConstructorIfConstructorHasTheSameParameterTypeAndName() {
+    void shouldVerifyThatFieldIsSetInConstructorIfConstructorHasTheSameParameterTypeAndName() {
         // given
         prepareBehaviourForReturningParameter();
         given(parameter.getType()).willReturn(psiType);
@@ -117,7 +119,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldIsSetInSetterMethodIfItIsNotPrivateAndHasCorrectParameter() {
+    void shouldVerifyThatFieldIsSetInSetterMethodIfItIsNotPrivateAndHasCorrectParameter() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
@@ -132,12 +134,12 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsPrivate() {
+    void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsPrivate() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
         given(psiField.getName()).willReturn("field");
-        given(modifierList.hasExplicitModifier(PsiFieldVerifier.PRIVATE_MODIFIER)).willReturn(true);
+        given(modifierList.hasExplicitModifier(PsiModifier.PRIVATE)).willReturn(true);
         given(method.getName()).willReturn("setField");
         // when
         boolean result = psiFieldVerifier.isSetInSetterMethod(psiField, psiClass);
@@ -147,7 +149,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsNotPrivateButHasIncorrectParameter() {
+    void shouldVerifyThatFieldIsNotSetInSetterMethodIfItIsNotPrivateButHasIncorrectParameter() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
@@ -161,7 +163,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldHasGetterMethodAvailableIfTheMethodIsNotPrivateAndHasCorrectName() {
+    void shouldVerifyThatFieldHasGetterMethodAvailableIfTheMethodIsNotPrivateAndHasCorrectName() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
@@ -176,12 +178,12 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsPrivate() {
+    void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsPrivate() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);
         given(psiField.getName()).willReturn("field");
-        given(modifierList.hasExplicitModifier(PsiFieldVerifier.PRIVATE_MODIFIER)).willReturn(true);
+        given(modifierList.hasExplicitModifier(PsiModifier.PRIVATE)).willReturn(true);
         given(method.getName()).willReturn("setField");
         // when
         boolean result = psiFieldVerifier.hasGetterMethod(psiField, psiClass);
@@ -191,7 +193,7 @@ public class PsiFieldVerifierTest {
     }
 
     @Test
-    public void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsNotPrivateButHasIncorrectName() {
+    void shouldVerifyThatFieldHasNoGetterMethodAvailableIfTheMethodIsNotPrivateButHasIncorrectName() {
         // given
         given(psiClass.getAllMethods()).willReturn(methods);
         given(method.getModifierList()).willReturn(modifierList);

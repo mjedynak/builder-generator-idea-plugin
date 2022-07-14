@@ -6,23 +6,24 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Mock.Strictness.LENIENT;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BuilderWriterComputableTest {
 
     private static final String METHOD_PREFIX = "with";
@@ -34,13 +35,13 @@ public class BuilderWriterComputableTest {
     @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
     @Mock private Project project;
     @Mock private PsiClass srcClass;
-    @Mock private PsiClass builderClass;
+    @Mock(strictness = LENIENT) private PsiClass builderClass;
     @Mock private PsiFile psiFile;
     @Mock private PsiElement psiElement;
-    @Mock private BuilderContext context;
+    @Mock(strictness = LENIENT) private BuilderContext context;
     @Mock private PsiClass existingBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         builderWriterComputable = new BuilderWriterComputable(builderPsiClassBuilder, context, existingBuilder);
         given(context.getProject()).willReturn(project);
@@ -51,7 +52,7 @@ public class BuilderWriterComputableTest {
     }
 
     @Test
-    public void shouldIncludeCurrentPlaceAsChangePlaceAndNavigateToCreatedBuilder() {
+    void shouldIncludeCurrentPlaceAsChangePlaceAndNavigateToCreatedBuilder() {
         // given
         given(builderPsiClassBuilder.aBuilder(context)).willReturn(builderPsiClassBuilder);
         mockBuilder();
@@ -67,7 +68,7 @@ public class BuilderWriterComputableTest {
     }
 
     @Test
-    public void shouldIncludeCurrentPlaceAsChangePlaceAndCreateInnerBuilder() {
+    void shouldIncludeCurrentPlaceAsChangePlaceAndCreateInnerBuilder() {
         // given
         given(context.isInner()).willReturn(true);
         given(context.getPsiClassFromEditor()).willReturn(srcClass);
@@ -83,9 +84,8 @@ public class BuilderWriterComputableTest {
         assertThat((PsiClass) result).isEqualTo(builderClass);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void shouldInvokeBuilderWriterErrorRunnableWhenExceptionOccurs() {
+    void shouldInvokeBuilderWriterErrorRunnableWhenExceptionOccurs() {
         // given
         given(builderPsiClassBuilder.aBuilder(context)).willThrow(IncorrectOperationException.class);
         Application application = mock(Application.class);

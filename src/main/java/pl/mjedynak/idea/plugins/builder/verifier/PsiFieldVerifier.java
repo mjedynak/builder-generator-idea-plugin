@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.builder.verifier;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
@@ -13,11 +14,10 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 
 public class PsiFieldVerifier {
 
-    static final String PRIVATE_MODIFIER = "private";
     static final String SET_PREFIX = "set";
     static final String GET_PREFIX = "get";
 
-    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
+    private final CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
 
     public boolean isSetInConstructor(PsiField psiField, PsiClass psiClass) {
         boolean result = false;
@@ -91,7 +91,7 @@ public class PsiFieldVerifier {
     }
 
     private boolean modifierListHasNoPrivateModifier(PsiModifierList modifierList) {
-        return !modifierList.hasExplicitModifier(PRIVATE_MODIFIER);
+        return !modifierList.hasExplicitModifier(PsiModifier.PRIVATE);
     }
 
 }

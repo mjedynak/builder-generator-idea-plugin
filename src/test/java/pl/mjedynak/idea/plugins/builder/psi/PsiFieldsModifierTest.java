@@ -1,72 +1,75 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.javadoc.PsiDocComment;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.intellij.psi.PsiType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static pl.mjedynak.idea.plugins.builder.psi.PsiFieldsModifier.FINAL;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PsiFieldsModifierTest {
 
-    private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
+    private final PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
     @Mock private PsiClass builderClass;
+    @Mock private Project project;
+    @Mock private PsiElementFactory psiElementFactory;
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        psiFieldsForConstructor = new ArrayList<PsiField>();
-        psiFieldsForSetters = new ArrayList<PsiField>();
+        psiFieldsForConstructor = new ArrayList<>();
+        psiFieldsForSetters = new ArrayList<>();
     }
 
     @Test
-    public void shouldAddFieldsOfCopyToBuilderClassWithoutAnnotationAndFinalModifierAndComments() {
+    void shouldAddPrivateFieldsToBuilderClass() {
         // given
         PsiField psiFieldForSetters = mock(PsiField.class);
+        given(psiFieldForSetters.getName()).willReturn("setterField");
+        given(psiFieldForSetters.getType()).willReturn(PsiType.INT);
         psiFieldsForSetters.add(psiFieldForSetters);
         PsiField copyPsiFieldForSetter = mock(PsiField.class);
-        PsiModifierList psiModifierListForSetter = mock(PsiModifierList.class);
-        PsiAnnotation annotation = mock(PsiAnnotation.class);
-        given(psiFieldForSetters.copy()).willReturn(copyPsiFieldForSetter);
-        given(copyPsiFieldForSetter.getModifierList()).willReturn(psiModifierListForSetter);
-        PsiAnnotation[] annotationArray = createAnnotationArray(annotation);
-        given(psiModifierListForSetter.getAnnotations()).willReturn(annotationArray);
+        PsiModifierList copyPsiFieldForSetterModifierList = mock(PsiModifierList.class);
+        given(copyPsiFieldForSetter.getModifierList()).willReturn(copyPsiFieldForSetterModifierList);
+        given(psiElementFactory.createField("setterField", PsiType.INT)).willReturn(copyPsiFieldForSetter);
 
         PsiField psiFieldForConstructor = mock(PsiField.class);
+        given(psiFieldForConstructor.getName()).willReturn("constructorField");
+        given(psiFieldForConstructor.getType()).willReturn(PsiType.BOOLEAN);
         psiFieldsForConstructor.add(psiFieldForConstructor);
         PsiField copyPsiFieldForConstructor = mock(PsiField.class);
-        PsiModifierList psiModifierListForConstructor = mock(PsiModifierList.class, RETURNS_MOCKS);
-        given(psiModifierListForConstructor.hasExplicitModifier(FINAL)).willReturn(true);
-        given(psiFieldForConstructor.copy()).willReturn(copyPsiFieldForConstructor);
-        given(copyPsiFieldForConstructor.getModifierList()).willReturn(psiModifierListForConstructor);
-        PsiDocComment docComment = mock(PsiDocComment.class);
-        given(copyPsiFieldForConstructor.getDocComment()).willReturn(docComment);
+        PsiModifierList copyPsiFieldForConstructorModifierList = mock(PsiModifierList.class);
+        given(copyPsiFieldForConstructor.getModifierList()).willReturn(copyPsiFieldForConstructorModifierList);
+        given(psiElementFactory.createField("constructorField", PsiType.BOOLEAN)).willReturn(copyPsiFieldForConstructor);
+
+        given(builderClass.getProject()).willReturn(project);
+        given(project.getService(PsiElementFactory.class)).willReturn(psiElementFactory);
 
         // when
         psiFieldsModifier.modifyFields(psiFieldsForSetters, psiFieldsForConstructor, builderClass);
 
         // then
-        verify(annotation).delete();
-        verify(psiModifierListForConstructor).setModifierProperty(FINAL, false);
-        verify(docComment).delete();
         verify(builderClass).add(copyPsiFieldForSetter);
+        verify(copyPsiFieldForSetterModifierList).setModifierProperty(PsiModifier.PRIVATE, true);
         verify(builderClass).add(copyPsiFieldForConstructor);
+        verify(copyPsiFieldForConstructorModifierList).setModifierProperty(PsiModifier.PRIVATE, true);
         verifyNoMoreInteractions(builderClass);
     }
 

@@ -2,31 +2,32 @@ package pl.mjedynak.idea.plugins.builder.finder;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BuilderFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
     private static final String BUILDER_NAME = CLASS_NAME + BuilderFinder.SEARCH_PATTERN;
 
     @InjectMocks private BuilderFinder builderFinder;
-    @Mock private ClassFinder classFinder;
-    @Mock private PsiClass psiClass;
-    @Mock private PsiClass builderClass;
+    @Mock(strictness = LENIENT) private ClassFinder classFinder;
+    @Mock(strictness = LENIENT) private PsiClass psiClass;
+    @Mock(strictness = LENIENT) private PsiClass builderClass;
     @Mock private Project project;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         given(psiClass.isEnum()).willReturn(false);
         given(psiClass.isInterface()).willReturn(false);
@@ -40,7 +41,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindBuilderForEnum() {
+    void shouldNotFindBuilderForEnum() {
         // given
         given(psiClass.isEnum()).willReturn(true);
 
@@ -52,7 +53,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindBuilderForInterface() {
+    void shouldNotFindBuilderForInterface() {
         // given
         given(psiClass.isAnnotationType()).willReturn(true);
 
@@ -64,7 +65,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindBuilderForAnnotationType() {
+    void shouldNotFindBuilderForAnnotationType() {
         // given
         given(psiClass.isAnnotationType()).willReturn(true);
 
@@ -76,7 +77,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindBuilderForClassWhenClassFounderReturnsNull() {
+    void shouldNotFindBuilderForClassWhenClassFounderReturnsNull() {
         // given
         given(classFinder.findClass(CLASS_NAME, project)).willReturn(null);
 
@@ -88,7 +89,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldFindBuilderForClassWhenBuilderWithTheExactClassNameIsPresent() {
+    void shouldFindBuilderForClassWhenBuilderWithTheExactClassNameIsPresent() {
         // given
 
         PsiClass builderClass = mock(PsiClass.class);
@@ -105,7 +106,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldFindInnerBuilder() {
+    void shouldFindInnerBuilder() {
         // given
         PsiClass innerClass = mock(PsiClass.class);
         PsiClass[] innerClasses = {innerClass};
@@ -120,7 +121,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindInnerBuilderWhenInnerClassNameDoesNotMatchPattern() {
+    void shouldNotFindInnerBuilderWhenInnerClassNameDoesNotMatchPattern() {
         // given
         PsiClass innerClass = mock(PsiClass.class);
         PsiClass[] innerClasses = {innerClass};
@@ -135,7 +136,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindClassForEnum() {
+    void shouldNotFindClassForEnum() {
         // given
         given(psiClass.isEnum()).willReturn(true);
 
@@ -147,7 +148,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindClassForInterface() {
+    void shouldNotFindClassForInterface() {
         // given
         given(psiClass.isAnnotationType()).willReturn(true);
 
@@ -159,7 +160,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindClassForAnnotationType() {
+    void shouldNotFindClassForAnnotationType() {
         // given
         given(psiClass.isAnnotationType()).willReturn(true);
 
@@ -171,7 +172,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldNotFindClassForBuilderWhenClassFounderReturnsNull() {
+    void shouldNotFindClassForBuilderWhenClassFounderReturnsNull() {
         // given
         given(classFinder.findClass(BUILDER_NAME, project)).willReturn(null);
 
@@ -184,7 +185,7 @@ public class BuilderFinderTest {
     }
 
     @Test
-    public void shouldFindClassForBuilderWhenClassWithTheExactBuildersNameIsPresent() {
+    void shouldFindClassForBuilderWhenClassWithTheExactBuildersNameIsPresent() {
         // given
         given(classFinder.findClass(CLASS_NAME, project)).willReturn(psiClass);
 

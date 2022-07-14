@@ -3,17 +3,17 @@ package pl.mjedynak.idea.plugins.builder.factory;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PackageChooserDialogFactoryTest {
 
     @Spy private PackageChooserDialogFactory packageChooserDialogFactory;
@@ -22,7 +22,7 @@ public class PackageChooserDialogFactoryTest {
     @Mock private PackageChooserDialog packageChooserDialog;
 
     @Test
-    public void shouldCreatePackageChooserDialogWithPassedTitle() {
+    void shouldCreatePackageChooserDialogWithPassedTitle() {
         // given
         String title = "title";
         given(packageChooserDialog.getTitle()).willReturn(title);
