@@ -10,9 +10,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
     testImplementation("org.assertj:assertj-core:3.23.1")
     testImplementation("org.springframework:spring-test:5.2.22.RELEASE")
@@ -27,7 +26,6 @@ intellij {
 }
 
 tasks {
-    // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "11"
         targetCompatibility = "11"

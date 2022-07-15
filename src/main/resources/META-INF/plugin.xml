@@ -28,7 +28,8 @@
            version 1.2.0
            <br/>
            <ul>
-           <li>Added ability to generate builder for Java records and lombok @Value types</li>
+           <li>Added ability to generate builder for Java records and lombok @Value types
+           (contribution by <a href="https://github.com/mkickax">mkickax</a>)</li>
            </ul>
            version 1.1.8
            <br/>

@@ -1,6 +1,0 @@
-improvements
-
-- fix pit mutation violations
-- test for GoToBuilderAction
-- try to have one level indentation per method
-
