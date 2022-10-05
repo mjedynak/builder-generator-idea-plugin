@@ -6,16 +6,17 @@ import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState;
 
 public class CreateBuilderDialogFactory {
 
-    private static final String BUILDER_SUFFIX = "Builder";
-    private static final String METHOD_PREFIX = "with";
-    private static final String DIALOG_NAME = "CreateBuilder";
+    private static String BUILDER_SUFFIX = "Builder";
+    private static String DIALOG_NAME = "CreateBuilder";
 
     private PsiHelper psiHelper;
     private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
     private GuiHelper guiHelper;
+
 
     public CreateBuilderDialogFactory(PsiHelper psiHelper, ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
         this.psiHelper = psiHelper;
@@ -24,7 +25,7 @@ public class CreateBuilderDialogFactory {
     }
 
     public CreateBuilderDialog createBuilderDialog(PsiClass sourceClass, Project project, PsiPackage srcPackage, PsiClass existingBuilder) {
-        return new CreateBuilderDialog(project, DIALOG_NAME, sourceClass, sourceClass.getName() + BUILDER_SUFFIX, METHOD_PREFIX, srcPackage, psiHelper, guiHelper,
+        return new CreateBuilderDialog(project, DIALOG_NAME, sourceClass, sourceClass.getName() + BUILDER_SUFFIX, srcPackage, psiHelper, guiHelper,
                 referenceEditorComboWithBrowseButtonFactory, existingBuilder);
     }
 }

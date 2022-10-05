@@ -25,6 +25,7 @@ import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
 import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState;
 
 import javax.swing.Action;
 import javax.swing.JCheckBox;
@@ -50,6 +51,8 @@ public class CreateBuilderDialog extends DialogWrapper {
     static final String RECENTS_KEY = "CreateBuilderDialog.RecentsKey";
     private static final int WIDTH = 40;
 
+    private static BuilderGeneratorSettingsState defaultStates = BuilderGeneratorSettingsState.getInstance();
+
     private PsiHelper psiHelper;
     private GuiHelper guiHelper;
     private Project project;
@@ -63,11 +66,11 @@ public class CreateBuilderDialog extends DialogWrapper {
     private ReferenceEditorComboWithBrowseButton targetPackageField;
     private PsiClass existingBuilder;
 
+
     public CreateBuilderDialog(Project project,
                                String title,
                                PsiClass sourceClass,
                                String targetClassName,
-                               String methodPrefix,
                                PsiPackage targetPackage,
                                PsiHelper psiHelper,
                                GuiHelper guiHelper,
@@ -80,7 +83,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         this.sourceClass = sourceClass;
         this.existingBuilder = existingBuilder;
         targetClassNameField = new JTextField(targetClassName);
-        targetMethodPrefix = new JTextField(methodPrefix);
+        targetMethodPrefix = new JTextField(defaultStates.defaultMethodPrefix);
         setPreferredSize(targetClassNameField);
         setPreferredSize(targetMethodPrefix);
 
@@ -198,6 +201,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.anchor = GridBagConstraints.WEST;
 
         innerBuilder = new JCheckBox();
+        innerBuilder.setSelected(defaultStates.isInnerBuilder);
         innerBuilder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -224,6 +228,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
         butMethod = new JCheckBox();
+        butMethod.setSelected(defaultStates.isButMethod);
         panel.add(butMethod, gbConstraints);
         // but method
 
@@ -244,6 +249,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.anchor = GridBagConstraints.WEST;
         useSingleField = new JCheckBox();
+        useSingleField.setSelected(defaultStates.isUseSinglePrefix);
         panel.add(useSingleField, gbConstraints);
         // useSingleField
 
