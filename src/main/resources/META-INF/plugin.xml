@@ -177,6 +177,12 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <applicationService
+            serviceImplementation="pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsConfigurable"
+                id="pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsConfigurable"
+                displayName="Builder Generation Defaults"/>
     </extensions>
 </idea-plugin>
