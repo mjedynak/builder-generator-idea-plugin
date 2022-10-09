@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "pl.mjedynak"
-version = "1.2.0"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -32,7 +32,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("201.6668.121")
+        sinceBuild.set("212.4746.92")
         untilBuild.set("")
     }
 

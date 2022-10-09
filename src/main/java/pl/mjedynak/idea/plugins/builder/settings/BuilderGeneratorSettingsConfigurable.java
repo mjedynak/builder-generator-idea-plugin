@@ -16,7 +16,7 @@ public class BuilderGeneratorSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "SDK: Application Settings Example";
+        return "Builder Generator Default Settings";
     }
 
     @Override

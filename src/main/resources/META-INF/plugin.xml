@@ -19,13 +19,23 @@
                   <li>creates a builder if it does not exist</li>
                   <li>regenerates builder if it exists</li>
               </ul>
+              <li><strong>Settings | Tools | Builder Generation Defaults</strong></li>
+              <ul>
+                  <li>store default settings of builder generation</li>
+              </ul>
           </ul>
         ]]>
     </description>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <change-notes>
         <![CDATA[
-           version 1.2.0
+           version 1.3.0
+           <br/>
+           <ul>
+           <li>Added ability to store default settings
+           (contribution by <a href="https://github.com/NexRX">NexRX</a>)</li>
+           </ul>
+           version 1.3.0
            <br/>
            <ul>
            <li>Added ability to generate builder for Java records and lombok @Value types
@@ -155,7 +165,7 @@
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak</vendor>
 
-    <idea-version since-build="201.6668.121"/>
+    <idea-version since-build="212.4746.92"/>
 
     <actions>
         <action id="GoToBuilder" class="pl.mjedynak.idea.plugins.builder.action.GoToBuilderAction"
@@ -165,7 +175,7 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt B"/>
         </action>
         <action id="GenerateBuilder" class="pl.mjedynak.idea.plugins.builder.action.GenerateBuilderAction"
-                text="Builder" description="Generates/Regenerates Builder">
+                text="Builder" description="Generates/regenerates builder">
             <add-to-group group-id="JavaGenerateGroup1" anchor="before" relative-to-action="GenerateEquals"/>
         </action>
     </actions>

@@ -6,17 +6,15 @@ import com.intellij.psi.PsiPackage;
 import pl.mjedynak.idea.plugins.builder.gui.CreateBuilderDialog;
 import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-import pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState;
 
 public class CreateBuilderDialogFactory {
 
-    private static String BUILDER_SUFFIX = "Builder";
-    private static String DIALOG_NAME = "CreateBuilder";
+    private static final String BUILDER_SUFFIX = "Builder";
+    private static final String DIALOG_NAME = "CreateBuilder";
 
-    private PsiHelper psiHelper;
-    private ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
-    private GuiHelper guiHelper;
-
+    private final PsiHelper psiHelper;
+    private final ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
+    private final GuiHelper guiHelper;
 
     public CreateBuilderDialogFactory(PsiHelper psiHelper, ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
         this.psiHelper = psiHelper;
