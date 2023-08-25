@@ -49,7 +49,7 @@ public class MethodCreatorTest {
     void shouldCreateMethod() {
         // given
         initOtherCommonMocks();
-        given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
+        given(elementFactory.createMethodFromText("public BuilderClassName withName(final String name) { this.name = name; return this; }", psiField)).willReturn(method);
         String methodPrefix = "with";
 
         // when
@@ -64,7 +64,7 @@ public class MethodCreatorTest {
         // given
         initOtherCommonMocks();
         given(methodNameCreator.createMethodName("set", "name")).willReturn("setName");
-        given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { className.setName(name); return this; }", psiField)).willReturn(method);
+        given(elementFactory.createMethodFromText("public BuilderClassName withName(final String name) { className.setName(name); return this; }", psiField)).willReturn(method);
         String methodPrefix = "with";
 
         // when

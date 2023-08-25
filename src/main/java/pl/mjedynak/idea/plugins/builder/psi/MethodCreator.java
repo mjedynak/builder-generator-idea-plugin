@@ -28,10 +28,10 @@ public class MethodCreator {
         String methodText;
         if(useSingleField){
             String setterName = methodNameCreator.createMethodName("set", fieldNameWithoutPrefix);
-            methodText = "public " + builderClassName + " " + methodName + "(" + fieldType + " " + parameterName + ") { "
+            methodText = "public " + builderClassName + " " + methodName + "(final " + fieldType + " " + parameterName + ") { "
                 + srcClassFieldName + "." + setterName + "(" + fieldName + "); return this; }";
         } else {
-            methodText = "public " + builderClassName + " " + methodName + "(" + fieldType + " " + parameterName + ") { this."
+            methodText = "public " + builderClassName + " " + methodName + "(final " + fieldType + " " + parameterName + ") { this."
                 + fieldName + " = " + parameterName + "; return this; }";
         }
         return elementFactory.createMethodFromText(methodText, psiField);
