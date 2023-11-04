@@ -44,13 +44,14 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 
 @ExtendWith(MockitoExtension.class)
-public class BuilderPsiClassBuilderTest {
+class BuilderPsiClassBuilderTest {
     private static final PsiParameter[] EMPTY_PSI_PARAMETERS = {};
 
     @InjectMocks private BuilderPsiClassBuilder psiClassBuilder;
     @Mock(strictness = Mock.Strictness.LENIENT) private CodeStyleSettings settings;
     @Mock(strictness = Mock.Strictness.LENIENT) private PsiHelper psiHelper;
     @Mock private ButMethodCreator butMethodCreator;
+    @Mock private CopyConstructorCreator copyConstructorCreator;
     @Mock private MethodCreator methodCreator;
     @Mock private PsiFieldsModifier psiFieldsModifier;
     @Mock private Project project;
@@ -311,6 +312,21 @@ public class BuilderPsiClassBuilderTest {
 
         // when
         BuilderPsiClassBuilder result = builder.withButMethod();
+
+        // then
+        assertThat(result).isSameAs(psiClassBuilder);
+        verify(builderClass).add(psiMethod);
+    }
+
+    @Test
+    void shouldAddConstructorMethod() {
+        // given
+        given(copyConstructorCreator.copyConstructor(builderClassName, builderClass, srcClass)).willReturn(psiMethod);
+        BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
+        setField(builder, "copyConstructorCreator", copyConstructorCreator);
+
+        // when
+        BuilderPsiClassBuilder result = builder.withCopyConstructor();
 
         // then
         assertThat(result).isSameAs(psiClassBuilder);

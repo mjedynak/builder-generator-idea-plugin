@@ -37,6 +37,7 @@ public class BuilderPsiClassBuilder {
     private PsiFieldVerifier psiFieldVerifier = new PsiFieldVerifier();
     private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
+    private CopyConstructorCreator copyConstructorCreator;
     private MethodCreator methodCreator;
 
     private PsiClass srcClass = null;
@@ -87,6 +88,7 @@ public class BuilderPsiClassBuilder {
         bestConstructor = context.getPsiFieldsForBuilder().getBestConstructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
+        copyConstructorCreator = new CopyConstructorCreator(elementFactory);
         isInline = allSelectedPsiFields.size() == psiFieldsForConstructor.size();
     }
 
@@ -145,6 +147,12 @@ public class BuilderPsiClassBuilder {
 
     public BuilderPsiClassBuilder withButMethod() {
         PsiMethod method = butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, useSingleField);
+        builderClass.add(method);
+        return this;
+    }
+
+    public BuilderPsiClassBuilder withCopyConstructor() {
+        final PsiMethod method = copyConstructorCreator.copyConstructor(builderClassName, builderClass, srcClass);
         builderClass.add(method);
         return this;
     }
