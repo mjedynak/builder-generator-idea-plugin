@@ -63,6 +63,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private JCheckBox innerBuilder;
     private JCheckBox butMethod;
     private JCheckBox useSingleField;
+    private JCheckBox copyConstructor;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
     private PsiClass existingBuilder;
 
@@ -211,7 +212,6 @@ public class CreateBuilderDialog extends DialogWrapper {
         panel.add(innerBuilder, gbConstraints);
         // Inner builder
 
-
         // but method
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
@@ -252,6 +252,26 @@ public class CreateBuilderDialog extends DialogWrapper {
         useSingleField.setSelected(defaultStates.isUseSinglePrefix);
         panel.add(useSingleField, gbConstraints);
         // useSingleField
+
+        // copy constructor
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 7;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Add copy constructor"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        copyConstructor = new JCheckBox();
+        copyConstructor.setSelected(defaultStates.isAddCopyConstructor);
+        panel.add(copyConstructor, gbConstraints);
+        // copy constructor
 
         return panel;
     }
@@ -345,6 +365,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public boolean useSingleField() {
         return useSingleField.isSelected();
+    }
+
+    public boolean hasAddCopyConstructor() {
+        return copyConstructor.isSelected();
     }
 
     public PsiDirectory getTargetDirectory() {

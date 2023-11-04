@@ -70,7 +70,9 @@ class BuilderPsiClassBuilderTest {
     @Captor private ArgumentCaptor<String> stringCaptor;
 
     private BuilderContext createBuilderContext(boolean useSingleField) {
-        return new BuilderContext(project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false, useSingleField);
+        return new BuilderContext(
+                project, psiFieldsForBuilder, targetDirectory, builderClassName, srcClass, "anyPrefix", false, false, useSingleField, false
+        );
     }
 
     private void mockCodeStyleManager() {
