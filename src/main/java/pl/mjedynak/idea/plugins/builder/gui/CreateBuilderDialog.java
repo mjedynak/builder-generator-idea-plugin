@@ -232,7 +232,6 @@ public class CreateBuilderDialog extends DialogWrapper {
         panel.add(butMethod, gbConstraints);
         // but method
 
-
         // useSingleField
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;

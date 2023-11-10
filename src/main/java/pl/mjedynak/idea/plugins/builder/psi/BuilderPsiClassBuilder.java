@@ -152,7 +152,7 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withCopyConstructor() {
-        final PsiMethod method = copyConstructorCreator.copyConstructor(builderClassName, builderClass, srcClass);
+        final PsiMethod method = copyConstructorCreator.copyConstructor(builderClass, srcClass, isInnerBuilder(builderClass));
         builderClass.add(method);
         return this;
     }

@@ -323,7 +323,7 @@ class BuilderPsiClassBuilderTest {
     @Test
     void shouldAddConstructorMethod() {
         // given
-        given(copyConstructorCreator.copyConstructor(builderClassName, builderClass, srcClass)).willReturn(psiMethod);
+        given(copyConstructorCreator.copyConstructor(builderClass, srcClass, false)).willReturn(psiMethod);
         BuilderPsiClassBuilder builder = psiClassBuilder.aBuilder(context);
         setField(builder, "copyConstructorCreator", copyConstructorCreator);
 

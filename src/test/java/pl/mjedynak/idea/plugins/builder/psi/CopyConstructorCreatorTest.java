@@ -1,9 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
+import com.intellij.mock.MockPsiManager;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.light.LightIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,21 +26,36 @@ class CopyConstructorCreatorTest {
     @Mock private PsiClass srcClass;
     @Mock private PsiField psiField;
     @Mock private PsiMethod createdMethod;
+    @Mock private MockPsiManager mockPsiManager;
 
     @BeforeEach
     void beforeEach() {
         given(srcClass.getQualifiedName()).willReturn("MyClass");
         given(builderClass.getAllFields()).willReturn(List.of(psiField).toArray(PsiField[]::new));
+        given(builderClass.getNameIdentifier()).willReturn(new LightIdentifier(mockPsiManager, "Builder"));
         given(psiField.getName()).willReturn("age");
     }
 
     @Test
-    void shouldCreateButMethod() {
+    void givenInnerBuilder_shouldCreateButMethod() {
         // given
         given(elementFactory.createMethodFromText("public Builder(MyClass other) { this.age = other.age; }", srcClass)).willReturn(createdMethod);
 
         // when
-        final PsiMethod result = copyConstructorCreator.copyConstructor("Builder", builderClass, srcClass);
+        final PsiMethod result = copyConstructorCreator.copyConstructor(builderClass, srcClass, true);
+
+        // then
+        assertThat(result).isEqualTo(createdMethod);
+    }
+
+    @Test
+    void givenRecord_shouldCreateButMethod() {
+        // given
+        given(srcClass.isRecord()).willReturn(true);
+        given(elementFactory.createMethodFromText("public Builder(MyClass other) { this.age = other.age(); }", srcClass)).willReturn(createdMethod);
+
+        // when
+        final PsiMethod result = copyConstructorCreator.copyConstructor(builderClass, srcClass, true);
 
         // then
         assertThat(result).isEqualTo(createdMethod);
