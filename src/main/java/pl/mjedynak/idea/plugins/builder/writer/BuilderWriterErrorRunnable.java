@@ -11,16 +11,24 @@ public class BuilderWriterErrorRunnable implements Runnable {
 
     private Project project;
     private String className;
+    private String message;
 
     public BuilderWriterErrorRunnable(Project project, String className) {
         this.project = project;
         this.className = className;
+        this.message = INTENTION_ERROR_CANNOT_CREATE_CLASS_MESSAGE;
+    }
+
+    public BuilderWriterErrorRunnable(Project project, String className, String message) {
+        this.project = project;
+        this.className = className;
+        this.message = message;
     }
 
     @Override
     public void run() {
          Messages.showErrorDialog(project,
-                 CodeInsightBundle.message(INTENTION_ERROR_CANNOT_CREATE_CLASS_MESSAGE, className),
+                 CodeInsightBundle.message(message, className),
                  CodeInsightBundle.message(INTENTION_ERROR_CANNOT_CREATE_CLASS_TITLE));
     }
 }

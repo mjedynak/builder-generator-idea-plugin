@@ -43,7 +43,7 @@ public class CopyConstructorCreator {
             return method;
         }
 
-        throw new IncorrectOperationException("Cannot find getter for fields");
+        throw new IncorrectOperationException("Could not create copy constructor as cannot get field getters");
     }
 
 }

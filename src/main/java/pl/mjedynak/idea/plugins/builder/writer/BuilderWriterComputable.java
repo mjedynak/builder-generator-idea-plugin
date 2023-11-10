@@ -45,7 +45,7 @@ class BuilderWriterComputable implements Computable<PsiElement> {
             }
             return targetClass;
         } catch (IncorrectOperationException e) {
-            showErrorMessage(context.getProject(), context.getClassName());
+            showErrorMessage(context.getProject(), context.getClassName(), e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -89,8 +89,10 @@ class BuilderWriterComputable implements Computable<PsiElement> {
         guiHelper.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
     }
 
-    private void showErrorMessage(Project project, String className) {
+    private void showErrorMessage(Project project, String className, String message) {
+        BuilderWriterErrorRunnable builderWriterErrorRunnable = message == null ? new BuilderWriterErrorRunnable(project, className) : new BuilderWriterErrorRunnable(project, className, message);
+
         Application application = psiHelper.getApplication();
-        application.invokeLater(new BuilderWriterErrorRunnable(project, className));
+        application.invokeLater(builderWriterErrorRunnable);
     }
 }
