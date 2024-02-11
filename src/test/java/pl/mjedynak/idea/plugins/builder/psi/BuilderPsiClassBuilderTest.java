@@ -166,10 +166,10 @@ class BuilderPsiClassBuilderTest {
         given(elementFactory.createConstructor()).willReturn(constructor);
 
         // when
-        psiClassBuilder.aBuilder(context).withPrivateConstructor();
+        psiClassBuilder.aBuilder(context).withConstructor();
 
         // then
-        verify(modifierList).setModifierProperty(PsiModifier.PRIVATE, true);
+        verify(modifierList).setModifierProperty(PsiModifier.PUBLIC, true);
         verify(builderClass).add(constructor);
     }
 
@@ -184,10 +184,10 @@ class BuilderPsiClassBuilderTest {
         given(elementFactory.createMethodFromText(constructorText, srcClass)).willReturn(constructor);
 
         // when
-        psiClassBuilder.aBuilder(context).withPrivateConstructor();
+        psiClassBuilder.aBuilder(context).withConstructor();
 
         // then
-        verify(modifierList).setModifierProperty(PsiModifier.PRIVATE, true);
+        verify(modifierList).setModifierProperty(PsiModifier.PUBLIC, true);
         verify(builderClass).add(constructor);
     }
 

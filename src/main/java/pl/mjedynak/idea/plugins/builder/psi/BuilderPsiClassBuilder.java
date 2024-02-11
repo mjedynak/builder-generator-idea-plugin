@@ -1,14 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import org.apache.commons.lang.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
@@ -24,7 +16,6 @@ import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
 public class BuilderPsiClassBuilder {
 
-    private static final String PRIVATE_STRING = "private";
     private static final String SPACE = " ";
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
@@ -105,14 +96,14 @@ public class BuilderPsiClassBuilder {
         return this;
     }
 
-    public BuilderPsiClassBuilder withPrivateConstructor() {
+    public BuilderPsiClassBuilder withConstructor() {
         PsiMethod constructor;
         if (useSingleField) {
             constructor = elementFactory.createMethodFromText(builderClassName + "(){ " + srcClassFieldName + " = new " + srcClassName + "(); }", srcClass);
         } else {
             constructor = elementFactory.createConstructor();
         }
-        constructor.getModifierList().setModifierProperty(PRIVATE_STRING, true);
+        constructor.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
         builderClass.add(constructor);
         return this;
     }
