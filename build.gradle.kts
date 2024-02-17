@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.intellij") version "1.5.2"
+    id("org.jetbrains.intellij") version "1.13.3"
 }
 
 group = "pl.mjedynak"
@@ -41,6 +41,6 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "7.4.2"
+        gradleVersion = "8.0.2"
     }
 }
