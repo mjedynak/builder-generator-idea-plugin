@@ -1,5 +1,5 @@
-Builder Generator Idea plugin ![Java CI with Gradle](https://github.com/mjedynak/builder-generator-idea-plugin/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
-===============
+# Builder Generator Idea plugin ![build](https://github.com/mjedynak/builder-generator-idea-plugin/actions/workflows/build-gradle-project.yml/badge.svg?branch=master)
+
 Plugin for IntelliJ IDEA that adds ability to generate builder for a class and switch between them.
 
 Switching between builder and source class is similar to 'Go To Test' action.
