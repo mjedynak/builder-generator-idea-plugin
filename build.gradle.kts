@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.17.1"
 }
 
 group = "pl.mjedynak"
@@ -14,10 +14,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
     testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation("org.springframework:spring-test:5.3.32")
+    testImplementation("org.springframework:spring-test:6.1.4")
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     version.set("2023.3")
     type.set("IC") // Target IDE Platform
@@ -41,6 +40,6 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "8.0.2"
+        gradleVersion = "8.6"
     }
 }
