@@ -7,10 +7,10 @@ import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 public class MethodCreator {
 
-    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
-    private MethodNameCreator methodNameCreator = new MethodNameCreator();
-    private PsiElementFactory elementFactory;
-    private String builderClassName;
+    private final CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
+    private final MethodNameCreator methodNameCreator = new MethodNameCreator();
+    private final PsiElementFactory elementFactory;
+    private final String builderClassName;
 
     public MethodCreator(PsiElementFactory elementFactory, String builderClassName) {
         this.elementFactory = elementFactory;

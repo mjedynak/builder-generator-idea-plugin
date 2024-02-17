@@ -8,12 +8,12 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class SelectDirectory implements Runnable {
 
-    private CreateBuilderDialog createBuilderDialog;
-    private PsiHelper psiHelper;
-    private Module module;
-    private String packageName;
-    private String className;
-    private PsiClass existingBuilder;
+    private final CreateBuilderDialog createBuilderDialog;
+    private final PsiHelper psiHelper;
+    private final Module module;
+    private final String packageName;
+    private final String className;
+    private final PsiClass existingBuilder;
 
     public SelectDirectory(CreateBuilderDialog createBuilderDialog, PsiHelper psiHelper, Module module, String packageName, String className, PsiClass existingBuilder) {
         this.createBuilderDialog = createBuilderDialog;

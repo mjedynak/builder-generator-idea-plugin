@@ -10,17 +10,18 @@ public class MemberChooserDialogFactory {
 
     static final String TITLE = "Select Fields to Be Available in Builder";
 
-    public com.intellij.ide.util.MemberChooser<PsiElementClassMember> getMemberChooserDialog(List<PsiElementClassMember> elements, Project project) {
-        PsiElementClassMember[] psiElementClassMembers = elements.toArray(new PsiElementClassMember[elements.size()]);
-        MemberChooser<PsiElementClassMember> memberChooserDialog = createNewInstance(project, psiElementClassMembers);
+    public com.intellij.ide.util.MemberChooser<PsiElementClassMember<?>> getMemberChooserDialog(List<PsiElementClassMember<?>> elements, Project project) {
+        PsiElementClassMember<?>[] psiElementClassMembers = elements.toArray(new PsiElementClassMember[0]);
+        MemberChooser<PsiElementClassMember<?>> memberChooserDialog = createNewInstance(project, psiElementClassMembers);
         memberChooserDialog.setCopyJavadocVisible(false);
         memberChooserDialog.selectElements(psiElementClassMembers);
         memberChooserDialog.setTitle(TITLE);
         return memberChooserDialog;
     }
 
-    MemberChooser<PsiElementClassMember> createNewInstance(Project project, PsiElementClassMember[] psiElementClassMembers) {
-        return new com.intellij.ide.util.MemberChooser<PsiElementClassMember>(psiElementClassMembers, false, true, project, false);
+    MemberChooser<PsiElementClassMember<?>> createNewInstance(Project project, PsiElementClassMember<?>[] psiElementClassMembers) {
+        return new com.intellij.ide.util.MemberChooser<PsiElementClassMember<?>>(
+                psiElementClassMembers, false, true, project, false);
     }
 
 

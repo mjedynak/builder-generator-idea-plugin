@@ -7,10 +7,10 @@ import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.text.WordUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class PsiFieldVerifier {
 
@@ -43,11 +43,7 @@ public class PsiFieldVerifier {
     }
 
     private boolean checkParameter(PsiField psiField, PsiParameter parameter) {
-        boolean result = false;
-        if (areNameAndTypeEqual(psiField, parameter)) {
-            result = true;
-        }
-        return result;
+        return areNameAndTypeEqual(psiField, parameter);
     }
 
     public boolean areNameAndTypeEqual(PsiField psiField, PsiParameter parameter) {

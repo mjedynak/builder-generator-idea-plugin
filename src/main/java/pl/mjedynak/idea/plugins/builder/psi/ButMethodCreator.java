@@ -4,13 +4,13 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
 public class ButMethodCreator {
 
-    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
-    private PsiElementFactory elementFactory;
+    private final CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
+    private final PsiElementFactory elementFactory;
 
     public ButMethodCreator(PsiElementFactory elementFactory) {
         this.elementFactory = elementFactory;

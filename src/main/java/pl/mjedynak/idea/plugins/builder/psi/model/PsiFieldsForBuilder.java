@@ -8,9 +8,9 @@ import java.util.List;
 
 public class PsiFieldsForBuilder {
 
-    private List<PsiField> psiFieldsForSetters;
-    private List<PsiField> psiFieldsForConstructor;
-    private List<PsiField> allSelectedPsiFields;
+    private final List<PsiField> psiFieldsForSetters;
+    private final List<PsiField> psiFieldsForConstructor;
+    private final List<PsiField> allSelectedPsiFields;
     private final PsiMethod bestConstructor;
 
     public PsiFieldsForBuilder(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, List<PsiField> allSelectedPsiFields, PsiMethod bestConstructor) {

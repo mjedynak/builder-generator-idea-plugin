@@ -21,7 +21,7 @@ import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 import java.util.Collection;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mock.Strictness.LENIENT;

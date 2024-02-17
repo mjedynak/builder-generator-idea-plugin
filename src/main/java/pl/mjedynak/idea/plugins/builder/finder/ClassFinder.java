@@ -8,7 +8,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class ClassFinder {
 
-    private PsiHelper psiHelper;
+    private final PsiHelper psiHelper;
 
     public ClassFinder(PsiHelper psiHelper) {
         this.psiHelper = psiHelper;

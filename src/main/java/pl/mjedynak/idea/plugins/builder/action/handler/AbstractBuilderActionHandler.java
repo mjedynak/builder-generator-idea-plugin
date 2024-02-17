@@ -14,9 +14,9 @@ import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
 public abstract class AbstractBuilderActionHandler extends EditorActionHandler {
 
+    private final BuilderVerifier builderVerifier;
+    private final BuilderFinder builderFinder;
     protected PsiHelper psiHelper;
-    private BuilderVerifier builderVerifier;
-    private BuilderFinder builderFinder;
     protected AbstractPopupDisplayer popupDisplayer;
     protected AbstractPopupListFactory popupListFactory;
     protected DisplayChoosers displayChoosers;

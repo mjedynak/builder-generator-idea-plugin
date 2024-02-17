@@ -15,7 +15,7 @@ import java.util.TreeSet;
 
 public class BestConstructorSelector {
 
-    private PsiFieldVerifier psiFieldVerifier;
+    private final PsiFieldVerifier psiFieldVerifier;
 
     private List<ConstructorWithExtraData> constructorsWithEqualParameterCount;
     private TreeSet<ConstructorWithExtraData> constructorsWithHigherParameterCount;
@@ -89,7 +89,9 @@ public class BestConstructorSelector {
         int parameterCount = 0;
         PsiMethod bestConstructor = null;
         for (ConstructorWithExtraData constructor : allConstructors) {
-            if (constructor.getMatchingFieldsCount() > matchingFieldCount || constructor.getMatchingFieldsCount() == matchingFieldCount && constructor.getParametersCount() < parameterCount) {
+            if (constructor.getMatchingFieldsCount() > matchingFieldCount
+                    || constructor.getMatchingFieldsCount() == matchingFieldCount
+                    && constructor.getParametersCount() < parameterCount) {
                 bestConstructor = constructor.getConstructor();
                 matchingFieldCount = constructor.getMatchingFieldsCount();
                 parameterCount = constructor.getParametersCount();
@@ -98,8 +100,8 @@ public class BestConstructorSelector {
         return bestConstructor;
     }
 
-    private class ConstructorWithExtraData implements Comparable<ConstructorWithExtraData> {
-        private PsiMethod constructor;
+    private static class ConstructorWithExtraData implements Comparable<ConstructorWithExtraData> {
+        private final PsiMethod constructor;
         private Integer matchingFieldsCount;
 
         ConstructorWithExtraData(PsiMethod constructor) {

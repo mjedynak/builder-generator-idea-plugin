@@ -8,8 +8,8 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 public class BuilderWriter {
 
     static final String CREATE_BUILDER_STRING = "Create Builder";
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-    private PsiHelper psiHelper;
+    private final BuilderPsiClassBuilder builderPsiClassBuilder;
+    private final PsiHelper psiHelper;
 
     public BuilderWriter(BuilderPsiClassBuilder builderPsiClassBuilder, PsiHelper psiHelper) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;

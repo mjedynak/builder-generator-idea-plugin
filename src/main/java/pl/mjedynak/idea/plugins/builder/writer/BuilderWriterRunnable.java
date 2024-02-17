@@ -7,10 +7,10 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 public class BuilderWriterRunnable implements Runnable {
 
-    private PsiHelper psiHelper = new PsiHelper();
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-    private BuilderContext context;
-    private PsiClass existingBuilder;
+    private final PsiHelper psiHelper = new PsiHelper();
+    private final BuilderPsiClassBuilder builderPsiClassBuilder;
+    private final BuilderContext context;
+    private final PsiClass existingBuilder;
 
     public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;

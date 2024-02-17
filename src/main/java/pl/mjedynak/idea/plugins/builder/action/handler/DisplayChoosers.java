@@ -23,12 +23,12 @@ public class DisplayChoosers {
     private PsiClass psiClassFromEditor;
     private Project project;
     private Editor editor;
-    private PsiHelper psiHelper;
-    private CreateBuilderDialogFactory createBuilderDialogFactory;
-    private PsiFieldSelector psiFieldSelector;
-    private MemberChooserDialogFactory memberChooserDialogFactory;
-    private BuilderWriter builderWriter;
-    private PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
+    private final PsiHelper psiHelper;
+    private final CreateBuilderDialogFactory createBuilderDialogFactory;
+    private final PsiFieldSelector psiFieldSelector;
+    private final MemberChooserDialogFactory memberChooserDialogFactory;
+    private final BuilderWriter builderWriter;
+    private final PsiFieldsForBuilderFactory psiFieldsForBuilderFactory;
 
     public DisplayChoosers(PsiHelper psiHelper, CreateBuilderDialogFactory createBuilderDialogFactory,
                            PsiFieldSelector psiFieldSelector, MemberChooserDialogFactory memberChooserDialogFactory,
@@ -41,7 +41,6 @@ public class DisplayChoosers {
         this.psiFieldsForBuilderFactory = psiFieldsForBuilderFactory;
     }
 
-    @SuppressWarnings("rawtypes")
     public void run(PsiClass existingBuilder) {
         CreateBuilderDialog createBuilderDialog = showDialog(existingBuilder);
         if (createBuilderDialog.isOK()) {
@@ -51,18 +50,17 @@ public class DisplayChoosers {
             boolean innerBuilder = createBuilderDialog.isInnerBuilder();
             boolean useSingleField = createBuilderDialog.useSingleField();
             boolean hasButMethod = createBuilderDialog.hasButMethod();
-            List<PsiElementClassMember> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder, useSingleField, hasButMethod);
-            com.intellij.ide.util.MemberChooser<PsiElementClassMember> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
+            List<PsiElementClassMember<?>> fieldsToDisplay = getFieldsToIncludeInBuilder(psiClassFromEditor, innerBuilder, useSingleField, hasButMethod);
+            com.intellij.ide.util.MemberChooser<PsiElementClassMember<?>> memberChooserDialog = memberChooserDialogFactory.getMemberChooserDialog(fieldsToDisplay, project);
             memberChooserDialog.show();
             writeBuilderIfNecessary(targetDirectory, className, methodPrefix, memberChooserDialog, createBuilderDialog, existingBuilder);
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private void writeBuilderIfNecessary(
-            PsiDirectory targetDirectory, String className, String methodPrefix, com.intellij.ide.util.MemberChooser<PsiElementClassMember> memberChooserDialog, CreateBuilderDialog createBuilderDialog, PsiClass existingBuilder) {
+            PsiDirectory targetDirectory, String className, String methodPrefix, com.intellij.ide.util.MemberChooser<PsiElementClassMember<?>> memberChooserDialog, CreateBuilderDialog createBuilderDialog, PsiClass existingBuilder) {
         if (memberChooserDialog.isOK()) {
-            List<PsiElementClassMember> selectedElements = memberChooserDialog.getSelectedElements();
+            List<PsiElementClassMember<?>> selectedElements = memberChooserDialog.getSelectedElements();
             PsiFieldsForBuilder psiFieldsForBuilder = psiFieldsForBuilderFactory.createPsiFieldsForBuilder(selectedElements, psiClassFromEditor);
             BuilderContext context = new BuilderContext(
                     project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix, createBuilderDialog.isInnerBuilder(), createBuilderDialog.hasButMethod(), createBuilderDialog.useSingleField(), createBuilderDialog.hasAddCopyConstructor());
@@ -78,8 +76,7 @@ public class DisplayChoosers {
         return dialog;
     }
 
-    @SuppressWarnings("rawtypes")
-    private List<PsiElementClassMember> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder, boolean useSingleField, boolean hasButMethod) {
+    private List<PsiElementClassMember<?>> getFieldsToIncludeInBuilder(PsiClass clazz, boolean innerBuilder, boolean useSingleField, boolean hasButMethod) {
         return psiFieldSelector.selectFieldsToIncludeInBuilder(clazz, innerBuilder, useSingleField, hasButMethod);
     }
 

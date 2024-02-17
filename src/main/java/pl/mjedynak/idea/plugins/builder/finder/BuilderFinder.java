@@ -2,12 +2,14 @@ package pl.mjedynak.idea.plugins.builder.finder;
 
 import com.intellij.psi.PsiClass;
 
+import java.util.Objects;
+
 public class BuilderFinder {
 
     static final String SEARCH_PATTERN = "Builder";
     public static final String EMPTY_STRING = "";
 
-    private ClassFinder classFinder;
+    private final ClassFinder classFinder;
 
     public BuilderFinder(ClassFinder classFinder) {
         this.classFinder = classFinder;
@@ -27,7 +29,7 @@ public class BuilderFinder {
         PsiClass innerBuilderClass = null;
         PsiClass[] allInnerClasses = psiClass.getAllInnerClasses();
         for (PsiClass innerClass : allInnerClasses) {
-            if (innerClass.getName().contains(SEARCH_PATTERN)) {
+            if (Objects.requireNonNull(innerClass.getName()).contains(SEARCH_PATTERN)) {
                 innerBuilderClass = innerClass;
                 break;
             }
@@ -36,7 +38,7 @@ public class BuilderFinder {
     }
 
     public PsiClass findClassForBuilder(PsiClass psiClass) {
-        String searchName = psiClass.getName().replaceFirst(SEARCH_PATTERN, EMPTY_STRING);
+        String searchName = Objects.requireNonNull(psiClass.getName()).replaceFirst(SEARCH_PATTERN, EMPTY_STRING);
         return findClass(psiClass, searchName);
     }
 

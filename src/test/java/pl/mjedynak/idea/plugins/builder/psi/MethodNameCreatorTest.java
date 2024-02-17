@@ -2,7 +2,7 @@ package pl.mjedynak.idea.plugins.builder.psi;
 
 import org.junit.jupiter.api.Test;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MethodNameCreatorTest {

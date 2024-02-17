@@ -8,7 +8,7 @@ import javax.swing.JList;
 
 public abstract class AbstractPopupDisplayer {
 
-    private PopupChooserBuilderFactory popupChooserBuilderFactory;
+    private final PopupChooserBuilderFactory popupChooserBuilderFactory;
 
     public AbstractPopupDisplayer(PopupChooserBuilderFactory popupChooserBuilderFactory) {
         this.popupChooserBuilderFactory = popupChooserBuilderFactory;

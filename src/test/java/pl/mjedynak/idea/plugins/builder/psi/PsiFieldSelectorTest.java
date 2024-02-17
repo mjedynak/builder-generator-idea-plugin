@@ -90,7 +90,7 @@ public class PsiFieldSelectorTest {
         given(psiFieldVerifier.hasGetterMethod(psiField, psiClass)).willReturn(hasGetter);
 
         // when
-        List<PsiElementClassMember> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, isInnerBuilder, useSingleField, hasButMethod);
+        List<PsiElementClassMember<?>> result = psiFieldSelector.selectFieldsToIncludeInBuilder(psiClass, isInnerBuilder, useSingleField, hasButMethod);
 
         // then
         assertThat(result).hasSize(size);

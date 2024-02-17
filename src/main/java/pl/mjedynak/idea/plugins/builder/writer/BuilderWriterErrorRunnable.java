@@ -9,9 +9,9 @@ public class BuilderWriterErrorRunnable implements Runnable {
     static final String INTENTION_ERROR_CANNOT_CREATE_CLASS_MESSAGE = "intention.error.cannot.create.class.message";
     static final String INTENTION_ERROR_CANNOT_CREATE_CLASS_TITLE = "intention.error.cannot.create.class.title";
 
-    private Project project;
-    private String className;
-    private String message;
+    private final Project project;
+    private final String className;
+    private final String message;
 
     public BuilderWriterErrorRunnable(Project project, String className) {
         this.project = project;

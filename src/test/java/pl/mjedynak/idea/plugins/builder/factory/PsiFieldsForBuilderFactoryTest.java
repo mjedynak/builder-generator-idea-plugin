@@ -36,16 +36,16 @@ public class PsiFieldsForBuilderFactoryTest {
     @InjectMocks private PsiFieldsForBuilderFactory factory;
     @Mock private PsiFieldVerifier psiFieldVerifier;
     @Mock private PsiClass psiClass;
-    @SuppressWarnings("rawtypes")
-    @Mock private PsiElementClassMember psiElementClassMember;
-    @SuppressWarnings("rawtypes")
-    @Mock private PsiElementClassMember psiElementClassMemberInSetterOnly;
-    @SuppressWarnings("rawtypes")
-    @Mock private PsiElementClassMember psiElementClassMemberInConstructorOnly;
-    @SuppressWarnings("rawtypes")
-    @Mock private PsiElementClassMember psiElementClassMemberInSetterAndConstructor;
-    @SuppressWarnings("rawtypes")
-    @Mock private PsiElementClassMember psiElementClassMemberNowhere;
+
+    @Mock private PsiElementClassMember<?> psiElementClassMember;
+
+    @Mock private PsiElementClassMember<?> psiElementClassMemberInSetterOnly;
+
+    @Mock private PsiElementClassMember<?> psiElementClassMemberInConstructorOnly;
+
+    @Mock private PsiElementClassMember<?> psiElementClassMemberInSetterAndConstructor;
+
+    @Mock private PsiElementClassMember<?> psiElementClassMemberNowhere;
     @Mock private PsiField psiField;
     @Mock private PsiField psiFieldInSetterOnly;
     @Mock private PsiField psiFieldInConstructorOnly;
@@ -56,11 +56,10 @@ public class PsiFieldsForBuilderFactoryTest {
 
     @Captor private ArgumentCaptor<List<PsiField>> argumentCaptor;
 
-    @SuppressWarnings("rawtypes")
-    private List<PsiElementClassMember> psiElementClassMembers;
+    private List<PsiElementClassMember<?>> psiElementClassMembers;
 
     private void initCommonMock() {
-        psiElementClassMembers = Lists.newArrayList(psiElementClassMember);
+        psiElementClassMembers = List.of(psiElementClassMember);
         given(psiElementClassMember.getPsiElement()).willReturn(psiField);
         given(psiField.getName()).willReturn(PSI_FIELD_NAME);
     }

@@ -14,8 +14,8 @@ import java.util.List;
 
 public class PsiFieldsForBuilderFactory {
 
-    private PsiFieldVerifier psiFieldVerifier;
-    private BestConstructorSelector bestConstructorSelector;
+    private final PsiFieldVerifier psiFieldVerifier;
+    private final BestConstructorSelector bestConstructorSelector;
 
     public PsiFieldsForBuilderFactory(PsiFieldVerifier psiFieldVerifier, BestConstructorSelector bestConstructorSelector) {
         this.psiFieldVerifier = psiFieldVerifier;
@@ -23,7 +23,7 @@ public class PsiFieldsForBuilderFactory {
     }
 
     @SuppressWarnings("rawtypes")
-    public PsiFieldsForBuilder createPsiFieldsForBuilder(List<PsiElementClassMember> psiElementClassMembers, PsiClass psiClass) {
+    public PsiFieldsForBuilder createPsiFieldsForBuilder(List<PsiElementClassMember<?>> psiElementClassMembers, PsiClass psiClass) {
         List<PsiField> allSelectedPsiFields = Lists.newArrayList();
         List<PsiField> psiFieldsFoundInSetters = Lists.newArrayList();
         for (PsiElementClassMember psiElementClassMember : psiElementClassMembers) {

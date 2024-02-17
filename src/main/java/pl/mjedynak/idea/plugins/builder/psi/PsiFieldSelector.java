@@ -14,18 +14,20 @@ import static java.util.stream.Collectors.toList;
 
 public class PsiFieldSelector {
 
-    private PsiElementClassMemberFactory psiElementClassMemberFactory;
-    private PsiFieldVerifier psiFieldVerifier;
+    private final PsiElementClassMemberFactory psiElementClassMemberFactory;
+    private final PsiFieldVerifier psiFieldVerifier;
 
     public PsiFieldSelector(PsiElementClassMemberFactory psiElementClassMemberFactory, PsiFieldVerifier psiFieldVerifier) {
         this.psiElementClassMemberFactory = psiElementClassMemberFactory;
         this.psiFieldVerifier = psiFieldVerifier;
     }
 
-    public List<PsiElementClassMember> selectFieldsToIncludeInBuilder(final PsiClass psiClass, final boolean innerBuilder, final boolean useSingleField, final boolean hasButMethod) {
-        List<PsiElementClassMember> result = new ArrayList<>();
+    public List<PsiElementClassMember<?>> selectFieldsToIncludeInBuilder(PsiClass psiClass, boolean innerBuilder, boolean useSingleField, boolean hasButMethod) {
+        List<PsiElementClassMember<?>> result = new ArrayList<>();
 
-        List<PsiField> psiFields = stream(psiClass.getAllFields()).filter(psiField -> !"serialVersionUID".equals(psiField.getName())).collect(toList());
+        List<PsiField> psiFields = stream(psiClass.getAllFields())
+                .filter(psiField -> !"serialVersionUID".equals(psiField.getName()))
+                .toList();
         Iterable<PsiField> filtered = psiFields.stream().filter(psiField -> isAppropriate(psiClass, psiField, innerBuilder, useSingleField, hasButMethod)).collect(toList());
 
         for (PsiField psiField : filtered) {

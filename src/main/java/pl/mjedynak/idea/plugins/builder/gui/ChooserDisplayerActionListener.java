@@ -12,11 +12,9 @@ import java.awt.event.ActionListener;
 
 public class ChooserDisplayerActionListener implements ActionListener {
 
-    private ReferenceEditorComboWithBrowseButton comboWithBrowseButton;
-
-    private PackageChooserDialogFactory packageChooserDialogFactory;
-
-    private Project project;
+    private final ReferenceEditorComboWithBrowseButton comboWithBrowseButton;
+    private final PackageChooserDialogFactory packageChooserDialogFactory;
+    private final Project project;
 
     public ChooserDisplayerActionListener(ReferenceEditorComboWithBrowseButton comboWithBrowseButton, PackageChooserDialogFactory packageChooserDialogFactory, Project project) {
         this.comboWithBrowseButton = comboWithBrowseButton;
