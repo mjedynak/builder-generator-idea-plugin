@@ -1,8 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
-import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
-
 import javax.swing.JList;
+import pl.mjedynak.idea.plugins.builder.renderer.ActionCellRenderer;
 
 public abstract class AbstractPopupListFactory {
 

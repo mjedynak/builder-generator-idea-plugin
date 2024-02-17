@@ -11,6 +11,7 @@ public class GenerateBuilderAction extends AbstractBuilderAction {
         picoContainer.registerComponentImplementation(GenerateBuilderActionHandler.class);
         picoContainer.registerComponentImplementation(GenerateBuilderPopupDisplayer.class);
         picoContainer.registerComponentImplementation(GenerateBuilderPopupListFactory.class);
-        builderActionHandler = (AbstractBuilderActionHandler) picoContainer.getComponentInstanceOfType(GenerateBuilderActionHandler.class);
+        builderActionHandler = (AbstractBuilderActionHandler)
+                picoContainer.getComponentInstanceOfType(GenerateBuilderActionHandler.class);
     }
 }

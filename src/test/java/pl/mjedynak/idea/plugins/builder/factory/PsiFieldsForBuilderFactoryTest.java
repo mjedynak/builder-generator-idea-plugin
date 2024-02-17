@@ -1,10 +1,17 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+
 import com.google.common.collect.Lists;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,14 +23,6 @@ import pl.mjedynak.idea.plugins.builder.psi.BestConstructorSelector;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 public class PsiFieldsForBuilderFactoryTest {
 
@@ -33,28 +32,53 @@ public class PsiFieldsForBuilderFactoryTest {
     private static final String PSI_FIELD_NAME_IN_SETTER_AND_CONSTRUCTOR = "psiFieldNameInSetterAndConstructor";
     private static final String PSI_FIELD_NAME_NOWHERE = "psiFieldNameNowhere";
 
-    @InjectMocks private PsiFieldsForBuilderFactory factory;
-    @Mock private PsiFieldVerifier psiFieldVerifier;
-    @Mock private PsiClass psiClass;
+    @InjectMocks
+    private PsiFieldsForBuilderFactory factory;
 
-    @Mock private PsiElementClassMember<?> psiElementClassMember;
+    @Mock
+    private PsiFieldVerifier psiFieldVerifier;
 
-    @Mock private PsiElementClassMember<?> psiElementClassMemberInSetterOnly;
+    @Mock
+    private PsiClass psiClass;
 
-    @Mock private PsiElementClassMember<?> psiElementClassMemberInConstructorOnly;
+    @Mock
+    private PsiElementClassMember<?> psiElementClassMember;
 
-    @Mock private PsiElementClassMember<?> psiElementClassMemberInSetterAndConstructor;
+    @Mock
+    private PsiElementClassMember<?> psiElementClassMemberInSetterOnly;
 
-    @Mock private PsiElementClassMember<?> psiElementClassMemberNowhere;
-    @Mock private PsiField psiField;
-    @Mock private PsiField psiFieldInSetterOnly;
-    @Mock private PsiField psiFieldInConstructorOnly;
-    @Mock private PsiField psiFieldInSetterAndConstructor;
-    @Mock private PsiField psiFieldNowhere;
-    @Mock private BestConstructorSelector bestConstructorSelector;
-    @Mock private PsiMethod bestConstructor;
+    @Mock
+    private PsiElementClassMember<?> psiElementClassMemberInConstructorOnly;
 
-    @Captor private ArgumentCaptor<List<PsiField>> argumentCaptor;
+    @Mock
+    private PsiElementClassMember<?> psiElementClassMemberInSetterAndConstructor;
+
+    @Mock
+    private PsiElementClassMember<?> psiElementClassMemberNowhere;
+
+    @Mock
+    private PsiField psiField;
+
+    @Mock
+    private PsiField psiFieldInSetterOnly;
+
+    @Mock
+    private PsiField psiFieldInConstructorOnly;
+
+    @Mock
+    private PsiField psiFieldInSetterAndConstructor;
+
+    @Mock
+    private PsiField psiFieldNowhere;
+
+    @Mock
+    private BestConstructorSelector bestConstructorSelector;
+
+    @Mock
+    private PsiMethod bestConstructor;
+
+    @Captor
+    private ArgumentCaptor<List<PsiField>> argumentCaptor;
 
     private List<PsiElementClassMember<?>> psiElementClassMembers;
 
@@ -69,7 +93,8 @@ public class PsiFieldsForBuilderFactoryTest {
         // given
         initCommonMock();
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(true);
-        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass))).willReturn(bestConstructor);
+        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass)))
+                .willReturn(bestConstructor);
         given(psiFieldVerifier.checkConstructor(psiField, bestConstructor)).willReturn(false);
 
         // when
@@ -91,7 +116,8 @@ public class PsiFieldsForBuilderFactoryTest {
         // given
         initCommonMock();
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
-        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass))).willReturn(bestConstructor);
+        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass)))
+                .willReturn(bestConstructor);
         given(psiFieldVerifier.checkConstructor(psiField, bestConstructor)).willReturn(true);
 
         // when
@@ -104,7 +130,11 @@ public class PsiFieldsForBuilderFactoryTest {
 
         verify(psiFieldVerifier).isSetInSetterMethod(psiField, psiClass);
         verify(bestConstructorSelector).getBestConstructor(argumentCaptor.capture(), eq(psiClass));
-        assertThat(argumentCaptor.getValue()).isNotNull().hasSize(1).extracting("name").containsOnly(PSI_FIELD_NAME);
+        assertThat(argumentCaptor.getValue())
+                .isNotNull()
+                .hasSize(1)
+                .extracting("name")
+                .containsOnly(PSI_FIELD_NAME);
         verify(psiFieldVerifier).checkConstructor(psiField, bestConstructor);
     }
 
@@ -113,7 +143,8 @@ public class PsiFieldsForBuilderFactoryTest {
         // given
         initCommonMock();
         given(psiFieldVerifier.isSetInSetterMethod(psiField, psiClass)).willReturn(false);
-        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass))).willReturn(bestConstructor);
+        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass)))
+                .willReturn(bestConstructor);
         given(psiFieldVerifier.checkConstructor(psiField, bestConstructor)).willReturn(false);
 
         // when
@@ -126,15 +157,22 @@ public class PsiFieldsForBuilderFactoryTest {
 
         verify(psiFieldVerifier).isSetInSetterMethod(psiField, psiClass);
         verify(bestConstructorSelector).getBestConstructor(argumentCaptor.capture(), eq(psiClass));
-        assertThat(argumentCaptor.getValue()).isNotNull().hasSize(1).extracting("name").containsOnly(PSI_FIELD_NAME);
+        assertThat(argumentCaptor.getValue())
+                .isNotNull()
+                .hasSize(1)
+                .extracting("name")
+                .containsOnly(PSI_FIELD_NAME);
         verify(psiFieldVerifier).checkConstructor(psiField, bestConstructor);
     }
 
     @Test
     void shouldManageTrickyCaseAccordingToBestConstructorSelection() {
         // given
-        psiElementClassMembers = Lists.newArrayList(psiElementClassMemberInSetterOnly, psiElementClassMemberInConstructorOnly,
-                psiElementClassMemberInSetterAndConstructor, psiElementClassMemberNowhere);
+        psiElementClassMembers = Lists.newArrayList(
+                psiElementClassMemberInSetterOnly,
+                psiElementClassMemberInConstructorOnly,
+                psiElementClassMemberInSetterAndConstructor,
+                psiElementClassMemberNowhere);
 
         given(psiElementClassMemberInSetterOnly.getPsiElement()).willReturn(psiFieldInSetterOnly);
         given(psiElementClassMemberInConstructorOnly.getPsiElement()).willReturn(psiFieldInConstructorOnly);
@@ -146,29 +184,44 @@ public class PsiFieldsForBuilderFactoryTest {
         given(psiFieldInSetterAndConstructor.getName()).willReturn(PSI_FIELD_NAME_IN_SETTER_AND_CONSTRUCTOR);
         given(psiFieldNowhere.getName()).willReturn(PSI_FIELD_NAME_NOWHERE);
 
-        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInSetterOnly, psiClass)).willReturn(true);
-        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInConstructorOnly, psiClass)).willReturn(false);
-        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInSetterAndConstructor, psiClass)).willReturn(true);
+        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInSetterOnly, psiClass))
+                .willReturn(true);
+        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInConstructorOnly, psiClass))
+                .willReturn(false);
+        given(psiFieldVerifier.isSetInSetterMethod(psiFieldInSetterAndConstructor, psiClass))
+                .willReturn(true);
         given(psiFieldVerifier.isSetInSetterMethod(psiFieldNowhere, psiClass)).willReturn(false);
 
-        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass))).willReturn(bestConstructor);
+        given(bestConstructorSelector.getBestConstructor(anyList(), eq(psiClass)))
+                .willReturn(bestConstructor);
 
-        given(psiFieldVerifier.checkConstructor(psiFieldInSetterOnly, bestConstructor)).willReturn(false);
-        given(psiFieldVerifier.checkConstructor(psiFieldInConstructorOnly, bestConstructor)).willReturn(true);
-        given(psiFieldVerifier.checkConstructor(psiFieldInSetterAndConstructor, bestConstructor)).willReturn(true);
-        given(psiFieldVerifier.checkConstructor(psiFieldNowhere, bestConstructor)).willReturn(false);
+        given(psiFieldVerifier.checkConstructor(psiFieldInSetterOnly, bestConstructor))
+                .willReturn(false);
+        given(psiFieldVerifier.checkConstructor(psiFieldInConstructorOnly, bestConstructor))
+                .willReturn(true);
+        given(psiFieldVerifier.checkConstructor(psiFieldInSetterAndConstructor, bestConstructor))
+                .willReturn(true);
+        given(psiFieldVerifier.checkConstructor(psiFieldNowhere, bestConstructor))
+                .willReturn(false);
 
         // when
         PsiFieldsForBuilder result = factory.createPsiFieldsForBuilder(psiElementClassMembers, psiClass);
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getAllSelectedFields()).isNotNull().hasSize(4)
-                .containsOnly(psiFieldInSetterOnly, psiFieldInConstructorOnly, psiFieldInSetterAndConstructor, psiFieldNowhere);
-        assertThat(result.getFieldsForConstructor()).isNotNull().hasSize(2)
+        assertThat(result.getAllSelectedFields())
+                .isNotNull()
+                .hasSize(4)
+                .containsOnly(
+                        psiFieldInSetterOnly,
+                        psiFieldInConstructorOnly,
+                        psiFieldInSetterAndConstructor,
+                        psiFieldNowhere);
+        assertThat(result.getFieldsForConstructor())
+                .isNotNull()
+                .hasSize(2)
                 .containsOnly(psiFieldInConstructorOnly, psiFieldInSetterAndConstructor);
-        assertThat(result.getFieldsForSetters()).isNotNull().hasSize(1)
-                .containsOnly(psiFieldInSetterOnly);
+        assertThat(result.getFieldsForSetters()).isNotNull().hasSize(1).containsOnly(psiFieldInSetterOnly);
         assertThat(result.getBestConstructor()).isEqualTo(bestConstructor);
     }
 }

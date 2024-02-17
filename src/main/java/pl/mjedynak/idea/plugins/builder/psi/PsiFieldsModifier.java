@@ -5,12 +5,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
-
 import java.util.List;
 
 public class PsiFieldsModifier {
 
-    public void modifyFields(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, PsiClass builderClass) {
+    public void modifyFields(
+            List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, PsiClass builderClass) {
         for (PsiField psiFieldsForSetter : psiFieldsForSetters) {
             removeModifiers(psiFieldsForSetter, builderClass);
         }
@@ -32,8 +32,7 @@ public class PsiFieldsModifier {
 
     private PsiElement copyField(final PsiField psiField, final PsiClass builderClass) {
         PsiField builderField = PsiElementFactory.getInstance(builderClass.getProject())
-                .createField(psiField.getName(), psiField.getType()
-        );
+                .createField(psiField.getName(), psiField.getType());
         if (builderField.getModifierList() != null) {
             builderField.getModifierList().setModifierProperty(PsiModifier.PRIVATE, true);
         }

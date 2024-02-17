@@ -1,9 +1,9 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
-import org.junit.jupiter.api.Test;
-
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 public class MethodNameCreatorTest {
 

@@ -19,10 +19,17 @@ public class BuilderContext {
     private final boolean useSingleField;
     private final boolean addCopyConstructor;
 
-    public BuilderContext(Project project, PsiFieldsForBuilder psiFieldsForBuilder,
-                          PsiDirectory targetDirectory, String className, PsiClass psiClassFromEditor,
-                          String methodPrefix, boolean isInner, boolean hasButMethod, boolean useSingleField,
-                          boolean addCopyConstructor) {
+    public BuilderContext(
+            Project project,
+            PsiFieldsForBuilder psiFieldsForBuilder,
+            PsiDirectory targetDirectory,
+            String className,
+            PsiClass psiClassFromEditor,
+            String methodPrefix,
+            boolean isInner,
+            boolean hasButMethod,
+            boolean useSingleField,
+            boolean addCopyConstructor) {
         this.project = project;
         this.psiFieldsForBuilder = psiFieldsForBuilder;
         this.targetDirectory = targetDirectory;
@@ -77,7 +84,8 @@ public class BuilderContext {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
+        return Objects.hashCode(
+                project, psiFieldsForBuilder, targetDirectory, className, psiClassFromEditor, methodPrefix);
     }
 
     @Override

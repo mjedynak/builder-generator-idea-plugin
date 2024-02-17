@@ -1,10 +1,9 @@
 package pl.mjedynak.idea.plugins.builder.settings;
 
 import com.intellij.openapi.options.Configurable;
+import javax.swing.*;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class BuilderGeneratorSettingsConfigurable implements Configurable {
 
@@ -66,5 +65,4 @@ public class BuilderGeneratorSettingsConfigurable implements Configurable {
     public void disposeUIResources() {
         mySettingsComponent = null;
     }
-
 }

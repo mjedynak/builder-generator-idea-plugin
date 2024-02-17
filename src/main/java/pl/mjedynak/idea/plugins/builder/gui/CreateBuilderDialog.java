@@ -20,21 +20,6 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
-import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
-import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
-import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
-import pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState;
-
-import javax.swing.Action;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -45,6 +30,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import javax.swing.Action;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import org.jetbrains.annotations.NotNull;
+import pl.mjedynak.idea.plugins.builder.factory.PackageChooserDialogFactory;
+import pl.mjedynak.idea.plugins.builder.factory.ReferenceEditorComboWithBrowseButtonFactory;
+import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
+import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
+import pl.mjedynak.idea.plugins.builder.settings.BuilderGeneratorSettingsState;
 
 public class CreateBuilderDialog extends DialogWrapper {
 
@@ -67,17 +66,16 @@ public class CreateBuilderDialog extends DialogWrapper {
     private JCheckBox useSingleField;
     private JCheckBox copyConstructor;
 
-
-
-    public CreateBuilderDialog(Project project,
-                               String title,
-                               PsiClass sourceClass,
-                               String targetClassName,
-                               PsiPackage targetPackage,
-                               PsiHelper psiHelper,
-                               GuiHelper guiHelper,
-                               ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
-                               PsiClass existingBuilder) {
+    public CreateBuilderDialog(
+            Project project,
+            String title,
+            PsiClass sourceClass,
+            String targetClassName,
+            PsiPackage targetPackage,
+            PsiHelper psiHelper,
+            GuiHelper guiHelper,
+            ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
+            PsiClass existingBuilder) {
         super(project, true);
         this.psiHelper = psiHelper;
         this.guiHelper = guiHelper;
@@ -90,8 +88,10 @@ public class CreateBuilderDialog extends DialogWrapper {
         setPreferredSize(targetMethodPrefix);
 
         String targetPackageName = (targetPackage != null) ? targetPackage.getQualifiedName() : "";
-        targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(project, targetPackageName, RECENTS_KEY);
-        targetPackageField.addActionListener(new ChooserDisplayerActionListener(targetPackageField, new PackageChooserDialogFactory(), project));
+        targetPackageField = referenceEditorComboWithBrowseButtonFactory.getReferenceEditorComboWithBrowseButton(
+                project, targetPackageName, RECENTS_KEY);
+        targetPackageField.addActionListener(
+                new ChooserDisplayerActionListener(targetPackageField, new PackageChooserDialogFactory(), project));
         setTitle(title);
     }
 
@@ -111,7 +111,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     @NotNull
     @Override
     protected Action[] createActions() {
-        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
+        return new Action[] {getOKAction(), getCancelAction(), getHelpAction()};
     }
 
     @Override
@@ -140,7 +140,10 @@ public class CreateBuilderDialog extends DialogWrapper {
         targetClassNameField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
-                getOKAction().setEnabled(JavaPsiFacade.getInstance(project).getNameHelper().isIdentifier(getClassName()));
+                getOKAction()
+                        .setEnabled(JavaPsiFacade.getInstance(project)
+                                .getNameHelper()
+                                .isIdentifier(getClassName()));
             }
         });
         // Class name
@@ -169,7 +172,8 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.gridy = 3;
         gbConstraints.weightx = 0;
         gbConstraints.gridwidth = 1;
-        panel.add(new JLabel(CodeInsightBundle.message("dialog.create.class.destination.package.label")), gbConstraints);
+        panel.add(
+                new JLabel(CodeInsightBundle.message("dialog.create.class.destination.package.label")), gbConstraints);
 
         gbConstraints.gridx = 1;
         gbConstraints.weightx = 1;
@@ -180,7 +184,8 @@ public class CreateBuilderDialog extends DialogWrapper {
                 targetPackageField.getButton().doClick();
             }
         };
-        clickAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
+        clickAction.registerCustomShortcutSet(
+                new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
                 targetPackageField.getChildComponent());
 
         addInnerPanelForDestinationPackageField(panel, gbConstraints);
@@ -306,7 +311,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     void checkIfSourceClassHasZeroArgsConstructorWhenUsingSingleField() {
         if (useSingleField()) {
             PsiMethod[] constructors = sourceClass.getConstructors();
-            if(constructors.length == 0){
+            if (constructors.length == 0) {
                 return;
             }
             for (PsiMethod constructor : constructors) {
@@ -314,13 +319,15 @@ public class CreateBuilderDialog extends DialogWrapper {
                     return;
                 }
             }
-            throw new IncorrectOperationException(String.format("%s must define a default constructor", sourceClass.getName()));
+            throw new IncorrectOperationException(
+                    String.format("%s must define a default constructor", sourceClass.getName()));
         }
     }
 
     void checkIfClassCanBeCreated(Module module) {
         if (!isInnerBuilder()) {
-            SelectDirectory selectDirectory = new SelectDirectory(this, psiHelper, module, getPackageName(), getClassName(), existingBuilder);
+            SelectDirectory selectDirectory =
+                    new SelectDirectory(this, psiHelper, module, getPackageName(), getClassName(), existingBuilder);
             executeCommand(selectDirectory);
         }
     }
@@ -334,7 +341,8 @@ public class CreateBuilderDialog extends DialogWrapper {
     }
 
     void executeCommand(SelectDirectory selectDirectory) {
-        CommandProcessor.getInstance().executeCommand(project, selectDirectory, CodeInsightBundle.message("create.directory.command"), null);
+        CommandProcessor.getInstance()
+                .executeCommand(project, selectDirectory, CodeInsightBundle.message("create.directory.command"), null);
     }
 
     private String getPackageName() {

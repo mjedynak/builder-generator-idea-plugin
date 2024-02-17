@@ -1,7 +1,6 @@
 package pl.mjedynak.idea.plugins.builder.finder;
 
 import com.intellij.psi.PsiClass;
-
 import java.util.Objects;
 
 public class BuilderFinder {

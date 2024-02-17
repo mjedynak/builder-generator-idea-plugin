@@ -16,14 +16,26 @@ public class CreateBuilderDialogFactory {
     private final ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory;
     private final GuiHelper guiHelper;
 
-    public CreateBuilderDialogFactory(PsiHelper psiHelper, ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory, GuiHelper guiHelper) {
+    public CreateBuilderDialogFactory(
+            PsiHelper psiHelper,
+            ReferenceEditorComboWithBrowseButtonFactory referenceEditorComboWithBrowseButtonFactory,
+            GuiHelper guiHelper) {
         this.psiHelper = psiHelper;
         this.referenceEditorComboWithBrowseButtonFactory = referenceEditorComboWithBrowseButtonFactory;
         this.guiHelper = guiHelper;
     }
 
-    public CreateBuilderDialog createBuilderDialog(PsiClass sourceClass, Project project, PsiPackage srcPackage, PsiClass existingBuilder) {
-        return new CreateBuilderDialog(project, DIALOG_NAME, sourceClass, sourceClass.getName() + BUILDER_SUFFIX, srcPackage, psiHelper, guiHelper,
-                referenceEditorComboWithBrowseButtonFactory, existingBuilder);
+    public CreateBuilderDialog createBuilderDialog(
+            PsiClass sourceClass, Project project, PsiPackage srcPackage, PsiClass existingBuilder) {
+        return new CreateBuilderDialog(
+                project,
+                DIALOG_NAME,
+                sourceClass,
+                sourceClass.getName() + BUILDER_SUFFIX,
+                srcPackage,
+                psiHelper,
+                guiHelper,
+                referenceEditorComboWithBrowseButtonFactory,
+                existingBuilder);
     }
 }

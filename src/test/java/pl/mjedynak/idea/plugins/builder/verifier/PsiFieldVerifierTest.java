@@ -1,5 +1,12 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
@@ -15,13 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mock.Strictness.LENIENT;
-import static org.mockito.Mockito.mock;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
 @ExtendWith(MockitoExtension.class)
 public class PsiFieldVerifierTest {
 
@@ -30,15 +30,32 @@ public class PsiFieldVerifierTest {
     private PsiMethod[] methods;
     private PsiParameter[] parameters;
 
-    @Mock(strictness = LENIENT) private PsiField psiField;
-    @Mock private PsiClass psiClass;
-    @Mock private PsiMethod constructor;
-    @Mock private PsiParameterList parameterList;
-    @Mock(strictness = LENIENT) private PsiParameter parameter;
-    @Mock private PsiType psiType;
-    @Mock(strictness = LENIENT) private PsiMethod method;
-    @Mock private PsiModifierList modifierList;
-    @Mock(strictness = LENIENT) private CodeStyleSettings settings;
+    @Mock(strictness = LENIENT)
+    private PsiField psiField;
+
+    @Mock
+    private PsiClass psiClass;
+
+    @Mock
+    private PsiMethod constructor;
+
+    @Mock
+    private PsiParameterList parameterList;
+
+    @Mock(strictness = LENIENT)
+    private PsiParameter parameter;
+
+    @Mock
+    private PsiType psiType;
+
+    @Mock(strictness = LENIENT)
+    private PsiMethod method;
+
+    @Mock
+    private PsiModifierList modifierList;
+
+    @Mock(strictness = LENIENT)
+    private CodeStyleSettings settings;
 
     private String name;
 

@@ -13,10 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * The {@link State} and {@link Storage} annotations define the name of the data and the file name where
  * these persistent application settings are stored.
  */
-@State(
-        name = "org.intellij.sdk.settings.AppSettingsState",
-        storages = @Storage("SdkSettingsPlugin.xml")
-)
+@State(name = "org.intellij.sdk.settings.AppSettingsState", storages = @Storage("SdkSettingsPlugin.xml"))
 public class BuilderGeneratorSettingsState implements PersistentStateComponent<BuilderGeneratorSettingsState> {
 
     public String defaultMethodPrefix = "with";
@@ -45,5 +42,4 @@ public class BuilderGeneratorSettingsState implements PersistentStateComponent<B
     public void loadState(@NotNull BuilderGeneratorSettingsState state) {
         XmlSerializerUtil.copyBean(state, this);
     }
-
 }

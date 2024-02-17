@@ -11,6 +11,7 @@ public class GoToBuilderAction extends AbstractBuilderAction {
         picoContainer.registerComponentImplementation(GoToBuilderActionHandler.class);
         picoContainer.registerComponentImplementation(GoToBuilderPopupDisplayer.class);
         picoContainer.registerComponentImplementation(GoToBuilderPopupListFactory.class);
-        builderActionHandler = (AbstractBuilderActionHandler) picoContainer.getComponentInstanceOfType(GoToBuilderActionHandler.class);
+        builderActionHandler =
+                (AbstractBuilderActionHandler) picoContainer.getComponentInstanceOfType(GoToBuilderActionHandler.class);
     }
 }

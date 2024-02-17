@@ -1,13 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.settings;
 
-
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
+import org.jetbrains.annotations.NotNull;
 
 public class BuilderGeneratorSettingsComponent {
 
@@ -77,5 +75,4 @@ public class BuilderGeneratorSettingsComponent {
     public void setAddCopyConstructor(boolean addCopyConstructor) {
         addCopyConstructorCheckBox.setSelected(addCopyConstructor);
     }
-
 }

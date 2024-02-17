@@ -1,14 +1,14 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
 import com.intellij.openapi.util.IconLoader;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.Icon;
+import org.jetbrains.annotations.NotNull;
 
 public class GenerateBuilderAdditionalAction extends AbstractBuilderAdditionalAction {
 
     private static final String TEXT = "Create New Builder...";
-    private static final Icon ICON = IconLoader.getIcon("/actions/intentionBulb.png", GenerateBuilderAdditionalAction.class);
+    private static final Icon ICON =
+            IconLoader.getIcon("/actions/intentionBulb.png", GenerateBuilderAdditionalAction.class);
 
     @NotNull
     @Override
@@ -22,6 +22,5 @@ public class GenerateBuilderAdditionalAction extends AbstractBuilderAdditionalAc
     }
 
     @Override
-    public void execute() {
-    }
+    public void execute() {}
 }

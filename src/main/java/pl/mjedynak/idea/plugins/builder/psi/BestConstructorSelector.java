@@ -6,12 +6,11 @@ import com.google.common.collect.Sets;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-import org.jetbrains.annotations.NotNull;
-import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
+import org.jetbrains.annotations.NotNull;
+import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
 
 public class BestConstructorSelector {
 
@@ -30,7 +29,8 @@ public class BestConstructorSelector {
         createConstructorLists(psiFieldsToFindInConstructor, psiClass);
 
         computeNumberOfMatchingFields(constructorsWithEqualParameterCount, psiFieldsToFindInConstructor);
-        PsiMethod bestConstructor = findConstructorWithAllFieldsToFind(constructorsWithEqualParameterCount, fieldsToFindCount);
+        PsiMethod bestConstructor =
+                findConstructorWithAllFieldsToFind(constructorsWithEqualParameterCount, fieldsToFindCount);
         if (bestConstructor != null) {
             return bestConstructor;
         }
@@ -62,7 +62,9 @@ public class BestConstructorSelector {
         }
     }
 
-    private void computeNumberOfMatchingFields(Iterable<ConstructorWithExtraData> constuctorsWithExtraData, Iterable<PsiField> psiFieldsToFindInConstructor) {
+    private void computeNumberOfMatchingFields(
+            Iterable<ConstructorWithExtraData> constuctorsWithExtraData,
+            Iterable<PsiField> psiFieldsToFindInConstructor) {
         for (ConstructorWithExtraData constructorWithExtraData : constuctorsWithExtraData) {
             int matchingFieldsCount = 0;
             for (PsiField psiField : psiFieldsToFindInConstructor) {
@@ -74,7 +76,8 @@ public class BestConstructorSelector {
         }
     }
 
-    private PsiMethod findConstructorWithAllFieldsToFind(Iterable<ConstructorWithExtraData> constructorsWithExtraData, int fieldsToFindCount) {
+    private PsiMethod findConstructorWithAllFieldsToFind(
+            Iterable<ConstructorWithExtraData> constructorsWithExtraData, int fieldsToFindCount) {
         for (ConstructorWithExtraData constructorWithExtraData : constructorsWithExtraData) {
             if (constructorWithExtraData.getMatchingFieldsCount() == fieldsToFindCount) {
                 return constructorWithExtraData.getConstructor();
@@ -84,14 +87,17 @@ public class BestConstructorSelector {
     }
 
     private PsiMethod findConstructorWithMaximumOfFieldsToFind() {
-        Iterable<ConstructorWithExtraData> allConstructors = Iterables.concat(constructorsWithEqualParameterCount, constructorsWithHigherParameterCount, constructorsWithLowerParameterCount);
+        Iterable<ConstructorWithExtraData> allConstructors = Iterables.concat(
+                constructorsWithEqualParameterCount,
+                constructorsWithHigherParameterCount,
+                constructorsWithLowerParameterCount);
         int matchingFieldCount = -1;
         int parameterCount = 0;
         PsiMethod bestConstructor = null;
         for (ConstructorWithExtraData constructor : allConstructors) {
             if (constructor.getMatchingFieldsCount() > matchingFieldCount
                     || constructor.getMatchingFieldsCount() == matchingFieldCount
-                    && constructor.getParametersCount() < parameterCount) {
+                            && constructor.getParametersCount() < parameterCount) {
                 bestConstructor = constructor.getConstructor();
                 matchingFieldCount = constructor.getMatchingFieldsCount();
                 parameterCount = constructor.getParametersCount();

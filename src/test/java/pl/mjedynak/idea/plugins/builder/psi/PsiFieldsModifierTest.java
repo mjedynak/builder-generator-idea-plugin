@@ -1,5 +1,10 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
@@ -8,27 +13,28 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiType;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 @ExtendWith(MockitoExtension.class)
 public class PsiFieldsModifierTest {
 
     private final PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
-    @Mock private PsiClass builderClass;
-    @Mock private Project project;
-    @Mock private PsiElementFactory psiElementFactory;
+
+    @Mock
+    private PsiClass builderClass;
+
+    @Mock
+    private Project project;
+
+    @Mock
+    private PsiElementFactory psiElementFactory;
+
     private List<PsiField> psiFieldsForSetters;
     private List<PsiField> psiFieldsForConstructor;
 
@@ -57,7 +63,8 @@ public class PsiFieldsModifierTest {
         PsiField copyPsiFieldForConstructor = mock(PsiField.class);
         PsiModifierList copyPsiFieldForConstructorModifierList = mock(PsiModifierList.class);
         given(copyPsiFieldForConstructor.getModifierList()).willReturn(copyPsiFieldForConstructorModifierList);
-        given(psiElementFactory.createField("constructorField", PsiType.BOOLEAN)).willReturn(copyPsiFieldForConstructor);
+        given(psiElementFactory.createField("constructorField", PsiType.BOOLEAN))
+                .willReturn(copyPsiFieldForConstructor);
 
         given(builderClass.getProject()).willReturn(project);
         given(project.getService(PsiElementFactory.class)).willReturn(psiElementFactory);
@@ -78,5 +85,4 @@ public class PsiFieldsModifierTest {
         annotationArray[0] = annotation;
         return annotationArray;
     }
-
 }

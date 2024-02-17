@@ -16,7 +16,12 @@ public class ButMethodCreator {
         this.elementFactory = elementFactory;
     }
 
-    public PsiMethod butMethod(String builderClassName, PsiClass builderClass, PsiClass srcClass, String srcClassFieldName, boolean useSingleField) {
+    public PsiMethod butMethod(
+            String builderClassName,
+            PsiClass builderClass,
+            PsiClass srcClass,
+            String srcClassFieldName,
+            boolean useSingleField) {
         PsiMethod[] methods = builderClass.getMethods();
         StringBuilder text = new StringBuilder("public " + builderClassName + " but() { return ");
         for (PsiMethod method : methods) {
@@ -30,7 +35,12 @@ public class ButMethodCreator {
         return elementFactory.createMethodFromText(text.toString(), srcClass);
     }
 
-    private void appendMethod(StringBuilder text, PsiMethod method, PsiParameterList parameterList, String srcClassFieldName, boolean useSingleField) {
+    private void appendMethod(
+            StringBuilder text,
+            PsiMethod method,
+            PsiParameterList parameterList,
+            String srcClassFieldName,
+            boolean useSingleField) {
         if (isInitializingMethod(parameterList)) {
             text.append(method.getName()).append("().");
         } else {
@@ -40,7 +50,10 @@ public class ButMethodCreator {
             String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
             text.append(method.getName()).append("(");
             if (useSingleField) {
-                text.append(srcClassFieldName).append(".get").append(StringUtils.capitalize(parameterNameWithoutPrefix)).append("()");
+                text.append(srcClassFieldName)
+                        .append(".get")
+                        .append(StringUtils.capitalize(parameterNameWithoutPrefix))
+                        .append("()");
             } else {
                 text.append(fieldNamePrefix).append(parameterNameWithoutPrefix);
             }

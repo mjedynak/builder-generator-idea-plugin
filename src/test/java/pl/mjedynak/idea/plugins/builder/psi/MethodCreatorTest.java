@@ -1,5 +1,10 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
@@ -11,21 +16,28 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
 @ExtendWith(MockitoExtension.class)
 public class MethodCreatorTest {
 
     private MethodCreator methodCreator;
-    @Mock private MethodNameCreator methodNameCreator;
-    @Mock private CodeStyleSettings codeStyleSettings;
-    @Mock private PsiElementFactory elementFactory;
-    @Mock private PsiField psiField;
-    @Mock private PsiType type;
-    @Mock private PsiMethod method;
+
+    @Mock
+    private MethodNameCreator methodNameCreator;
+
+    @Mock
+    private CodeStyleSettings codeStyleSettings;
+
+    @Mock
+    private PsiElementFactory elementFactory;
+
+    @Mock
+    private PsiField psiField;
+
+    @Mock
+    private PsiType type;
+
+    @Mock
+    private PsiMethod method;
 
     private final String srcClassFieldName = "className";
 
@@ -49,7 +61,9 @@ public class MethodCreatorTest {
     void shouldCreateMethod() {
         // given
         initOtherCommonMocks();
-        given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { this.name = name; return this; }", psiField)).willReturn(method);
+        given(elementFactory.createMethodFromText(
+                        "public BuilderClassName withName(String name) { this.name = name; return this; }", psiField))
+                .willReturn(method);
         String methodPrefix = "with";
 
         // when
@@ -64,7 +78,10 @@ public class MethodCreatorTest {
         // given
         initOtherCommonMocks();
         given(methodNameCreator.createMethodName("set", "name")).willReturn("setName");
-        given(elementFactory.createMethodFromText("public BuilderClassName withName(String name) { className.setName(name); return this; }", psiField)).willReturn(method);
+        given(elementFactory.createMethodFromText(
+                        "public BuilderClassName withName(String name) { className.setName(name); return this; }",
+                        psiField))
+                .willReturn(method);
         String methodPrefix = "with";
 
         // when
@@ -73,5 +90,4 @@ public class MethodCreatorTest {
         // then
         assertThat(result).isEqualTo(method);
     }
-
 }

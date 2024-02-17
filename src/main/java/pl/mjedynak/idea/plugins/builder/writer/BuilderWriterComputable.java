@@ -18,7 +18,8 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     private final BuilderContext context;
     private final PsiClass existingBuilder;
 
-    BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
+    BuilderWriterComputable(
+            BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.context = context;
         this.existingBuilder = existingBuilder;
@@ -52,7 +53,8 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private PsiClass getInnerBuilderPsiClass() {
-        BuilderPsiClassBuilder builder = builderPsiClassBuilder.anInnerBuilder(context)
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder
+                .anInnerBuilder(context)
                 .withFields()
                 .withConstructor()
                 .withInitializingMethod()
@@ -63,7 +65,8 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private PsiClass getBuilderPsiClass() {
-        BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(context)
+        BuilderPsiClassBuilder builder = builderPsiClassBuilder
+                .aBuilder(context)
                 .withFields()
                 .withConstructor()
                 .withInitializingMethod()
@@ -90,9 +93,9 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     }
 
     private void showErrorMessage(Project project, String className, String message) {
-        BuilderWriterErrorRunnable builderWriterErrorRunnable =
-                message == null ? new BuilderWriterErrorRunnable(project, className)
-                        : new BuilderWriterErrorRunnable(project, className, message);
+        BuilderWriterErrorRunnable builderWriterErrorRunnable = message == null
+                ? new BuilderWriterErrorRunnable(project, className)
+                : new BuilderWriterErrorRunnable(project, className, message);
 
         Application application = psiHelper.getApplication();
         application.invokeLater(builderWriterErrorRunnable);

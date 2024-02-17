@@ -12,7 +12,8 @@ public class BuilderWriterRunnable implements Runnable {
     private final BuilderContext context;
     private final PsiClass existingBuilder;
 
-    public BuilderWriterRunnable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
+    public BuilderWriterRunnable(
+            BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
         this.context = context;
         this.existingBuilder = existingBuilder;

@@ -1,5 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.psi;
 
+import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
+
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -19,8 +21,6 @@ import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RefactoringMessageUtil;
-
-import static com.intellij.ide.util.EditSourceUtil.getDescriptor;
 
 public class PsiHelper {
 

@@ -3,7 +3,6 @@ package pl.mjedynak.idea.plugins.builder.psi.model;
 import com.google.common.collect.ImmutableList;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-
 import java.util.List;
 
 public class PsiFieldsForBuilder {
@@ -13,7 +12,11 @@ public class PsiFieldsForBuilder {
     private final List<PsiField> allSelectedPsiFields;
     private final PsiMethod bestConstructor;
 
-    public PsiFieldsForBuilder(List<PsiField> psiFieldsForSetters, List<PsiField> psiFieldsForConstructor, List<PsiField> allSelectedPsiFields, PsiMethod bestConstructor) {
+    public PsiFieldsForBuilder(
+            List<PsiField> psiFieldsForSetters,
+            List<PsiField> psiFieldsForConstructor,
+            List<PsiField> allSelectedPsiFields,
+            PsiMethod bestConstructor) {
         this.psiFieldsForSetters = ImmutableList.copyOf(psiFieldsForSetters);
         this.psiFieldsForConstructor = ImmutableList.copyOf(psiFieldsForConstructor);
         this.allSelectedPsiFields = ImmutableList.copyOf(allSelectedPsiFields);

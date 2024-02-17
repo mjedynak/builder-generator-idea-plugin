@@ -27,8 +27,9 @@ public class BuilderWriterErrorRunnable implements Runnable {
 
     @Override
     public void run() {
-         Messages.showErrorDialog(project,
-                 CodeInsightBundle.message(message, className),
-                 CodeInsightBundle.message(INTENTION_ERROR_CANNOT_CREATE_CLASS_TITLE));
+        Messages.showErrorDialog(
+                project,
+                CodeInsightBundle.message(message, className),
+                CodeInsightBundle.message(INTENTION_ERROR_CANNOT_CREATE_CLASS_TITLE));
     }
 }

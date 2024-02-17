@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.intellij") version "1.17.1"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "pl.mjedynak"
@@ -43,3 +44,10 @@ tasks {
         gradleVersion = "8.6"
     }
 }
+
+spotless {
+    java {
+        palantirJavaFormat()
+    }
+}
+

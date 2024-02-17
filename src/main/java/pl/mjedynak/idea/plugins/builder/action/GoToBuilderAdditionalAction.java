@@ -1,9 +1,8 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
 import com.intellij.openapi.util.IconLoader;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.Icon;
+import org.jetbrains.annotations.NotNull;
 
 public class GoToBuilderAdditionalAction extends AbstractBuilderAdditionalAction {
 
@@ -22,6 +21,5 @@ public class GoToBuilderAdditionalAction extends AbstractBuilderAdditionalAction
     }
 
     @Override
-    public void execute() {
-    }
+    public void execute() {}
 }

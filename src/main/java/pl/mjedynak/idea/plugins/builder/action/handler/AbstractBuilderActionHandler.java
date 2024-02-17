@@ -1,7 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
@@ -21,8 +21,13 @@ public abstract class AbstractBuilderActionHandler extends EditorActionHandler {
     protected AbstractPopupListFactory popupListFactory;
     protected DisplayChoosers displayChoosers;
 
-    public AbstractBuilderActionHandler(PsiHelper psiHelper, BuilderVerifier builderVerifier, BuilderFinder builderFinder, AbstractPopupDisplayer popupDisplayer,
-                                        AbstractPopupListFactory popupListFactory, DisplayChoosers displayChoosers) {
+    public AbstractBuilderActionHandler(
+            PsiHelper psiHelper,
+            BuilderVerifier builderVerifier,
+            BuilderFinder builderFinder,
+            AbstractPopupDisplayer popupDisplayer,
+            AbstractPopupListFactory popupListFactory,
+            DisplayChoosers displayChoosers) {
         this.psiHelper = psiHelper;
         this.builderVerifier = builderVerifier;
         this.builderFinder = builderFinder;
@@ -65,8 +70,9 @@ public abstract class AbstractBuilderActionHandler extends EditorActionHandler {
         return builderFinder.findBuilderForClass(psiClassFromEditor);
     }
 
-    protected abstract void doActionWhenClassToGoIsFound(Editor editor, PsiClass psiClassFromEditor, DataContext dataContext, boolean isBuilder, PsiClass classToGo);
+    protected abstract void doActionWhenClassToGoIsFound(
+            Editor editor, PsiClass psiClassFromEditor, DataContext dataContext, boolean isBuilder, PsiClass classToGo);
 
-    protected abstract void doActionWhenClassToGoIsNotFound(Editor editor, PsiClass psiClassFromEditor, DataContext dataContext, boolean isBuilder);
-
+    protected abstract void doActionWhenClassToGoIsNotFound(
+            Editor editor, PsiClass psiClassFromEditor, DataContext dataContext, boolean isBuilder);
 }

@@ -1,5 +1,13 @@
 package pl.mjedynak.idea.plugins.builder.writer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -15,14 +23,6 @@ import pl.mjedynak.idea.plugins.builder.gui.helper.GuiHelper;
 import pl.mjedynak.idea.plugins.builder.psi.BuilderPsiClassBuilder;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mock.Strictness.LENIENT;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
 @ExtendWith(MockitoExtension.class)
 public class BuilderWriterComputableTest {
 
@@ -30,16 +30,35 @@ public class BuilderWriterComputableTest {
 
     private BuilderWriterComputable builderWriterComputable;
 
-    @Mock private PsiHelper psiHelper;
-    @Mock private GuiHelper guiHelper;
-    @Mock private BuilderPsiClassBuilder builderPsiClassBuilder;
-    @Mock private Project project;
-    @Mock private PsiClass srcClass;
-    @Mock(strictness = LENIENT) private PsiClass builderClass;
-    @Mock private PsiFile psiFile;
-    @Mock private PsiElement psiElement;
-    @Mock(strictness = LENIENT) private BuilderContext context;
-    @Mock private PsiClass existingBuilder;
+    @Mock
+    private PsiHelper psiHelper;
+
+    @Mock
+    private GuiHelper guiHelper;
+
+    @Mock
+    private BuilderPsiClassBuilder builderPsiClassBuilder;
+
+    @Mock
+    private Project project;
+
+    @Mock
+    private PsiClass srcClass;
+
+    @Mock(strictness = LENIENT)
+    private PsiClass builderClass;
+
+    @Mock
+    private PsiFile psiFile;
+
+    @Mock
+    private PsiElement psiElement;
+
+    @Mock(strictness = LENIENT)
+    private BuilderContext context;
+
+    @Mock
+    private PsiClass existingBuilder;
 
     @BeforeEach
     public void setUp() {

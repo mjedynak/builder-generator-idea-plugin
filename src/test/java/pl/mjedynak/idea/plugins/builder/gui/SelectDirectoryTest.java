@@ -1,5 +1,16 @@
 package pl.mjedynak.idea.plugins.builder.gui;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -12,17 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-
 @ExtendWith(MockitoExtension.class)
 public class SelectDirectoryTest {
 
@@ -33,22 +33,33 @@ public class SelectDirectoryTest {
 
     private SelectDirectory selectDirectory;
 
-    @Mock private CreateBuilderDialog createBuilderDialog;
-    @Mock private PsiHelper psiHelper;
-    @Mock private Module module;
-    @Mock private PsiDirectory targetDirectory;
-    @Mock private PsiClass existingBuilder;
+    @Mock
+    private CreateBuilderDialog createBuilderDialog;
+
+    @Mock
+    private PsiHelper psiHelper;
+
+    @Mock
+    private Module module;
+
+    @Mock
+    private PsiDirectory targetDirectory;
+
+    @Mock
+    private PsiClass existingBuilder;
 
     @BeforeEach
     public void setUp() {
-        given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME)).willReturn(targetDirectory);
+        given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME))
+                .willReturn(targetDirectory);
     }
 
     @Test
     void shouldDoNothingIfTargetDirectoryReturnedByPsiHelperIsNull() {
         // given
         selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
-        given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME)).willReturn(null);
+        given(psiHelper.getDirectoryFromModuleAndPackageName(module, PACKAGE_NAME))
+                .willReturn(null);
 
         // when
         selectDirectory.run();
@@ -76,8 +87,10 @@ public class SelectDirectoryTest {
         Throwable exception = assertThrows(IncorrectOperationException.class, () -> {
 
             // given
-            selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
-            given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME)).willReturn(ERROR_MESSAGE);
+            selectDirectory =
+                    new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, null);
+            given(psiHelper.checkIfClassCanBeCreated(targetDirectory, CLASS_NAME))
+                    .willReturn(ERROR_MESSAGE);
 
             // when
             selectDirectory.run();
@@ -103,7 +116,8 @@ public class SelectDirectoryTest {
     @Test
     void shouldNotCheckIfClassCanBeCreatedIfExistingBuilderMustBeDeletedAndClassToCreateIsTheSame() {
         // given
-        selectDirectory = new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, existingBuilder);
+        selectDirectory =
+                new SelectDirectory(createBuilderDialog, psiHelper, module, PACKAGE_NAME, CLASS_NAME, existingBuilder);
         mockIsClassToCreateSameAsBuilderToDelete();
 
         // when

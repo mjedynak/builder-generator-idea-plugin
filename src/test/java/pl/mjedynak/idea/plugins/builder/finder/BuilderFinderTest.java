@@ -1,5 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.finder;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mock.Strictness.LENIENT;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,23 +15,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mock.Strictness.LENIENT;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 public class BuilderFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
     private static final String BUILDER_NAME = CLASS_NAME + BuilderFinder.SEARCH_PATTERN;
 
-    @InjectMocks private BuilderFinder builderFinder;
-    @Mock(strictness = LENIENT) private ClassFinder classFinder;
-    @Mock(strictness = LENIENT) private PsiClass psiClass;
-    @Mock(strictness = LENIENT) private PsiClass builderClass;
-    @Mock private Project project;
+    @InjectMocks
+    private BuilderFinder builderFinder;
+
+    @Mock(strictness = LENIENT)
+    private ClassFinder classFinder;
+
+    @Mock(strictness = LENIENT)
+    private PsiClass psiClass;
+
+    @Mock(strictness = LENIENT)
+    private PsiClass builderClass;
+
+    @Mock
+    private Project project;
 
     @BeforeEach
     public void setUp() {
@@ -196,5 +205,4 @@ public class BuilderFinderTest {
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo(CLASS_NAME);
     }
-
 }

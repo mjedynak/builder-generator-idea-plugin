@@ -18,6 +18,10 @@ public class BuilderWriter {
 
     public void writeBuilder(BuilderContext context, PsiClass existingBuilder) {
         CommandProcessor commandProcessor = psiHelper.getCommandProcessor();
-        commandProcessor.executeCommand(context.getProject(), new BuilderWriterRunnable(builderPsiClassBuilder, context, existingBuilder), CREATE_BUILDER_STRING, this);
+        commandProcessor.executeCommand(
+                context.getProject(),
+                new BuilderWriterRunnable(builderPsiClassBuilder, context, existingBuilder),
+                CREATE_BUILDER_STRING,
+                this);
     }
 }

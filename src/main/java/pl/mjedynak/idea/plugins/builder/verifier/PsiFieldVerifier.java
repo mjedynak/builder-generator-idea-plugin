@@ -1,5 +1,7 @@
 package pl.mjedynak.idea.plugins.builder.verifier;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
@@ -9,8 +11,6 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import org.apache.commons.text.WordUtils;
 import pl.mjedynak.idea.plugins.builder.settings.CodeStyleSettings;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class PsiFieldVerifier {
 
@@ -53,7 +53,8 @@ public class PsiFieldVerifier {
         String fieldNamePrefix = codeStyleSettings.getFieldNamePrefix();
         String fieldName = psiField.getName();
         String fieldNameWithoutPrefix = fieldName.replaceFirst(fieldNamePrefix, "");
-        return parameterNameWithoutPrefix.equals(fieldNameWithoutPrefix) && parameter.getType().equals(psiField.getType());
+        return parameterNameWithoutPrefix.equals(fieldNameWithoutPrefix)
+                && parameter.getType().equals(psiField.getType());
     }
 
     public boolean isSetInSetterMethod(PsiField psiField, PsiClass psiClass) {
@@ -64,7 +65,8 @@ public class PsiFieldVerifier {
         return methodIsNotPrivateAndHasProperPrefixAndProperName(psiField, psiClass, GET_PREFIX);
     }
 
-    private boolean methodIsNotPrivateAndHasProperPrefixAndProperName(PsiField psiField, PsiClass psiClass, String prefix) {
+    private boolean methodIsNotPrivateAndHasProperPrefixAndProperName(
+            PsiField psiField, PsiClass psiClass, String prefix) {
         boolean result = false;
         for (PsiMethod method : psiClass.getAllMethods()) {
             if (methodIsNotPrivate(method) && methodHaProperPrefixAndProperName(psiField, method, prefix)) {
@@ -89,5 +91,4 @@ public class PsiFieldVerifier {
     private boolean modifierListHasNoPrivateModifier(PsiModifierList modifierList) {
         return !modifierList.hasExplicitModifier(PsiModifier.PRIVATE);
     }
-
 }

@@ -1,10 +1,18 @@
 package pl.mjedynak.idea.plugins.builder.action.handler;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import javax.swing.JList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,32 +26,48 @@ import pl.mjedynak.idea.plugins.builder.gui.displayer.GoToBuilderPopupDisplayer;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 import pl.mjedynak.idea.plugins.builder.verifier.BuilderVerifier;
 
-import javax.swing.JList;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 @ExtendWith(MockitoExtension.class)
 public class GoToBuilderActionHandlerTest {
 
-    @InjectMocks private GoToBuilderActionHandler builderActionHandler;
-    @Mock private BuilderVerifier builderVerifier;
-    @Mock private BuilderFinder builderFinder;
-    @Mock private PsiHelper psiHelper;
-    @Mock private GoToBuilderPopupListFactory popupListFactory;
-    @Mock private GoToBuilderPopupDisplayer popupDisplayer;
-    @Mock private DisplayChoosers displayChoosers;
-    @Mock private PsiClass psiClass;
-    @Mock private PsiClass builderClass;
-    @Mock private Editor editor;
-    @Mock private Project project;
-    @Mock private DataContext dataContext;
+    @InjectMocks
+    private GoToBuilderActionHandler builderActionHandler;
+
+    @Mock
+    private BuilderVerifier builderVerifier;
+
+    @Mock
+    private BuilderFinder builderFinder;
+
+    @Mock
+    private PsiHelper psiHelper;
+
+    @Mock
+    private GoToBuilderPopupListFactory popupListFactory;
+
+    @Mock
+    private GoToBuilderPopupDisplayer popupDisplayer;
+
+    @Mock
+    private DisplayChoosers displayChoosers;
+
+    @Mock
+    private PsiClass psiClass;
+
+    @Mock
+    private PsiClass builderClass;
+
+    @Mock
+    private Editor editor;
+
+    @Mock
+    private Project project;
+
+    @Mock
+    private DataContext dataContext;
+
     @SuppressWarnings("rawtypes")
-    @Mock private JList list;
+    @Mock
+    private JList list;
 
     @BeforeEach
     public void setUp() {

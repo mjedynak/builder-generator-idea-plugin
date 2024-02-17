@@ -1,12 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.action;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.intellij.openapi.util.IconLoader;
+import javax.swing.Icon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.Icon;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GenerateBuilderAdditionalActionTest {
 

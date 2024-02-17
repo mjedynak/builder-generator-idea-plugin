@@ -1,5 +1,9 @@
 package pl.mjedynak.idea.plugins.builder.finder;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -13,20 +17,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-
 @ExtendWith(MockitoExtension.class)
 public class ClassFinderTest {
 
     private static final String CLASS_NAME = "SomeClass";
 
-    @InjectMocks private ClassFinder classFinder;
-    @Mock private PsiHelper psiHelper;
-    @Mock private PsiShortNamesCache psiShortNamesCache;
-    @Mock private Project project;
-    @Mock private GlobalSearchScope globalSearchScope;
+    @InjectMocks
+    private ClassFinder classFinder;
+
+    @Mock
+    private PsiHelper psiHelper;
+
+    @Mock
+    private PsiShortNamesCache psiShortNamesCache;
+
+    @Mock
+    private Project project;
+
+    @Mock
+    private GlobalSearchScope globalSearchScope;
 
     @BeforeEach
     public void setUp() {
@@ -38,7 +47,8 @@ public class ClassFinderTest {
     void shouldNotFindClassWhenSearchPatternNotFound() {
         // given
         PsiClass[] emptyArray = new PsiClass[0];
-        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).willReturn(emptyArray);
+        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope))
+                .willReturn(emptyArray);
 
         // when
         PsiClass result = classFinder.findClass(CLASS_NAME, project);
@@ -54,7 +64,8 @@ public class ClassFinderTest {
         given(foundClass.getName()).willReturn(CLASS_NAME);
         PsiClass[] foundClassArray = {foundClass};
 
-        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope)).willReturn(foundClassArray);
+        given(psiShortNamesCache.getClassesByName(CLASS_NAME, globalSearchScope))
+                .willReturn(foundClassArray);
 
         // when
         PsiClass result = classFinder.findClass(CLASS_NAME, project);

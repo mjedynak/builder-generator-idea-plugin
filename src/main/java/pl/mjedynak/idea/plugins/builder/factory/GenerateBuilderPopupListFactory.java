@@ -1,12 +1,11 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
+import static java.util.Arrays.asList;
+
 import com.intellij.ui.components.JBList;
+import javax.swing.JList;
 import pl.mjedynak.idea.plugins.builder.action.GoToBuilderAdditionalAction;
 import pl.mjedynak.idea.plugins.builder.action.RegenerateBuilderAdditionalAction;
-
-import javax.swing.JList;
-
-import static java.util.Arrays.asList;
 
 public class GenerateBuilderPopupListFactory extends AbstractPopupListFactory {
 

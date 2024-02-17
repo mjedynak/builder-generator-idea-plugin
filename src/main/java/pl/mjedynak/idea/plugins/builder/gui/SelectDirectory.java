@@ -15,7 +15,13 @@ public class SelectDirectory implements Runnable {
     private final String className;
     private final PsiClass existingBuilder;
 
-    public SelectDirectory(CreateBuilderDialog createBuilderDialog, PsiHelper psiHelper, Module module, String packageName, String className, PsiClass existingBuilder) {
+    public SelectDirectory(
+            CreateBuilderDialog createBuilderDialog,
+            PsiHelper psiHelper,
+            Module module,
+            String packageName,
+            String className,
+            PsiClass existingBuilder) {
         this.createBuilderDialog = createBuilderDialog;
         this.psiHelper = psiHelper;
         this.module = module;
@@ -46,7 +52,11 @@ public class SelectDirectory implements Runnable {
         return existingBuilder != null
                 && existingBuilder.getContainingFile() != null
                 && existingBuilder.getContainingFile().getContainingDirectory() != null
-                && existingBuilder.getContainingFile().getContainingDirectory().getName().equals(targetDirectory.getName())
+                && existingBuilder
+                        .getContainingFile()
+                        .getContainingDirectory()
+                        .getName()
+                        .equals(targetDirectory.getName())
                 && existingBuilder.getName() != null
                 && existingBuilder.getName().equals(className);
     }

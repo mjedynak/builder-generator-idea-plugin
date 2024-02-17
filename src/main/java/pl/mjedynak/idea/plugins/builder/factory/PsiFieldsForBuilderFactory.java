@@ -6,24 +6,25 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import java.util.List;
 import pl.mjedynak.idea.plugins.builder.psi.BestConstructorSelector;
 import pl.mjedynak.idea.plugins.builder.psi.model.PsiFieldsForBuilder;
 import pl.mjedynak.idea.plugins.builder.verifier.PsiFieldVerifier;
-
-import java.util.List;
 
 public class PsiFieldsForBuilderFactory {
 
     private final PsiFieldVerifier psiFieldVerifier;
     private final BestConstructorSelector bestConstructorSelector;
 
-    public PsiFieldsForBuilderFactory(PsiFieldVerifier psiFieldVerifier, BestConstructorSelector bestConstructorSelector) {
+    public PsiFieldsForBuilderFactory(
+            PsiFieldVerifier psiFieldVerifier, BestConstructorSelector bestConstructorSelector) {
         this.psiFieldVerifier = psiFieldVerifier;
         this.bestConstructorSelector = bestConstructorSelector;
     }
 
     @SuppressWarnings("rawtypes")
-    public PsiFieldsForBuilder createPsiFieldsForBuilder(List<PsiElementClassMember<?>> psiElementClassMembers, PsiClass psiClass) {
+    public PsiFieldsForBuilder createPsiFieldsForBuilder(
+            List<PsiElementClassMember<?>> psiElementClassMembers, PsiClass psiClass) {
         List<PsiField> allSelectedPsiFields = Lists.newArrayList();
         List<PsiField> psiFieldsFoundInSetters = Lists.newArrayList();
         for (PsiElementClassMember psiElementClassMember : psiElementClassMembers) {
@@ -43,10 +44,12 @@ public class PsiFieldsForBuilderFactory {
         }
         List<PsiField> psiFieldsForSetters = getSubList(psiFieldsFoundInSetters, psiFieldsForConstructor);
 
-        return new PsiFieldsForBuilder(psiFieldsForSetters, psiFieldsForConstructor, allSelectedPsiFields, bestConstructor);
+        return new PsiFieldsForBuilder(
+                psiFieldsForSetters, psiFieldsForConstructor, allSelectedPsiFields, bestConstructor);
     }
 
-    private void buildPsiFieldsForConstructor(List<PsiField> psiFieldsForConstructor, List<PsiField> allSelectedPsiFields, PsiMethod bestConstructor) {
+    private void buildPsiFieldsForConstructor(
+            List<PsiField> psiFieldsForConstructor, List<PsiField> allSelectedPsiFields, PsiMethod bestConstructor) {
         for (PsiField selectedPsiField : allSelectedPsiFields) {
             if (psiFieldVerifier.checkConstructor(selectedPsiField, bestConstructor)) {
                 psiFieldsForConstructor.add(selectedPsiField);

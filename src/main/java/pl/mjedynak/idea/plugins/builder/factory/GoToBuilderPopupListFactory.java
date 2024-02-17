@@ -1,11 +1,10 @@
 package pl.mjedynak.idea.plugins.builder.factory;
 
-import com.intellij.ui.components.JBList;
-import pl.mjedynak.idea.plugins.builder.action.GenerateBuilderAdditionalAction;
-
-import javax.swing.JList;
-
 import static java.util.Collections.singletonList;
+
+import com.intellij.ui.components.JBList;
+import javax.swing.JList;
+import pl.mjedynak.idea.plugins.builder.action.GenerateBuilderAdditionalAction;
 
 public class GoToBuilderPopupListFactory extends AbstractPopupListFactory {
 
