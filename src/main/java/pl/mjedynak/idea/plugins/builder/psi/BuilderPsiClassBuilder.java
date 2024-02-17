@@ -6,6 +6,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
@@ -24,19 +25,17 @@ import static com.intellij.openapi.util.text.StringUtil.isVowel;
 
 public class BuilderPsiClassBuilder {
 
-    private static final String PRIVATE_STRING = "private";
     private static final String SPACE = " ";
     private static final String A_PREFIX = " a";
     private static final String AN_PREFIX = " an";
     private static final String SEMICOLON = ",";
-    static final String STATIC_MODIFIER = "static";
-    static final String FINAL_MODIFIER = "final";
 
-    private PsiHelper psiHelper = new PsiHelper();
-    private PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
-    private PsiFieldVerifier psiFieldVerifier = new PsiFieldVerifier();
-    private CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
+    private final PsiHelper psiHelper = new PsiHelper();
+    private final PsiFieldsModifier psiFieldsModifier = new PsiFieldsModifier();
+    private final PsiFieldVerifier psiFieldVerifier = new PsiFieldVerifier();
+    private final CodeStyleSettings codeStyleSettings = new CodeStyleSettings();
     private ButMethodCreator butMethodCreator;
+    private CopyConstructorCreator copyConstructorCreator;
     private MethodCreator methodCreator;
 
     private PsiClass srcClass = null;
@@ -54,13 +53,14 @@ public class BuilderPsiClassBuilder {
 
     private boolean useSingleField = false;
     private boolean isInline = false;
+    private boolean copyConstructor = false;
 
     public BuilderPsiClassBuilder aBuilder(BuilderContext context) {
         initializeFields(context);
         JavaDirectoryService javaDirectoryService = psiHelper.getJavaDirectoryService();
         builderClass = javaDirectoryService.createClass(context.getTargetDirectory(), builderClassName);
         PsiModifierList modifierList = builderClass.getModifierList();
-        modifierList.setModifierProperty(FINAL_MODIFIER, true);
+        modifierList.setModifierProperty(PsiModifier.FINAL, true);
         return this;
     }
 
@@ -68,8 +68,8 @@ public class BuilderPsiClassBuilder {
         initializeFields(context);
         builderClass = elementFactory.createClass(builderClassName);
         PsiModifierList modifierList = builderClass.getModifierList();
-        modifierList.setModifierProperty(FINAL_MODIFIER, true);
-        modifierList.setModifierProperty(STATIC_MODIFIER, true);
+        modifierList.setModifierProperty(PsiModifier.FINAL, true);
+        modifierList.setModifierProperty(PsiModifier.STATIC, true);
         return this;
     }
 
@@ -87,7 +87,9 @@ public class BuilderPsiClassBuilder {
         bestConstructor = context.getPsiFieldsForBuilder().getBestConstructor();
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
+        copyConstructorCreator = new CopyConstructorCreator(elementFactory);
         isInline = allSelectedPsiFields.size() == psiFieldsForConstructor.size();
+        copyConstructor = context.hasAddCopyConstructor();
     }
 
     public BuilderPsiClassBuilder withFields() {
@@ -103,14 +105,17 @@ public class BuilderPsiClassBuilder {
         return this;
     }
 
-    public BuilderPsiClassBuilder withPrivateConstructor() {
+    public BuilderPsiClassBuilder withConstructor() {
         PsiMethod constructor;
         if (useSingleField) {
             constructor = elementFactory.createMethodFromText(builderClassName + "(){ " + srcClassFieldName + " = new " + srcClassName + "(); }", srcClass);
         } else {
             constructor = elementFactory.createConstructor();
         }
-        constructor.getModifierList().setModifierProperty(PRIVATE_STRING, true);
+
+        constructor.getModifierList().setModifierProperty(copyConstructor ? PsiModifier.PUBLIC : PsiModifier.PRIVATE, true);
+
+
         builderClass.add(constructor);
         return this;
     }
@@ -140,11 +145,17 @@ public class BuilderPsiClassBuilder {
     }
 
     private boolean isInnerBuilder(PsiClass aClass) {
-        return aClass.hasModifierProperty("static");
+        return aClass.hasModifierProperty(PsiModifier.STATIC);
     }
 
     public BuilderPsiClassBuilder withButMethod() {
         PsiMethod method = butMethodCreator.butMethod(builderClassName, builderClass, srcClass, srcClassFieldName, useSingleField);
+        builderClass.add(method);
+        return this;
+    }
+
+    public BuilderPsiClassBuilder withCopyConstructor() {
+        final PsiMethod method = copyConstructorCreator.copyConstructor(builderClass, srcClass, isInnerBuilder(builderClass), useSingleField);
         builderClass.add(method);
         return this;
     }

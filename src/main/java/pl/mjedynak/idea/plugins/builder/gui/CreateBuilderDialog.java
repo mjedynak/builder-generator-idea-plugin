@@ -53,18 +53,20 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     private static BuilderGeneratorSettingsState defaultStates = BuilderGeneratorSettingsState.getInstance();
 
-    private PsiHelper psiHelper;
-    private GuiHelper guiHelper;
-    private Project project;
+    private final PsiHelper psiHelper;
+    private final GuiHelper guiHelper;
+    private final Project project;
+    private final PsiClass sourceClass;
+    private final JTextField targetClassNameField;
+    private final JTextField targetMethodPrefix;
+    private final ReferenceEditorComboWithBrowseButton targetPackageField;
+    private final PsiClass existingBuilder;
     private PsiDirectory targetDirectory;
-    private PsiClass sourceClass;
-    private JTextField targetClassNameField;
-    private JTextField targetMethodPrefix;
     private JCheckBox innerBuilder;
     private JCheckBox butMethod;
     private JCheckBox useSingleField;
-    private ReferenceEditorComboWithBrowseButton targetPackageField;
-    private PsiClass existingBuilder;
+    private JCheckBox copyConstructor;
+
 
 
     public CreateBuilderDialog(Project project,
@@ -211,7 +213,6 @@ public class CreateBuilderDialog extends DialogWrapper {
         panel.add(innerBuilder, gbConstraints);
         // Inner builder
 
-
         // but method
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
@@ -232,7 +233,6 @@ public class CreateBuilderDialog extends DialogWrapper {
         panel.add(butMethod, gbConstraints);
         // but method
 
-
         // useSingleField
         gbConstraints.insets = new Insets(4, 8, 4, 8);
         gbConstraints.gridx = 0;
@@ -252,6 +252,26 @@ public class CreateBuilderDialog extends DialogWrapper {
         useSingleField.setSelected(defaultStates.isUseSinglePrefix);
         panel.add(useSingleField, gbConstraints);
         // useSingleField
+
+        // copy constructor
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 7;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Add copy constructor"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        copyConstructor = new JCheckBox();
+        copyConstructor.setSelected(defaultStates.isAddCopyConstructor);
+        panel.add(copyConstructor, gbConstraints);
+        // copy constructor
 
         return panel;
     }
@@ -345,6 +365,10 @@ public class CreateBuilderDialog extends DialogWrapper {
 
     public boolean useSingleField() {
         return useSingleField.isSelected();
+    }
+
+    public boolean hasAddCopyConstructor() {
+        return copyConstructor.isSelected();
     }
 
     public PsiDirectory getTargetDirectory() {

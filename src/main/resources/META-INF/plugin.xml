@@ -26,16 +26,22 @@
           </ul>
         ]]>
     </description>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <change-notes>
         <![CDATA[
+           version 1.4.0
+           <br/>
+           <ul>
+           <li>Added ability to generate builder with copy constructor
+           (contribution by <a href="https://github.com/c-mansfield">c-mansfield</a>)</li>
+           </ul>
            version 1.3.0
            <br/>
            <ul>
            <li>Added ability to store default settings
            (contribution by <a href="https://github.com/NexRX">NexRX</a>)</li>
            </ul>
-           version 1.3.0
+           version 1.2.0
            <br/>
            <ul>
            <li>Added ability to generate builder for Java records and lombok @Value types

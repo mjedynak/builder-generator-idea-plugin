@@ -23,6 +23,7 @@ public class BuilderGeneratorSettingsState implements PersistentStateComponent<B
     public boolean isInnerBuilder = false;
     public boolean isButMethod = false;
     public boolean isUseSinglePrefix = false;
+    public boolean isAddCopyConstructor = false;
 
     public BuilderGeneratorSettingsState() {}
 

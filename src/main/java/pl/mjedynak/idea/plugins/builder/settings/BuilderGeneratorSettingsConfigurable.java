@@ -38,6 +38,7 @@ public class BuilderGeneratorSettingsConfigurable implements Configurable {
         modified |= mySettingsComponent.isInnerBuilder() != settings.isInnerBuilder;
         modified |= mySettingsComponent.isButMethod() != settings.isButMethod;
         modified |= mySettingsComponent.isUseSinglePrefix() != settings.isUseSinglePrefix;
+        modified |= mySettingsComponent.isAddCopyConstructor() != settings.isAddCopyConstructor;
         return modified;
     }
 
@@ -48,6 +49,7 @@ public class BuilderGeneratorSettingsConfigurable implements Configurable {
         settings.isInnerBuilder = mySettingsComponent.isInnerBuilder();
         settings.isButMethod = mySettingsComponent.isButMethod();
         settings.isUseSinglePrefix = mySettingsComponent.isUseSinglePrefix();
+        settings.isAddCopyConstructor = mySettingsComponent.isAddCopyConstructor();
     }
 
     @Override
@@ -57,6 +59,7 @@ public class BuilderGeneratorSettingsConfigurable implements Configurable {
         mySettingsComponent.setInnerBuilder(settings.isInnerBuilder);
         mySettingsComponent.setButMethod(settings.isButMethod);
         mySettingsComponent.setUseSinglePrefix(settings.isUseSinglePrefix);
+        mySettingsComponent.setAddCopyConstructor(settings.isAddCopyConstructor);
     }
 
     @Override

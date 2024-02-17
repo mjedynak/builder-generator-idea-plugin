@@ -12,11 +12,11 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 
 class BuilderWriterComputable implements Computable<PsiElement> {
 
-    private GuiHelper guiHelper = new GuiHelper();
-    private PsiHelper psiHelper = new PsiHelper();
-    private BuilderPsiClassBuilder builderPsiClassBuilder;
-    private BuilderContext context;
-    private PsiClass existingBuilder;
+    private final GuiHelper guiHelper = new GuiHelper();
+    private final PsiHelper psiHelper = new PsiHelper();
+    private final BuilderPsiClassBuilder builderPsiClassBuilder;
+    private final BuilderContext context;
+    private final PsiClass existingBuilder;
 
     BuilderWriterComputable(BuilderPsiClassBuilder builderPsiClassBuilder, BuilderContext context, PsiClass existingBuilder) {
         this.builderPsiClassBuilder = builderPsiClassBuilder;
@@ -45,7 +45,7 @@ class BuilderWriterComputable implements Computable<PsiElement> {
             }
             return targetClass;
         } catch (IncorrectOperationException e) {
-            showErrorMessage(context.getProject(), context.getClassName());
+            showErrorMessage(context.getProject(), context.getClassName(), e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -54,20 +54,22 @@ class BuilderWriterComputable implements Computable<PsiElement> {
     private PsiClass getInnerBuilderPsiClass() {
         BuilderPsiClassBuilder builder = builderPsiClassBuilder.anInnerBuilder(context)
                 .withFields()
-                .withPrivateConstructor()
+                .withConstructor()
                 .withInitializingMethod()
                 .withSetMethods(context.getMethodPrefix());
         addButMethodIfNecessary(builder);
+        addCopyConstructorIfNecessary(builder);
         return builder.build();
     }
 
     private PsiClass getBuilderPsiClass() {
         BuilderPsiClassBuilder builder = builderPsiClassBuilder.aBuilder(context)
                 .withFields()
-                .withPrivateConstructor()
+                .withConstructor()
                 .withInitializingMethod()
                 .withSetMethods(context.getMethodPrefix());
         addButMethodIfNecessary(builder);
+        addCopyConstructorIfNecessary(builder);
         return builder.build();
     }
 
@@ -77,12 +79,22 @@ class BuilderWriterComputable implements Computable<PsiElement> {
         }
     }
 
+    private void addCopyConstructorIfNecessary(BuilderPsiClassBuilder builder) {
+        if (context.hasAddCopyConstructor()) {
+            builder.withCopyConstructor();
+        }
+    }
+
     private void navigateToClassAndPositionCursor(Project project, PsiClass targetClass) {
         guiHelper.positionCursor(project, targetClass.getContainingFile(), targetClass.getLBrace());
     }
 
-    private void showErrorMessage(Project project, String className) {
+    private void showErrorMessage(Project project, String className, String message) {
+        BuilderWriterErrorRunnable builderWriterErrorRunnable =
+                message == null ? new BuilderWriterErrorRunnable(project, className)
+                        : new BuilderWriterErrorRunnable(project, className, message);
+
         Application application = psiHelper.getApplication();
-        application.invokeLater(new BuilderWriterErrorRunnable(project, className));
+        application.invokeLater(builderWriterErrorRunnable);
     }
 }
