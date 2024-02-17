@@ -10,11 +10,11 @@ repositories {
 }
 
 dependencies {
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
-    testImplementation("org.assertj:assertj-core:3.23.1")
-    testImplementation("org.springframework:spring-test:5.2.22.RELEASE")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
+    testImplementation("org.assertj:assertj-core:3.25.3")
+    testImplementation("org.springframework:spring-test:5.3.32")
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
