@@ -50,4 +50,3 @@ spotless {
         palantirJavaFormat()
     }
 }
-
